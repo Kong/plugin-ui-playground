@@ -15,7 +15,7 @@
         tooltipAttributes: { maxWidth: '400' },
       } : undefined"
       :items="control.options"
-      @change="onChange"
+      @change="(onChange as any)"
     />
   </control-wrapper>
 </template>

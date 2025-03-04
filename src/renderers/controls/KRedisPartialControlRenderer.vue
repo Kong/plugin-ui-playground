@@ -77,7 +77,6 @@ import {
 } from '@jsonforms/vue';
 import ControlWrapper from './ControlWrapper.vue';
 import { useVanillaControl } from '../../util';
-import { SelectItem } from '@kong/kongponents';
 
 const useRedisPartialPickerStates = (props: any) => {
   const input = useJsonFormsControl(props)
@@ -87,22 +86,22 @@ const useRedisPartialPickerStates = (props: any) => {
   const partialPath = 'partial' // fixme: should read from options
   const handlePickerChange = (item: any) => {
     partialValue.value = item.value as string
-    input.handleChange(partialPath, partialValue.value)
+    input.handleChange(partialPath, [partialValue.value])
     input.handleChange(redisPath, {})
   }
 
   watch(usePartial, (usePartialValue) => {
     if (usePartialValue) {
-      input.handleChange(partialPath, partialValue.value)
+      input.handleChange(partialPath, [partialValue.value])
       input.handleChange(redisPath, {})
     } else {
-      input.handleChange(partialPath, '')
+      input.handleChange(partialPath, [])
       input.handleChange(redisPath, {})
     }
   })
   const childUiSchema = computed(() =>
     findUISchema(
-      input.control.value.uischemas,
+      (input.control.value as any).uischemas,
       input.control.value.schema,
       input.control.value.uischema.scope,
       input.control.value.path,

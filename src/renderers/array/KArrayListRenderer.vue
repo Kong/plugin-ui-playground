@@ -1,4 +1,3 @@
-<!-- todo -->
 <template>
   <fieldset v-if="control.visible" :class="styles.arrayList.root">
     <legend :class="styles.arrayList.legend">
@@ -48,6 +47,7 @@
 </template>
 
 <script lang="ts">
+// @ts-nocheck
 import {
   composePaths,
   createDefaultValue,

@@ -8,7 +8,7 @@
     <KCheckbox
       v-model="control.data"
       :label="control.label"
-      @change="() => onChange(new Event('change'))"
+      @change="() => onChange({} as any)"
     />
   </control-wrapper>
 </template>

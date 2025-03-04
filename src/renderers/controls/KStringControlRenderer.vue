@@ -29,7 +29,7 @@ import {
   rankWith,
   isStringControl,
 } from '@jsonforms/core';
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import {
   rendererProps,
   useJsonFormsControl,

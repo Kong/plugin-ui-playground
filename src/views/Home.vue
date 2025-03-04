@@ -31,7 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 
 import CaseItem from '../components/CaseItem.vue'
 import { getCases } from '../helpers/case-register.ts'

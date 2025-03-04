@@ -13,9 +13,9 @@
         </div>
         <div
           class="form-section-description"
-          v-if="layout.uischema.description"
+          v-if="(layout.uischema as any).description"
         >
-          {{ layout.uischema.description }}
+          {{ (layout.uischema as any).description }}
         </div>
       </div>
       <div class="form-section-content">

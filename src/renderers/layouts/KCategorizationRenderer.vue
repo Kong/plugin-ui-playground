@@ -1,7 +1,7 @@
 <template>
   <KTabs :tabs="categories.map(c => ({ title: c.value.label, hash: c.value.label }))">
     <template
-      v-for="(category, index) in categories"
+      v-for="(category) in categories"
       :key="`category-${index}`"
       #[category.value.label]
     >
