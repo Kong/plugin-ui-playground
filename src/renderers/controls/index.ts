@@ -9,6 +9,7 @@ export { default as DateControlRenderer } from './DateControlRenderer.vue';
 export { default as DateTimeControlRenderer } from './DateTimeControlRenderer.vue';
 export { default as TimeControlRenderer } from './TimeControlRenderer.vue';
 export { default as BooleanControlRenderer } from './KBooleanControlRenderer.vue';
+export { default as RedisPartialControlRenderer } from './KRedisPartialControlRenderer.vue';
 
 import { entry as stringControlRendererEntry } from './KStringControlRenderer.vue';
 import { entry as multiStringControlRendererEntry } from './MultiStringControlRenderer.vue';
@@ -20,6 +21,7 @@ import { entry as dateControlRendererEntry } from './DateControlRenderer.vue';
 import { entry as dateTimeControlRendererEntry } from './DateTimeControlRenderer.vue';
 import { entry as timeControlRendererEntry } from './TimeControlRenderer.vue';
 import { entry as booleanControlRendererEntry } from './KBooleanControlRenderer.vue';
+import { entry as redisPartialControlRenderer } from './KRedisPartialControlRenderer.vue';
 
 export const controlRenderers = [
   stringControlRendererEntry,
@@ -32,4 +34,5 @@ export const controlRenderers = [
   dateTimeControlRendererEntry,
   timeControlRendererEntry,
   booleanControlRendererEntry,
+  redisPartialControlRenderer,
 ];

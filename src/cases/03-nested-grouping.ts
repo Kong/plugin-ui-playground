@@ -74,19 +74,8 @@ register({
     }
   },
   uischema: {
-    "type": "VerticalLayout",
-    elements: [
-      {
-        type: 'Control',
-        label: 'Auth',
-        scope: '#/properties/auth',
-      },
-      {
-        type: 'Control',
-        label: 'Model',
-        scope: '#/properties/model',
-      }
-    ]
+    "type": "Control",
+    scope: '#/'
   },
   data: {
     auth: {
