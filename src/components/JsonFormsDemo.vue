@@ -5,7 +5,7 @@
         :data="data"
         :schema="schema"
         :uischema="uischema"
-        :renderers="renderers"
+        :renderers="kongRenderers"
         @change="onChange"
       />
     </div>
@@ -19,7 +19,7 @@
 <script setup lang="ts">
 import { ref, onMounted, defineProps } from 'vue'
 import { JsonForms } from '@jsonforms/vue'
-import { vanillaRenderers } from '@jsonforms/vue-vanilla'
+import { kongRenderers } from '../renderers'
 
 const props = defineProps({
   schema: {
@@ -27,7 +27,7 @@ const props = defineProps({
     required: true
   },
   uischema: {
-    type: Object,
+    type: Object as any,
     required: true
   },
   initialData: {
@@ -37,7 +37,6 @@ const props = defineProps({
 })
 
 const data = ref(props.initialData)
-const renderers = ref(vanillaRenderers)
 
 const onChange = (event: any) => {
   data.value = event.data

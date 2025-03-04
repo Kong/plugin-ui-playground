@@ -4,7 +4,11 @@
       <h2>Case List</h2>
       <ul class="case-list">
         <li v-for="(caseItem, index) in cases" :key="index">
-          <a href="#" @click.prevent="scrollToCase(caseItem.name)">
+          <a
+            href="#"
+            @click.prevent="handleSelected(caseItem)"
+            :class="{ active: selectedCase === caseItem.name }"
+          >
             {{ caseItem.name }}
           </a>
         </li>
@@ -28,24 +32,25 @@
 
 <script setup lang="ts">
 import { ref, reactive } from 'vue'
-// import { casesData } from '../data/cases'
+
 import CaseItem from '../components/CaseItem.vue'
 import { getCases } from '../helpers/case-register.ts'
+import type { Case } from '../types/case.ts'
 import '../cases'
 
 const cases = ref(getCases())
-const activeTabs = reactive<Record<string, string>>({})
-
-// Initialize default active tab for each case
-cases.value.forEach(caseItem => {
-  activeTabs[caseItem.name] = 'Demo'
-})
+const selectedCase = ref(cases.value[0].name)
 
 const scrollToCase = (id: string) => {
   const element = document.getElementById(id)
   if (element) {
     element.scrollIntoView({ behavior: 'smooth' })
   }
+}
+
+const handleSelected = (caseItem: Case) => {
+  scrollToCase(caseItem.name)
+  selectedCase.value = caseItem.name
 }
 </script>
 
@@ -107,5 +112,10 @@ h1 {
 h2 {
   margin-top: 0;
   margin-bottom: 15px;
+}
+
+.active {
+  background-color: #fff;
+  font-weight: bold;
 }
 </style>

@@ -4,6 +4,7 @@ import App from './App.vue'
 import router from './router'
 import Kongponents from '@kong/kongponents'
 import '@kong/kongponents/dist/style.css'
+import './vanilla.css'
 
 const app = createApp(App)
 app.use(router)

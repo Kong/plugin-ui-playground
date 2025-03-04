@@ -1,3 +1,5 @@
-import './01-simple-person-form'
-import './02-address-form'
-import './03-product-configuration'
+import './01-basic'
+import './02-entity-section'
+import './03-nested-grouping'
+import './04-custom-grouping'
+import './05-categorization'
