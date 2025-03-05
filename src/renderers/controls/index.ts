@@ -1,38 +1,59 @@
-export { default as ControlWrapper } from './ControlWrapper.vue';
-export { default as StringControlRenderer } from './KStringControlRenderer.vue';
-export { default as MultiStringControlRenderer } from './MultiStringControlRenderer.vue';
-export { default as NumberControlRenderer } from './KNumberControlRenderer.vue';
-export { default as IntegerControlRenderer } from './KIntegerControlRenderer.vue';
-export { default as EnumControlRenderer } from './KEnumControlRenderer.vue';
-export { default as oneOfEnumControlRenderer } from './EnumOneOfControlRenderer.vue';
-export { default as DateControlRenderer } from './DateControlRenderer.vue';
-export { default as DateTimeControlRenderer } from './DateTimeControlRenderer.vue';
-export { default as TimeControlRenderer } from './TimeControlRenderer.vue';
-export { default as BooleanControlRenderer } from './KBooleanControlRenderer.vue';
-export { default as RedisPartialControlRenderer } from './KRedisPartialControlRenderer.vue';
+import {
+  default as StringControlRenderer,
+  tester as stringControlRendererTester,
+} from './KStringControlRenderer.vue';
+import {
+  default as MultiStringControlRenderer,
+  tester as multiStringControlRendererTester,
+} from './MultiStringControlRenderer.vue';
+import {
+  default as numberControlRenderer,
+  tester as numberControlRendererTester,
+} from './KNumberControlRenderer.vue';
+import {
+  default as integerControlRenderer,
+  tester as integerControlRendererTester,
+} from './KIntegerControlRenderer.vue';
+import {
+  default as enumControlRendererEntry,
+  tester as enumControlRendererTester,
+} from './KEnumControlRenderer.vue';
+import {
+  default as oneOfEnumControlRenderer,
+  tester as oneOfEnumControlRendererTester,
+} from './EnumOneOfControlRenderer.vue';
+import {
+  default as dateControlRenderer,
+  tester as dateControlRendererTester,
+} from './DateControlRenderer.vue';
+import {
+  default as dateTimeControlRenderer,
+  tester as dateTimeControlRendererTester,
+} from './DateTimeControlRenderer.vue';
+import {
+  default as timeControlRenderer,
+  tester as timeControlRendererTester,
+} from './TimeControlRenderer.vue';
+import {
+  default as booleanControlRenderer,
+  tester as booleanControlRendererTester,
+} from './KBooleanControlRenderer.vue';
+import {
+  default as redisPartialControlRenderer,
+  tester as redisPartialControlRendererTester,
+} from './KRedisPartialControlRenderer.vue';
+import type { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 
-import { entry as stringControlRendererEntry } from './KStringControlRenderer.vue';
-import { entry as multiStringControlRendererEntry } from './MultiStringControlRenderer.vue';
-import { entry as numberControlRendererEntry } from './KNumberControlRenderer.vue';
-import { entry as integerControlRendererEntry } from './KIntegerControlRenderer.vue';
-import { entry as enumControlRendererEntry } from './KEnumControlRenderer.vue';
-import { entry as oneOfEnumControlRendererEntry } from './EnumOneOfControlRenderer.vue';
-import { entry as dateControlRendererEntry } from './DateControlRenderer.vue';
-import { entry as dateTimeControlRendererEntry } from './DateTimeControlRenderer.vue';
-import { entry as timeControlRendererEntry } from './TimeControlRenderer.vue';
-import { entry as booleanControlRendererEntry } from './KBooleanControlRenderer.vue';
-import { entry as redisPartialControlRenderer } from './KRedisPartialControlRenderer.vue';
-
-export const controlRenderers = [
-  stringControlRendererEntry,
-  multiStringControlRendererEntry,
-  numberControlRendererEntry,
-  integerControlRendererEntry,
-  enumControlRendererEntry,
-  oneOfEnumControlRendererEntry,
-  dateControlRendererEntry,
-  dateTimeControlRendererEntry,
-  timeControlRendererEntry,
-  booleanControlRendererEntry,
-  redisPartialControlRenderer,
+export const controlRenderers: JsonFormsRendererRegistryEntry[] = [
+  { tester: stringControlRendererTester, renderer: StringControlRenderer },
+  { tester: multiStringControlRendererTester, renderer: MultiStringControlRenderer },
+  { tester: numberControlRendererTester, renderer: numberControlRenderer },
+  { tester: integerControlRendererTester, renderer: integerControlRenderer },
+  { tester: enumControlRendererTester, renderer: enumControlRendererEntry },
+  { tester: oneOfEnumControlRendererTester, renderer: oneOfEnumControlRenderer },
+  { tester: dateControlRendererTester, renderer: dateControlRenderer },
+  { tester: dateTimeControlRendererTester, renderer: dateTimeControlRenderer },
+  { tester: timeControlRendererTester, renderer: timeControlRenderer },
+  { tester: booleanControlRendererTester, renderer: booleanControlRenderer },
+  { tester: redisPartialControlRendererTester, renderer: redisPartialControlRenderer },
 ];

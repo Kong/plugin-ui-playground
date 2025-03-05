@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import {
-  JsonFormsRendererRegistryEntry,
+  // JsonFormsRendererRegistryEntry,
   Layout,
   rankWith,
   and,
@@ -82,17 +82,17 @@ const layoutRenderer = defineComponent({
     ...rendererProps<Layout>(),
   },
   setup(props: RendererProps<Layout>) {
-    console.log(props)
     return useJsonFormsLayout(props);
   },
 });
 
 export default layoutRenderer;
 
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: layoutRenderer,
-  tester: rankWith(2, and(isLayout, uiTypeIs('KEntitySection'))),
-};
+// export const entry: JsonFormsRendererRegistryEntry = {
+//   renderer: layoutRenderer,
+//   tester: rankWith(2, and(isLayout, uiTypeIs('KEntitySection'))),
+// };
+export const tester = rankWith(2, and(isLayout, uiTypeIs('KEntitySection')))
 </script>
 
 <style lang="scss" scoped>

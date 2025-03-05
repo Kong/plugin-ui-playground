@@ -135,8 +135,9 @@ const controlRenderer = defineComponent({
 
 export default controlRenderer;
 
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: controlRenderer,
-  tester: rankWith(2, schemaTypeIs('array')),
-};
+// export const entry: JsonFormsRendererRegistryEntry = {
+//   renderer: controlRenderer,
+//   tester: rankWith(2, schemaTypeIs('array')),
+// };
+export const tester = rankWith(2, schemaTypeIs('array'))
 </script>

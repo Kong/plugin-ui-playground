@@ -1,5 +1,6 @@
-export { default as ArrayListRenderer } from './KArrayListRenderer.vue';
+import { default as ArrayListRenderer, tester as arrayListTester } from './KArrayListRenderer.vue';
 
-import { entry as arrayListRendererEntry } from './KArrayListRenderer.vue';
-
-export const arrayRenderers = [arrayListRendererEntry];
+export const arrayRenderers = [{
+  tester: arrayListTester,
+  renderer: ArrayListRenderer
+}];

@@ -23,7 +23,7 @@
 <script lang="ts">
 import {
   ControlElement,
-  JsonFormsRendererRegistryEntry,
+  // JsonFormsRendererRegistryEntry,
   rankWith,
   isDateTimeControl,
 } from '@jsonforms/core';
@@ -62,8 +62,9 @@ const controlRenderer = defineComponent({
 
 export default controlRenderer;
 
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: controlRenderer,
-  tester: rankWith(2, isDateTimeControl),
-};
+// export const entry: JsonFormsRendererRegistryEntry = {
+//   renderer: controlRenderer,
+//   tester: rankWith(2, isDateTimeControl),
+// };
+export const tester = rankWith(2, isDateTimeControl)
 </script>

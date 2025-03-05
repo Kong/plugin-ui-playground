@@ -22,11 +22,12 @@
 <script lang="ts">
 import {
   ControlElement,
-  JsonFormsRendererRegistryEntry,
+  // JsonFormsRendererRegistryEntry,
   rankWith,
   isStringControl,
   isMultiLineControl,
   and,
+  RankedTester,
 } from '@jsonforms/core';
 import { defineComponent } from 'vue';
 import {
@@ -55,8 +56,10 @@ const controlRenderer = defineComponent({
 
 export default controlRenderer;
 
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: controlRenderer,
-  tester: rankWith(2, and(isStringControl, isMultiLineControl)),
-};
+// export const entry: JsonFormsRendererRegistryEntry = {
+//   renderer: controlRenderer,
+//   tester: rankWith(2, and(isStringControl, isMultiLineControl)),
+// };
+
+export const tester: RankedTester = rankWith(2, and(isStringControl, isMultiLineControl));
 </script>

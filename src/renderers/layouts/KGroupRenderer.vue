@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import {
-  JsonFormsRendererRegistryEntry,
+  // JsonFormsRendererRegistryEntry,
   Layout,
   rankWith,
   and,
@@ -53,8 +53,10 @@ const layoutRenderer = defineComponent({
 
 export default layoutRenderer;
 
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: layoutRenderer,
-  tester: rankWith(2, and(isLayout, uiTypeIs('Group'))),
-};
+// export const entry: JsonFormsRendererRegistryEntry = {
+//   renderer: layoutRenderer,
+//   tester: rankWith(2, and(isLayout, uiTypeIs('Group'))),
+// };
+
+export const tester = rankWith(2, and(isLayout, uiTypeIs('Group')))
 </script>

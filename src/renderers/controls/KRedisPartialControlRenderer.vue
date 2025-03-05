@@ -64,7 +64,7 @@
 import {
   ControlElement,
   findUISchema,
-  JsonFormsRendererRegistryEntry,
+  // JsonFormsRendererRegistryEntry,
   rankWith,
   uiTypeIs,
 } from '@jsonforms/core';
@@ -141,10 +141,12 @@ export default controlRenderer;
 
 const isRedisPartialControl = uiTypeIs('KRedisPartialControl')
 
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: controlRenderer,
-  tester: rankWith(1, isRedisPartialControl),
-};
+// export const entry: JsonFormsRendererRegistryEntry = {
+//   renderer: controlRenderer,
+//   tester: rankWith(1, isRedisPartialControl),
+// };
+
+export const tester = rankWith(1, isRedisPartialControl)
 </script>
 
 <style lang="scss" scoped>

@@ -1,13 +1,18 @@
-export { default as EntitySection } from './KEntitySectionRenderer.vue';
-export { default as Group } from './KGroupRenderer.vue';
-export { default as Categorization } from './KCategorizationRenderer.vue';
-
-import { entry as entitySectionRendererEntry } from './KEntitySectionRenderer.vue';
-import { entry as entityGroupRendererEntry } from './KGroupRenderer.vue';
-import { entry as entityCategorizationRendererEntry } from './KCategorizationRenderer.vue';
+import {
+  default as EntitySectionRenderer,
+  tester as entitySectionRendererTester,
+} from './KEntitySectionRenderer.vue';
+import {
+  default as GroupRenderer,
+  tester as groupRendererTester,
+} from './KGroupRenderer.vue';
+import {
+  default as EntityCategorizationRenderer,
+  tester as entityCategorizationRendererTester,
+} from './KCategorizationRenderer.vue';
 
 export const layoutRenderers = [
-  entitySectionRendererEntry,
-  entityGroupRendererEntry,
-  entityCategorizationRendererEntry,
+  { tester: entitySectionRendererTester, renderer: EntitySectionRenderer },
+  { tester: groupRendererTester, renderer: GroupRenderer },
+  { tester: entityCategorizationRendererTester, renderer: EntityCategorizationRenderer },
 ];

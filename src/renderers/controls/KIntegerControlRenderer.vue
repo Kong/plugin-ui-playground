@@ -26,7 +26,7 @@
 <script lang="ts">
 import {
   ControlElement,
-  JsonFormsRendererRegistryEntry,
+  // JsonFormsRendererRegistryEntry,
   rankWith,
   isIntegerControl,
 } from '@jsonforms/core';
@@ -56,8 +56,10 @@ const controlRenderer = defineComponent({
 
 export default controlRenderer;
 
-export const entry: JsonFormsRendererRegistryEntry = {
-  renderer: controlRenderer,
-  tester: rankWith(1, isIntegerControl),
-};
+// export const entry: JsonFormsRendererRegistryEntry = {
+//   renderer: controlRenderer,
+//   tester: rankWith(1, isIntegerControl),
+// };
+
+export const tester = rankWith(1, isIntegerControl)
 </script>
