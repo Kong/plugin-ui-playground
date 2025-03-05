@@ -6,7 +6,7 @@
     :applied-options="appliedOptions"
   >
     <KInput
-      :value="control.data"
+      v-model="control.data"
       :label="control.label"
       type="number"
       :disabled="!control.enabled"
@@ -18,7 +18,7 @@
         info: control.schema.description,
         tooltipAttributes: { maxWidth: '400' },
       } : undefined"
-      required
+      :required="control.required"
     />
   </control-wrapper>
 </template>

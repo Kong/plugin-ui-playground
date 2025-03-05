@@ -28,8 +28,13 @@ export const useVanillaControl = <
 
   const isFocused = ref(false);
   const onChange = (event: Event) => {
-    input.handleChange(input.control.value.path, adaptTarget(event.target));
+    // input.handleChange(input.control.value.path, adaptTarget(event.target));
+    updateValue(adaptTarget(event.target));
   };
+
+  const updateValue = (value: any) => {
+    input.handleChange(input.control.value.path, value);
+  }
 
   const controlWrapper = computed(() => {
     const { id, description, errors, label, visible, required } =
@@ -44,6 +49,7 @@ export const useVanillaControl = <
     appliedOptions,
     controlWrapper,
     onChange,
+    updateValue,
   };
 };
 

@@ -9,13 +9,13 @@
       :id="control.id + '-input'"
       :value="control.data"
       :label="control.label"
-      :required="config.required"
+      :required="control.required"
       :label-attributes="control.schema.description ? {
         info: control.schema.description,
         tooltipAttributes: { maxWidth: '400' },
       } : undefined"
       :items="control.options"
-      @change="(onChange as any)"
+      @change="item => updateValue(item?.value)"
     />
   </control-wrapper>
 </template>

@@ -18,7 +18,7 @@
         :placeholder="appliedOptions.placeholder"
         mode="date"
         :range="false"
-        @change="console.log"
+        @change="value => updateValue(value?.start)"
       />
     </div>
   </control-wrapper>
@@ -41,7 +41,7 @@ import ControlWrapper from './ControlWrapper.vue';
 import { useVanillaControl } from '../../util';
 
 const controlRenderer = defineComponent({
-  name: 'DateControlRenderer',
+  name: 'KDateControlRenderer',
   components: {
     ControlWrapper,
   },

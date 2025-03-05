@@ -25,7 +25,7 @@ import {
 import {
   default as dateControlRenderer,
   tester as dateControlRendererTester,
-} from './DateControlRenderer.vue';
+} from './KDateControlRenderer.vue';
 import {
   default as dateTimeControlRenderer,
   tester as dateTimeControlRendererTester,
