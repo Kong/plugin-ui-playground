@@ -10,7 +10,8 @@
 </template>
 
 <script setup lang="ts">
-// No additional setup needed
+/* Import JSONForms styles */
+import '@jsonforms/vue-vanilla/vanilla.css';
 </script>
 
 <style>
@@ -26,6 +27,4 @@
   color: #fff;
 }
 
-/* Import JSONForms styles */
-@import '@jsonforms/vue-vanilla/vanilla.css';
 </style>
