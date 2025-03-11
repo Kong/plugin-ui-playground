@@ -15,7 +15,28 @@
       </ul>
     </aside>
     <main class="main-content">
-      <h1>Kong JSONForm Demos</h1>
+      <section class="intro">
+        <h1>JSON Forms + Kongponents</h1>
+        <p>
+          This is a PoC on how to fully control a form using <a target="_blank" href="https://jsonforms.io/">JSON Forms</a> with a custom layout. <br />
+          Github: <a target="_blank" href="https://github.com/2eha0/learn-jsonforms">https://github.com/2eha0/learn-jsonforms</a> <br />
+          Live Demo: <a target="_blank" href="https://learn-json-form.vercel.app/">https://learn-json-form.vercel.app/</a>
+        </p>
+        <ul class="features">
+          <li>
+            <i>📝</i>
+            <span>A <b>form generator</b> based on JSON Schema</span>
+          </li>
+          <li>
+            <i>🎨</i>
+            <span><b>Full control</b> over form layout using UI Schema</span>
+          </li>
+          <li>
+            <i>🔧</i>
+            <span><b>Custom UI</b> rendering by extending UI Schema</span>
+          </li>
+        </ul>
+      </section>
       <div class="cases-container">
         <div
           v-for="(caseItem, index) in cases"
@@ -55,6 +76,31 @@ const handleSelected = (caseItem: Case) => {
 </script>
 
 <style scoped>
+.intro {
+  margin-bottom: 80px;
+  text-align: center;
+}
+
+.intro p {
+  margin-bottom: 20px;
+}
+
+.intro h2 {
+  margin-top: 40px;
+}
+
+.features {
+  list-style: none;
+  padding: 0 40px;
+  display: flex;
+  gap: 80px;
+}
+
+.features i {
+  font-size: 40px;
+  display: block;
+}
+
 .home-container {
   display: flex;
   min-height: 100vh;

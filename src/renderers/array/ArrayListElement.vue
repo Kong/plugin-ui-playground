@@ -1,44 +1,31 @@
 <template>
-  <div :class="styles.arrayList.item">
-    <div :class="toolbarClasses" @click="expandClicked">
-      <div :class="styles.arrayList.itemLabel">{{ label }}</div>
-      <button
-        :disabled="!moveUpEnabled"
-        :class="styles.arrayList.itemMoveUp"
-        type="button"
-        @click="moveUpClicked"
-      >
-        ↑
-      </button>
-      <button
-        :disabled="!moveDownEnabled"
-        :class="styles.arrayList.itemMoveDown"
-        type="button"
-        @click="moveDownClicked"
-      >
-        ↓
-      </button>
-      <button
+  <div class="array-item-wrapper">
+    <div class="array-item">
+      <slot></slot>
+
+      <KButton
         :disabled="!deleteEnabled"
-        :class="styles.arrayList.itemDelete"
         type="button"
         @click="deleteClicked"
+        appearance="tertiary"
+        icon
       >
-        🗙
-      </button>
-    </div>
-    <div :class="contentClasses">
-      <slot></slot>
+        <TrashIcon />
+      </KButton>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { TrashIcon } from '@kong/icons'
 import { defineComponent, PropType } from 'vue';
 import { classes, Styles } from '../../styles';
 
 const listItem = defineComponent({
   name: 'ArrayListElement',
+  components: {
+    TrashIcon,
+  },
   props: {
     initiallyExpanded: {
       required: false,
@@ -123,3 +110,27 @@ const listItem = defineComponent({
 
 export default listItem;
 </script>
+
+<style lang="scss" scoped>
+.array-item-wrapper {
+  width: 100%;
+}
+
+.array-item {
+  display: flex;
+  width: 100%;
+
+  :deep(.k-button) {
+    margin-top: -24px;
+    &.delete {
+      align-self: center;
+      height: 100%;
+      margin-left: $kui-space-70;
+    }
+  }
+
+  :deep(.vertical-layout) {
+    width: 100%;
+  }
+}
+</style>

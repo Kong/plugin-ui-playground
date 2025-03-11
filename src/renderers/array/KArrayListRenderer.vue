@@ -1,5 +1,49 @@
 <template>
-  <fieldset v-if="control.visible" :class="styles.arrayList.root">
+  <div v-if="control.visible">
+    <KLabel
+      :required="control.required"
+    >
+      {{ control.label }}
+    </KLabel>
+    <div
+      v-for="(element, index) in control.data"
+      :key="`${control.path}-${index}`"
+      :class="styles.arrayList.itemWrapper"
+    >
+      <array-list-element
+        :move-up="moveUp(control.path, index)"
+        :move-up-enabled="control.enabled && index > 0"
+        :move-down="moveDown(control.path, index)"
+        :move-down-enabled="control.enabled && index < control.data.length - 1"
+        :delete-enabled="control.enabled && !minItemsReached"
+        :delete="removeItems(control.path, [index])"
+        :label="childLabelForIndex(index)"
+        :styles="styles"
+      >
+        <dispatch-renderer
+          :schema="control.schema"
+          :uischema="childUiSchema"
+          :path="composePaths(control.path, `${index}`)"
+          :enabled="control.enabled"
+          :renderers="control.renderers"
+          :cells="control.cells"
+        />
+      </array-list-element>
+    </div>
+    <div v-if="noData" :class="styles.arrayList.noData">
+      <!-- {{ translations.noDataMessage }}re;p -->
+    </div>
+    <KButton
+      appearance="tertiary"
+      :disabled="
+        !control.enabled || (appliedOptions.restrict && maxItemsReached)
+      "
+      @click="addButtonClick"
+    >
+      + Add
+    </KButton>
+  </div>
+  <!-- <fieldset v-if="control.visible" :class="styles.arrayList.root">
     <legend :class="styles.arrayList.legend">
       <button
         :class="styles.arrayList.addButton"
@@ -43,7 +87,7 @@
     <div v-if="noData" :class="styles.arrayList.noData">
       {{ translations.noDataMessage }}
     </div>
-  </fieldset>
+  </fieldset> -->
 </template>
 
 <script lang="ts">

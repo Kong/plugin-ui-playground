@@ -1,7 +1,7 @@
 <template>
   <div :id="caseItem.name" class="case-item">
     <h2>{{ caseItem.name }}</h2>
-
+    <p v-if="caseItem.description">{{ caseItem.description }}</p>
     <KTabs :tabs="linkTabs">
       <template #demo>
         <JsonFormsDemo

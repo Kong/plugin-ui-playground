@@ -2,6 +2,7 @@ import { register } from '../helpers/case-register'
 
 register({
   name: 'Categorization',
+  description: 'Just like the OIDC plugin, we can categorize fields into different tabs.',
   schema: {
     "type": "object",
     "properties": {

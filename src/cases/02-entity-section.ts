@@ -2,6 +2,7 @@ import { register } from '../helpers/case-register'
 
 register({
   name: 'Entity Section',
+  description: 'This is how we customize the layout of Kong\'s style form section. See the `KEntitySection` field in ui-schema tab.',
   schema: {
     "type": "object",
     "properties": {

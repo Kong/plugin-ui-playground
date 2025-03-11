@@ -2,6 +2,7 @@ import { register } from '../helpers/case-register'
 
 register({
   name: 'Nested Grouping',
+  description: 'By default, deeply nested objects are rendered as nested structures.',
   schema: {
     "type": "object",
     "properties": {

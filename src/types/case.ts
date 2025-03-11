@@ -3,4 +3,5 @@ export type Case = {
   schema: any,
   uischema: any,
   data: any
+  description?: string
 }

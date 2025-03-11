@@ -2,6 +2,7 @@ import { register } from '../helpers/case-register'
 
 register({
   name: 'Custom Control',
+  description: 'We can create custom controls to handle complex UI component. See the `KRedisPartialControl` field in ui-schema tab.',
   schema: {
     "type": "object",
     "properties": {

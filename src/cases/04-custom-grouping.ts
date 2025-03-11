@@ -2,6 +2,7 @@ import { register } from '../helpers/case-register'
 
 register({
   name: 'Custom Grouping',
+  description: 'Without changing the schema, we can use the UI schema to group fields the way we want.',
   schema: {
     "type": "object",
     "properties": {

@@ -20,6 +20,9 @@ importers:
       '@kong/design-tokens':
         specifier: ^1.17.3
         version: 1.17.3
+      '@kong/icons':
+        specifier: ^1.21.2
+        version: 1.21.2(vue@3.5.13(typescript@5.8.2))
       '@kong/kongponents':
         specifier: ^9.22.0
         version: 9.22.0(axios@1.8.1)(vue-router@4.5.0(vue@3.5.13(typescript@5.8.2)))(vue@3.5.13(typescript@5.8.2))

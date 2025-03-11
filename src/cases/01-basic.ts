@@ -2,6 +2,7 @@ import { register } from '../helpers/case-register'
 
 register({
   name: 'Basic',
+  description: 'A simple form with a few fields, `schema` is required for form generation, `ui-schema` is an optional configuration for layout.',
   schema: {
     "type": "object",
     "properties": {
