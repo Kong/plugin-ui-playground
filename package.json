@@ -15,6 +15,7 @@
     "@kong/design-tokens": "^1.17.3",
     "@kong/icons": "^1.21.2",
     "@kong/kongponents": "^9.22.0",
+    "@kong/vscode-json-languageservice": "5.4.1-patch.4",
     "lodash": "^4.17.21",
     "vue": "^3.5.13",
     "vue-router": "^4.2.5"

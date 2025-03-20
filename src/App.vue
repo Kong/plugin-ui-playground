@@ -69,7 +69,6 @@ const scrollToSection = (id: string) => {
 }
 
 .main-layout {
-  display: flex;
   flex: 1;
   height: 100vh;
   overflow-y: auto;
