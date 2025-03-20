@@ -16,6 +16,11 @@ export const routes: RouteRecordRaw[] = [
     path: '/schema-transformer',
     name: 'Schema Transformer',
     component: () => import('./views/SchemaTransformer.vue')
+  },
+  {
+    path: '/plugin-form',
+    name: 'Plugin Form (WIP)',
+    component: () => import('./views/PluginForm.vue')
   }
 ]
 
