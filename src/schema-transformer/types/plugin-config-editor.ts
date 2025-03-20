@@ -1,4 +1,6 @@
-import type { JSONSchema } from '@kong/vscode-json-languageservice'
+// import type { JSONSchema } from '@kong/vscode-json-languageservice'
+
+type JSONSchema = any
 import type { FieldSchema } from './schema'
 
 export type EditorLanguage = 'json' | 'yaml'

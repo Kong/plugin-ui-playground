@@ -1,4 +1,6 @@
-import type { JSONSchema } from '@kong/vscode-json-languageservice'
+// import type { JSONSchema } from '@kong/vscode-json-languageservice'
+
+type JSONSchema = any
 import {
   isArrayLikeField,
   isBooleanField,
@@ -331,10 +333,10 @@ const prepareData = (schema: JSONSchema) => {
      * JSON schemas should never use `undefined` as default values.
      * `undefined` indicates the missing of a default value.
      */
-    if (property.default !== undefined) {
+    if ((property as any).default !== undefined) {
       fields[key] = prepareData(property)
     } else if (requiredPropertyKeys.has(key)) {
-      fields[key] = property.type === 'object' ? prepareData(property) : requiredValuePlaceholder
+      fields[key] = (property as any).type === 'object' ? prepareData(property) : requiredValuePlaceholder
     }
 
     return fields
