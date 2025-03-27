@@ -1,0 +1,43 @@
+name: PR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Required to deploy to gh-pages
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4 # version is determined from the packageManager field in package.json by default.
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ".nvmrc"
+          cache: pnpm
+
+      - name: Install dependency
+        timeout-minutes: 5
+        run: pnpm install
+
+      - name: Build
+        run: pnpm build
+
+      - name: Deploy to GH Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ github.token }}
+          publish_branch: gh-pages
+          publish_dir: dist
