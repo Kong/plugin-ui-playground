@@ -5,7 +5,7 @@
       <p>
         This is a PoC on how to fully control a form using <a target="_blank" href="https://jsonforms.io/">JSON Forms</a> with a custom layout. <br />
         Github: <a target="_blank" href="https://github.com/2eha0/learn-jsonforms">https://github.com/2eha0/learn-jsonforms</a> <br />
-        Live Demo: <a target="_blank" href="https://learn-json-form.vercel.app/">https://learn-json-form.vercel.app/</a>
+        Live Demo: <a target="_blank" href="https://2eha0.github.io/learn-jsonforms/">https://2eha0.github.io/learn-jsonforms/</a>
       </p>
       <ul class="features">
         <li>
