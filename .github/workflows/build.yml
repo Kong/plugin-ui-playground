@@ -33,7 +33,7 @@ jobs:
         run: pnpm install
 
       - name: Build
-        run: pnpm build
+        run: pnpm build:gh-pages
 
       - name: Deploy to GH Pages
         uses: peaceiris/actions-gh-pages@v4
