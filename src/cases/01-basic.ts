@@ -47,7 +47,6 @@ register({
           }
         },
         "required": [
-          "age",
           "height"
         ]
       },

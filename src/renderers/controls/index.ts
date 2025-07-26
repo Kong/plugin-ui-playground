@@ -1,19 +1,7 @@
 import {
-  default as StringControlRenderer,
-  tester as stringControlRendererTester,
-} from './KStringControlRenderer.vue';
-import {
   default as MultiStringControlRenderer,
   tester as multiStringControlRendererTester,
 } from './MultiStringControlRenderer.vue';
-import {
-  default as numberControlRenderer,
-  tester as numberControlRendererTester,
-} from './KNumberControlRenderer.vue';
-import {
-  default as integerControlRenderer,
-  tester as integerControlRendererTester,
-} from './KIntegerControlRenderer.vue';
 import {
   default as enumControlRendererEntry,
   tester as enumControlRendererTester,
@@ -35,25 +23,29 @@ import {
   tester as timeControlRendererTester,
 } from './TimeControlRenderer.vue';
 import {
-  default as booleanControlRenderer,
-  tester as booleanControlRendererTester,
-} from './KBooleanControlRenderer.vue';
-import {
   default as redisPartialControlRenderer,
   tester as redisPartialControlRendererTester,
 } from './KRedisPartialControlRenderer.vue';
 import type { JsonFormsRendererRegistryEntry } from '@jsonforms/core';
 
+import { default as KCheckBoxControlRenderer, tester as checkBoxTester } from './KCheckBoxRenderer.vue'
+import { default as KToggleRenderer, tester as toggleTester } from './KToggleRenderer.vue'
+import { default as KInputControlRenderer, tester as inputTester } from './KInputControlRenderer.vue'
+import { default as KTextAreaControlRenderer, tester as textAreaTester } from './KTextAreaControlRenderer.vue'
+import { default as KNumberControlRenderer, tester as numberTester } from './KNumberControlRenderer.vue'
+
 export const controlRenderers: JsonFormsRendererRegistryEntry[] = [
-  { tester: stringControlRendererTester, renderer: StringControlRenderer },
   { tester: multiStringControlRendererTester, renderer: MultiStringControlRenderer },
-  { tester: numberControlRendererTester, renderer: numberControlRenderer },
-  { tester: integerControlRendererTester, renderer: integerControlRenderer },
   { tester: enumControlRendererTester, renderer: enumControlRendererEntry },
   { tester: oneOfEnumControlRendererTester, renderer: oneOfEnumControlRenderer },
   { tester: dateControlRendererTester, renderer: dateControlRenderer },
   { tester: dateTimeControlRendererTester, renderer: dateTimeControlRenderer },
   { tester: timeControlRendererTester, renderer: timeControlRenderer },
-  { tester: booleanControlRendererTester, renderer: booleanControlRenderer },
   { tester: redisPartialControlRendererTester, renderer: redisPartialControlRenderer },
-];
+
+  { tester: checkBoxTester, renderer: KCheckBoxControlRenderer },
+  { tester: toggleTester, renderer: KToggleRenderer },
+  { tester: inputTester, renderer: KInputControlRenderer },
+  { tester: textAreaTester, renderer: KTextAreaControlRenderer },
+  { tester: numberTester, renderer: KNumberControlRenderer },
+]

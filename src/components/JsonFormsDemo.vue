@@ -5,8 +5,9 @@
         :data="data"
         :schema="schema"
         :uischema="uischema"
-        :renderers="kongRenderers"
+        :renderers="Object.freeze(kongRenderers)"
         @change="onChange"
+        validationMode="NoValidation"
       />
     </div>
     <div class="output-container">
