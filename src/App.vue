@@ -48,11 +48,7 @@ const handleFileSelect = async (path: string) => {
     try {
       // 动态导入JSON文件
       let modules
-      if (path.includes('plugins')) {
-        modules = import.meta.glob(`../gateway-schema-watcher/**/*.json`, { eager: true })
-      } else {
-        modules = import.meta.glob(`../examples/**/*.json`, { eager: true })
-      }
+      modules = import.meta.glob(`../examples/**/*.json`, { eager: true })
       const jsonData: any = Object.keys(modules)
         .filter(key => key.includes(path))
         .map(key => modules[key])[0]
