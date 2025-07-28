@@ -20,6 +20,7 @@
         :key="code"
         :schema="(maybeSchemaJSON as any)"
         class="form"
+        @change="v => console.log(JSON.parse(JSON.stringify(v)))"
       />
       <div v-else class="empty-placeholder">
         <div class="empty-icon">

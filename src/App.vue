@@ -135,6 +135,7 @@ const handleFileSelect = async (path: string) => {
 }
 
 .playground {
+  height: 100%;
   position: relative;
   overflow: hidden;
   background-image:
