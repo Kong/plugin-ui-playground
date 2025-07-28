@@ -1,0 +1,25 @@
+{
+  "type": "record",
+  "fields": [
+    {
+      "number_simple": {
+        "type": "number"
+      }
+    },
+    {
+      "number_complex": {
+        "type": "number",
+        "required": true,
+        "description": "A complex number field",
+        "default": 42,
+        "gt": 0
+      }
+    },
+    {
+      "number_between": {
+        "type": "number",
+        "between": [1, 100]
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "type": "record",
+  "fields": [
+    {
+      "string_simple": {
+        "type": "string"
+      }
+    },
+    {
+      "string_complex": {
+        "type": "string",
+        "required": true,
+        "description": "A complex string field",
+        "default": "default value"
+      }
+    },
+    {
+      "string_referenceable": {
+        "type": "string",
+        "encrypted": true,
+        "referenceable": true
+      }
+    }
+  ]
+}

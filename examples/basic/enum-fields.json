@@ -1,0 +1,26 @@
+{
+  "type": "record",
+  "fields": [
+    {
+      "enum_simple": {
+        "type": "string",
+        "one_of": ["option1", "option2", "option3"]
+      }
+    },
+    {
+      "enum_complex": {
+        "type": "string",
+        "required": true,
+        "description": "A complex enum field",
+        "one_of": ["option1", "option2", "option3"]
+      }
+    },
+    {
+      "enum_default": {
+        "type": "string",
+        "one_of": ["option1", "option2", "option3"],
+        "default": "option2"
+      }
+    }
+  ]
+}

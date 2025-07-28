@@ -1,0 +1,42 @@
+{
+  "type": "record",
+  "fields": [
+    {
+      "map_simple": {
+        "type": "map",
+        "keys": {
+          "type": "string"
+        },
+        "values": {
+          "type": "number"
+        }
+      }
+    },
+    {
+      "map_complex": {
+        "type": "map",
+        "required": true,
+        "description": "A complex map field",
+        "keys": {
+          "type": "string"
+        },
+        "values": {
+          "type": "string"
+        },
+        "default": { "foo": "bar" }
+      }
+    },
+    {
+      "map_referenceable": {
+        "type": "map",
+        "keys": {
+          "type": "string"
+        },
+        "values": {
+          "type": "string",
+          "referenceable": true
+        }
+      }
+    }
+  ]
+}

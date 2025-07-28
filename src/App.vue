@@ -4,16 +4,26 @@
       <!-- 左侧固定宽度侧边栏 -->
       <div class="sidebar">
         <div class="file-tree">
-          <FileTree />
+          <FileTree @file-select="handleFileSelect" />
         </div>
       </div>
 
       <!-- 右侧弹性区域 -->
       <div class="content-area">
-        <!-- Playground 区域 -->
-        <div class="playground" :style="{ height: playgroundHeight }">
-          <div class="playground-content">
-            <FormPlayground />
+        <!-- 内容区左右布局 -->
+        <div class="content-layout">
+          <!-- 左边代码编辑区域 -->
+          <div class="code-editor">
+            <CodeEditor v-model="code" />
+          </div>
+
+          <!-- 右边 Playground 区域 -->
+          <div class="playground-container">
+            <div class="playground">
+              <div class="playground-content">
+                <FormPlayground :code="code" />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -22,17 +32,41 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import FileTree from './FileTree.vue'
 import FormPlayground from './FormPlayground.vue'
+import CodeEditor from './CodeEditor.vue'
 
-// 控制 output 区域的展开收起
-const outputCollapsed = ref(true)
+// 编辑器值
+const code = ref('')
 
-// 根据 output 区域的状态动态计算 playground 高度
-const playgroundHeight = computed(() => {
-  return outputCollapsed.value ? 'calc(100% - 40px)' : 'calc(70%)'
-})
+// 处理文件选择事件
+const handleFileSelect = async (path: string) => {
+  try {
+    console.log('Selected path:', path)
+
+    try {
+      // 动态导入JSON文件
+      let modules
+      if (path.includes('plugins')) {
+        modules = import.meta.glob(`../gateway-schema-watcher/**/*.json`, { eager: true })
+      } else {
+        modules = import.meta.glob(`../examples/**/*.json`, { eager: true })
+      }
+      const jsonData: any = Object.keys(modules)
+        .filter(key => key.includes(path))
+        .map(key => modules[key])[0]
+
+      // 更新编辑器中的内容和选中的schema
+      code.value = JSON.stringify(jsonData.default, null, 2)
+    } catch (importError) {
+      console.error('动态导入失败:', importError)
+    }
+
+  } catch (error) {
+    console.error('加载文件失败:', error)
+  }
+}
 
 </script>
 
@@ -75,6 +109,33 @@ const playgroundHeight = computed(() => {
   flex-direction: column;
   overflow: hidden;
   height: 100%;
+}
+
+// 新增左右布局
+.content-layout {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+// 左侧代码编辑区域
+.code-editor {
+  width: 45%;
+  border-right: 1px solid #e0e0e0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+// Monaco Editor 样式已移至 CodeEditor.vue
+
+// 右侧 Playground 容器
+.playground-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .playground {

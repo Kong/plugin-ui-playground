@@ -1,0 +1,18 @@
+{
+  "type": "record",
+  "fields": [
+    {
+      "boolean_simple": {
+        "type": "boolean"
+      }
+    },
+    {
+      "boolean_complex": {
+        "type": "boolean",
+        "required": true,
+        "description": "A complex boolean field",
+        "default": true
+      }
+    }
+  ]
+}

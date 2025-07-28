@@ -1,0 +1,68 @@
+{
+  "type": "record",
+  "fields": [
+    {
+      "record_simple": {
+        "type": "record",
+        "description": "A simple record field",
+        "fields": [
+          {
+            "string_simple": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "record_required": {
+        "type": "record",
+        "required": true,
+        "description": "A required record field",
+        "fields": [
+          {
+            "string_simple": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "record_recursive": {
+        "type": "record",
+        "description": "A recursive record field",
+        "fields": [
+          {
+            "nested_record": {
+              "type": "record",
+              "fields": [
+                {
+                  "number_simple": {
+                    "type": "number"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "record_default": {
+        "type": "record",
+        "description": "A record field with default values",
+        "default": {
+          "string_simple": "default value"
+        },
+        "fields": [
+          {
+            "string_simple": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
