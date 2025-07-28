@@ -1,0 +1,36 @@
+{
+  "fields": [
+    {
+      "connect_timeout": {
+        "between": [
+          0,
+          2147483646
+        ],
+        "description": "An integer representing a timeout in milliseconds. Must be between 1 and 2^31-2.",
+        "type": "integer"
+      }
+    },
+    {
+      "read_timeout": {
+        "between": [
+          0,
+          2147483646
+        ],
+        "description": "An integer representing a timeout in milliseconds. Must be between 1 and 2^31-2.",
+        "type": "integer"
+      }
+    },
+    {
+      "send_timeout": {
+        "between": [
+          0,
+          2147483646
+        ],
+        "description": "An integer representing a timeout in milliseconds. Must be between 1 and 2^31-2.",
+        "type": "integer"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

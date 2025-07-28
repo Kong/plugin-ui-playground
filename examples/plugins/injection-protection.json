@@ -1,0 +1,112 @@
+{
+  "entity_checks": [
+    {
+      "at_least_one_of": [
+        "custom_injections",
+        "injection_types"
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "custom_injections": {
+        "default": null,
+        "description": "Custom regexes to check for.",
+        "elements": {
+          "fields": [
+            {
+              "name": {
+                "description": "A unique name for this injection.",
+                "required": true,
+                "type": "string"
+              }
+            },
+            {
+              "regex": {
+                "description": "The regex to match against.",
+                "is_regex": true,
+                "required": true,
+                "type": "string"
+              }
+            }
+          ],
+          "type": "record"
+        },
+        "type": "array"
+      }
+    },
+    {
+      "enforcement_mode": {
+        "default": "block",
+        "description": "Enforcement mode of the security policy.",
+        "one_of": [
+          "block",
+          "log_only"
+        ],
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "error_message": {
+        "default": "Bad Request",
+        "description": "The response message when validation fails",
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "error_status_code": {
+        "between": [
+          400,
+          499
+        ],
+        "default": 400,
+        "description": "The response status code when validation fails.",
+        "required": true,
+        "type": "integer"
+      }
+    },
+    {
+      "injection_types": {
+        "default": [
+          "sql"
+        ],
+        "description": "The type of injections to check for.",
+        "elements": {
+          "one_of": [
+            "java_exception",
+            "js",
+            "sql",
+            "ssi",
+            "xpath_abbreviated",
+            "xpath_extended"
+          ],
+          "type": "string"
+        },
+        "required": true,
+        "type": "set"
+      }
+    },
+    {
+      "locations": {
+        "default": [
+          "path_and_query"
+        ],
+        "description": "The locations to check for injection.",
+        "elements": {
+          "one_of": [
+            "body",
+            "headers",
+            "path_and_query"
+          ],
+          "type": "string"
+        },
+        "required": true,
+        "type": "set"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

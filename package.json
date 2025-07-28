@@ -5,12 +5,11 @@
   "type": "module",
   "scripts": {
     "generate:file-index": "chmod +x ./generate-file-index.sh && ./generate-file-index.sh",
+    "cp:examples": "cp -r gateway-schema-watcher/plugins examples/plugins",
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "build:gh-pages": "vue-tsc -b && vite build --base=/learn-jsonforms",
     "preview": "vite preview",
-    "postinstall": "pnpm update:schema",
-    "update:schema": "git submodule update --init --remote --recursive",
     "predev": "pnpm generate:file-index",
     "prebuild": "pnpm generate:file-index",
     "prebuild:gh-pages": "pnpm generate:file-index"

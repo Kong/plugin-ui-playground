@@ -1,0 +1,91 @@
+{
+  "fields": [
+    {
+      "aws_access_key_id": {
+        "description": "The AWS access key ID to use for authentication",
+        "referenceable": true,
+        "required": false,
+        "type": "string"
+      }
+    },
+    {
+      "aws_region": {
+        "description": "The AWS region to use for the Bedrock API",
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "aws_secret_access_key": {
+        "description": "The AWS secret access key to use for authentication",
+        "referenceable": true,
+        "required": false,
+        "type": "string"
+      }
+    },
+    {
+      "guarding_mode": {
+        "default": "INPUT",
+        "description": "The guardrail mode to use for the request",
+        "one_of": [
+          "BOTH",
+          "INPUT",
+          "OUTPUT"
+        ],
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "guardrails_id": {
+        "description": "The guardrail identifier used in the request to apply the guardrail",
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "guardrails_version": {
+        "description": "The guardrail version used in the request to apply the guardrail",
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "response_buffer_size": {
+        "default": 100,
+        "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrails service. This only applies to the response content guard.",
+        "required": true,
+        "type": "number"
+      }
+    },
+    {
+      "stop_on_error": {
+        "default": true,
+        "description": "Stop processing if an error occurs",
+        "type": "boolean"
+      }
+    },
+    {
+      "text_source": {
+        "default": "concatenate_all_content",
+        "description": "Select where to pick the 'text' for the Content Guard Services request.",
+        "one_of": [
+          "concatenate_all_content",
+          "concatenate_user_content"
+        ],
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "timeout": {
+        "default": 10000,
+        "description": "Connection timeout with the bedrock service",
+        "required": true,
+        "type": "number"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

@@ -1,0 +1,118 @@
+{
+  "fields": [
+    {
+      "allow_duplicate_object_entry_name": {
+        "default": true,
+        "description": "Allow or disallow duplicate object entry name.",
+        "required": false,
+        "type": "boolean"
+      }
+    },
+    {
+      "enforcement_mode": {
+        "default": "block",
+        "description": "Enforcement mode of the security policy.",
+        "one_of": [
+          "block",
+          "log_only"
+        ],
+        "required": false,
+        "type": "string"
+      }
+    },
+    {
+      "error_message": {
+        "default": "Bad Request",
+        "description": "The response message when validation fails",
+        "required": false,
+        "type": "string"
+      }
+    },
+    {
+      "error_status_code": {
+        "between": [
+          400,
+          499
+        ],
+        "default": 400,
+        "description": "The response status code when validation fails.",
+        "required": false,
+        "type": "integer"
+      }
+    },
+    {
+      "max_array_element_count": {
+        "between": [
+          -1,
+          2147483648
+        ],
+        "default": -1,
+        "description": "Max number of elements in an array. -1 means unlimited.",
+        "required": false,
+        "type": "integer"
+      }
+    },
+    {
+      "max_body_size": {
+        "between": [
+          -1,
+          2147483648
+        ],
+        "default": 8192,
+        "description": "Max size of the request body. -1 means unlimited.",
+        "required": false,
+        "type": "integer"
+      }
+    },
+    {
+      "max_container_depth": {
+        "between": [
+          -1,
+          2147483648
+        ],
+        "default": -1,
+        "description": "Max nested depth of objects and arrays. -1 means unlimited.",
+        "required": false,
+        "type": "integer"
+      }
+    },
+    {
+      "max_object_entry_count": {
+        "between": [
+          -1,
+          2147483648
+        ],
+        "default": -1,
+        "description": "Max number of entries in an object. -1 means unlimited.",
+        "required": false,
+        "type": "integer"
+      }
+    },
+    {
+      "max_object_entry_name_length": {
+        "between": [
+          -1,
+          2147483648
+        ],
+        "default": -1,
+        "description": "Max string length of object name. -1 means unlimited.",
+        "required": false,
+        "type": "integer"
+      }
+    },
+    {
+      "max_string_value_length": {
+        "between": [
+          -1,
+          2147483648
+        ],
+        "default": -1,
+        "description": "Max string value length. -1 means unlimited.",
+        "required": false,
+        "type": "integer"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

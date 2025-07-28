@@ -1,0 +1,45 @@
+{
+  "fields": [
+    {
+      "auto_approve": {
+        "default": false,
+        "description": "If enabled, all new Service Contracts requests are automatically approved.",
+        "required": true,
+        "type": "boolean"
+      }
+    },
+    {
+      "description": {
+        "description": "Unique description displayed in information about a Service in the Developer Portal.",
+        "type": "string",
+        "unique": true
+      }
+    },
+    {
+      "display_name": {
+        "description": "Unique display name used for a Service in the Developer Portal.",
+        "required": true,
+        "type": "string",
+        "unique": true
+      }
+    },
+    {
+      "enable_proxy_with_consumer_credential": {
+        "default": false,
+        "description": "If enabled, the Route of the Service can be accessed using the Consumer's credential",
+        "required": true,
+        "type": "boolean"
+      }
+    },
+    {
+      "show_issuer": {
+        "default": false,
+        "description": "Displays the **Issuer URL** in the **Service Details** dialog.",
+        "required": true,
+        "type": "boolean"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

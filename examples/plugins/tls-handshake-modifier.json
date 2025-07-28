@@ -1,0 +1,17 @@
+{
+  "fields": [
+    {
+      "tls_client_certificate": {
+        "default": "REQUEST",
+        "description": "TLS Client Certificate",
+        "one_of": [
+          "REQUEST"
+        ],
+        "required": false,
+        "type": "string"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

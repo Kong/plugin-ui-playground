@@ -1,0 +1,147 @@
+{
+  "fields": [
+    {
+      "anonymize": {
+        "default": [
+          "all_and_credentials"
+        ],
+        "description": "List of types to be anonymized",
+        "elements": {
+          "one_of": [
+            "all",
+            "all_and_credentials",
+            "bank",
+            "credentials",
+            "creditcard",
+            "crypto",
+            "custom",
+            "date",
+            "domain",
+            "driverlicense",
+            "email",
+            "general",
+            "ip",
+            "medical",
+            "nationalid",
+            "nrp",
+            "passport",
+            "phone",
+            "ssn",
+            "url"
+          ],
+          "type": "string"
+        },
+        "required": true,
+        "type": "array"
+      }
+    },
+    {
+      "block_if_detected": {
+        "default": false,
+        "description": "Whether to block requests containing PII data",
+        "type": "boolean"
+      }
+    },
+    {
+      "custom_patterns": {
+        "description": "List of custom patterns to be used for anonymization",
+        "elements": {
+          "fields": [
+            {
+              "name": {
+                "required": true,
+                "type": "string"
+              }
+            },
+            {
+              "regex": {
+                "required": true,
+                "type": "string"
+              }
+            },
+            {
+              "score": {
+                "between": [
+                  0,
+                  1
+                ],
+                "default": 0.5,
+                "required": true,
+                "type": "number"
+              }
+            }
+          ],
+          "type": "record"
+        },
+        "len_min": 1,
+        "required": false,
+        "type": "array"
+      }
+    },
+    {
+      "host": {
+        "default": "localhost",
+        "description": "The host of the sanitizer",
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "keepalive_timeout": {
+        "default": 60000,
+        "description": "The keepalive timeout for the established http connnection",
+        "type": "number"
+      }
+    },
+    {
+      "port": {
+        "default": 8080,
+        "description": "The port of the sanitizer",
+        "required": true,
+        "type": "number"
+      }
+    },
+    {
+      "recover_redacted": {
+        "default": true,
+        "description": "Whether to recover redacted data",
+        "type": "boolean"
+      }
+    },
+    {
+      "redact_type": {
+        "default": "placeholder",
+        "description": "What value to be used to redacted to",
+        "one_of": [
+          "placeholder",
+          "synthetic"
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "scheme": {
+        "default": "http",
+        "description": "The protocol can be http and https",
+        "required": true,
+        "type": "string"
+      }
+    },
+    {
+      "stop_on_error": {
+        "default": true,
+        "description": "Stop processing if an error occurs",
+        "type": "boolean"
+      }
+    },
+    {
+      "timeout": {
+        "default": 10000,
+        "description": "Connection timeout with the sanitizer",
+        "type": "number"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

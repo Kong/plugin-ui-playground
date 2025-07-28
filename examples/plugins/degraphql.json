@@ -1,0 +1,21 @@
+{
+  "fields": [
+    {
+      "graphql_server_path": {
+        "default": "/graphql",
+        "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+        "match_none": [
+          {
+            "err": "must not have empty segments",
+            "pattern": "//"
+          }
+        ],
+        "required": true,
+        "starts_with": "/",
+        "type": "string"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

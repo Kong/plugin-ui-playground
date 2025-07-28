@@ -34,20 +34,20 @@ find "${EXAMPLES_DIR}" -mindepth 1 -maxdepth 1 -type d | sort | while read -r ex
     echo "  }," >> "${OUTPUT_FILE}"
 done
 
-# 处理 plugins 目录
-echo "  {" >> "${OUTPUT_FILE}"
-echo "    label: 'plugins/'," >> "${OUTPUT_FILE}"
-echo "    children: [" >> "${OUTPUT_FILE}"
+# # 处理 plugins 目录
+# echo "  {" >> "${OUTPUT_FILE}"
+# echo "    label: 'plugins/'," >> "${OUTPUT_FILE}"
+# echo "    children: [" >> "${OUTPUT_FILE}"
 
-# 查找所有 plugins 目录下的 json 文件并排序
-find "${SCHEMA_DIR}/plugins" -name "*.json" -type f | sort | while read -r file; do
-    filename=$(basename "${file}")
-    echo "      { label: '${filename}' }," >> "${OUTPUT_FILE}"
-done
+# # 查找所有 plugins 目录下的 json 文件并排序
+# find "${SCHEMA_DIR}/plugins" -name "*.json" -type f | sort | while read -r file; do
+#     filename=$(basename "${file}")
+#     echo "      { label: '${filename}' }," >> "${OUTPUT_FILE}"
+# done
 
-# 结束 plugins 部分
-echo "    ]" >> "${OUTPUT_FILE}"
-echo "  }," >> "${OUTPUT_FILE}"
+# # 结束 plugins 部分
+# echo "    ]" >> "${OUTPUT_FILE}"
+# echo "  }," >> "${OUTPUT_FILE}"
 
 # # 处理 non-plugin-entities 目录
 # echo "  {" >> "${OUTPUT_FILE}"

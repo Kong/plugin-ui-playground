@@ -1,0 +1,13 @@
+{
+  "fields": [
+    {
+      "proto": {
+        "description": "Describes the gRPC types and methods.",
+        "required": false,
+        "type": "string"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

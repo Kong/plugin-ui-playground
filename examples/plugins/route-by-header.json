@@ -1,0 +1,37 @@
+{
+  "fields": [
+    {
+      "rules": {
+        "default": [],
+        "description": "Route by header rules.",
+        "elements": {
+          "fields": [
+            {
+              "condition": {
+                "keys": {
+                  "type": "string"
+                },
+                "len_min": 1,
+                "required": true,
+                "type": "map",
+                "values": {
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "upstream_name": {
+                "required": true,
+                "type": "string"
+              }
+            }
+          ],
+          "type": "record"
+        },
+        "type": "array"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}

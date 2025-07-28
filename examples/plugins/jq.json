@@ -1,0 +1,154 @@
+{
+  "entity_checks": [
+    {
+      "at_least_one_of": [
+        "request_jq_program",
+        "response_jq_program"
+      ]
+    }
+  ],
+  "fields": [
+    {
+      "request_if_media_type": {
+        "default": [
+          "application/json"
+        ],
+        "elements": {
+          "type": "string"
+        },
+        "required": false,
+        "type": "array"
+      }
+    },
+    {
+      "request_jq_program": {
+        "required": false,
+        "type": "string"
+      }
+    },
+    {
+      "request_jq_program_options": {
+        "default": [],
+        "fields": [
+          {
+            "ascii_output": {
+              "default": false,
+              "required": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "compact_output": {
+              "default": true,
+              "required": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "join_output": {
+              "default": false,
+              "required": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "raw_output": {
+              "default": false,
+              "required": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "sort_keys": {
+              "default": false,
+              "required": true,
+              "type": "boolean"
+            }
+          }
+        ],
+        "required": false,
+        "type": "record"
+      }
+    },
+    {
+      "response_if_media_type": {
+        "default": [
+          "application/json"
+        ],
+        "elements": {
+          "type": "string"
+        },
+        "required": false,
+        "type": "array"
+      }
+    },
+    {
+      "response_if_status_code": {
+        "default": [
+          200
+        ],
+        "elements": {
+          "between": [
+            100,
+            599
+          ],
+          "type": "integer"
+        },
+        "required": false,
+        "type": "array"
+      }
+    },
+    {
+      "response_jq_program": {
+        "required": false,
+        "type": "string"
+      }
+    },
+    {
+      "response_jq_program_options": {
+        "default": [],
+        "fields": [
+          {
+            "ascii_output": {
+              "default": false,
+              "required": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "compact_output": {
+              "default": true,
+              "required": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "join_output": {
+              "default": false,
+              "required": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "raw_output": {
+              "default": false,
+              "required": true,
+              "type": "boolean"
+            }
+          },
+          {
+            "sort_keys": {
+              "default": false,
+              "required": true,
+              "type": "boolean"
+            }
+          }
+        ],
+        "required": false,
+        "type": "record"
+      }
+    }
+  ],
+  "required": true,
+  "type": "record"
+}
