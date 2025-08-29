@@ -13,12 +13,15 @@
         <div class="preview-header">
           <div class="engine-title">
             <UIcon name="i-heroicons-cog-6-tooth" class="engine-icon" />
-            <h3>FreeForm Engine</h3>
+            <h3>FreeForm</h3>
           </div>
-          <div class="engine-badge primary">Primary</div>
         </div>
         <div class="preview-content">
-          <FreeFormPreview :schema="schema" />
+          <PluginFormPreview
+            :key="schema"
+            :schema="schema"
+            engine="freeform"
+          />
         </div>
       </div>
 
@@ -32,12 +35,15 @@
         <div class="preview-header">
           <div class="engine-title">
             <UIcon name="i-heroicons-squares-2x2" class="engine-icon" />
-            <h3>VFG Engine</h3>
+            <h3>VFG</h3>
           </div>
-          <div class="engine-badge secondary">Comparison</div>
         </div>
         <div class="preview-content">
-          <VFGPreview :schema="schema" />
+          <PluginFormPreview
+            :key="schema"
+            :schema="schema"
+            engine="vfg"
+          />
         </div>
       </div>
     </div>
@@ -60,8 +66,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useGlobalStore } from '../composables/useGlobalStore'
-import FreeFormPreview from './FreeFormPreview.vue'
-import VFGPreview from './VFGPreview.vue'
+import PluginFormPreview from './PluginFormPreview.vue'
 
 const store = useGlobalStore()
 

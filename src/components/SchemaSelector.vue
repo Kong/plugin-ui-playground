@@ -35,14 +35,10 @@ const isLoading = computed(() => store.state.isLoading.value);
 
 const loadSchemaOptions = () => {
   // Convert file index structure to options
-  const options: SelectItem[] = fileIndex.reduce((acc, category) => {
-    const categoryOptions = category.children.map((child) => ({
-      label: child.label,
-      value: child.label,
-      group: category.label,
-    }));
-    return [...acc, ...categoryOptions];
-  }, [] as SelectItem[]);
+  const options: SelectItem[] = fileIndex.map(file => ({
+    label: file,
+    value: file,
+  }));
 
   console.log('Schema options loaded:', options);
   store.actions.updateSchemaOptions(options)
@@ -54,16 +50,11 @@ const handleSchemaChange = async (value: string) => {
     store.actions.setLoading(true);
     store.actions.clearError();
 
-    try {
-      const schema = await store.actions.loadSchemaFile(`basic/${value}`);
-      store.actions.updateSchema(JSON.stringify(schema, null, 2));
-    } catch {
-      const schema = await store.actions.loadSchemaFile(`plugins/${value}`);
-      store.actions.updateSchema(JSON.stringify(schema, null, 2));
-    }
+    const schema = await store.actions.loadSchemaFile(value);
+    store.actions.updateSchema(schema);
   } catch (error) {
     console.error('Error loading schema:', error);
-    store.actions.setError(error instanceof Error ? error.message : '加载模式失败');
+    store.actions.setError(error instanceof Error ? error.message : 'Load schema failed');
   } finally {
     store.actions.setLoading(false);
   }

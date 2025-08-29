@@ -5,6 +5,8 @@ import { reactive, toRefs } from 'vue'
 export interface AppState {
   schema: string
 
+  selectedPluginName?: string
+
   // Engine settings
   enableVFG: boolean
 
@@ -99,22 +101,23 @@ const actions = {
   },
 
   // Load schema file content
-  async loadSchemaFile(filePath: string): Promise<any> {
+  async loadSchemaFile(path: string): Promise<any> {
     try {
-      console.log('Loading schema file:', filePath);
+      console.log('Selected path:', path)
 
-      // Use fetch to load the JSON file from public directory
-      const response = await fetch(`/examples/${filePath}`);
-      if (!response.ok) {
-        throw new Error(`Failed to load ${filePath}: ${response.statusText}`);
+      try {
+        let modules
+        modules = import.meta.glob(`../../schemas/**/*.json`, { eager: true })
+        const jsonData: any = Object.keys(modules)
+          .filter(key => key.includes(path))
+          .map(key => modules[key])[0]
+
+        return JSON.stringify(jsonData.default, null, 2)
+      } catch (importError) {
+        console.error('Failed:', importError)
       }
-
-      const schema = await response.json();
-      console.log('Schema loaded successfully:', filePath);
-      return schema;
     } catch (error) {
-      console.error('Error loading schema file:', error);
-      throw error;
+      console.error('Failed:', error)
     }
   },
 

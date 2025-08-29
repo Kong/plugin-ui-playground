@@ -1,5 +1,5 @@
 <template>
-  <div class="freeform-preview">
+  <div class="form-preview">
     <div v-if="hasError" class="error-placeholder">
       <div class="error-icon">
         <UIcon name="i-heroicons-exclamation-triangle" class="text-amber-500" />
@@ -10,17 +10,21 @@
         Retry
       </UButton>
     </div>
+
     <component
       :is="ErrorBoundary"
       v-else
       @error-captured="handleError"
     >
-      <Form
+      <PluginForm
         v-if="maybeSchemaJSON"
-        :key="schema"
-        :schema="(maybeSchemaJSON as any)"
-        class="form"
-        @change="v => console.log('FreeForm change:', JSON.parse(JSON.stringify(v)))"
+        :config="kongManagerConfig"
+        enable-redis-partial
+        enable-vault-secret-picker
+        :engine="engine"
+        :plugin-type="pluginName ?? 'acl'"
+        :schema="maybeSchemaJSON"
+        @update="onUpdate"
       />
       <div v-else class="empty-placeholder">
         <div class="empty-icon">
@@ -34,17 +38,28 @@
 
 <script setup lang="ts">
 import '@kong-ui-public/entities-plugins/dist/style.css'
-import { FreeForm } from '@kong-ui-public/entities-plugins'
+import { KongManagerPluginFormConfig, PluginForm } from '@kong-ui-public/entities-plugins'
 import { computed, defineComponent, ref, watch } from 'vue'
-
-const { Form } = FreeForm
 
 const props = defineProps<{
   schema: string
+  pluginName?: string
+  engine: 'vfg' | 'freeform'
 }>()
 
 const hasError = ref(false)
 const errorMessage = ref('')
+
+const kongManagerConfig: KongManagerPluginFormConfig = {
+  app: 'kongManager',
+  workspace: 'default',
+  apiBaseUrl: '/kong-manager', // For local dev server proxy
+  cancelRoute: { name: 'list-plugin' },
+}
+
+const onUpdate = (payload: Record<string, any>) => {
+  console.log('update', payload)
+}
 
 // Error boundary component
 const ErrorBoundary = defineComponent({
@@ -61,7 +76,7 @@ const ErrorBoundary = defineComponent({
 
 // Handle error
 const handleError = (err: Error) => {
-  console.error('FreeForm rendering error:', err)
+  console.error('rendering error:', err)
   hasError.value = true
   errorMessage.value = err.message
 }
@@ -83,12 +98,12 @@ const maybeSchemaJSON = computed(() => {
 })
 
 watch(maybeSchemaJSON, () => {
-  hasError.value = false
+  resetError()
 })
 </script>
 
 <style scoped lang="scss">
-.freeform-preview {
+.form-preview {
   padding: 20px;
   height: 100%;
   display: flex;
@@ -144,7 +159,7 @@ watch(maybeSchemaJSON, () => {
 
 // Responsive design
 @media (max-width: 768px) {
-  .freeform-preview {
+  .form-preview {
     padding: 16px;
   }
 

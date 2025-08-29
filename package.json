@@ -10,13 +10,11 @@
     "build": "vue-tsc -b && vite build",
     "build:gh-pages": "vue-tsc -b && vite build --base=/learn-jsonforms",
     "preview": "vite preview",
-    "predev": "pnpm generate:file-index",
-    "prebuild": "pnpm generate:file-index",
     "prebuild:gh-pages": "pnpm generate:file-index"
   },
   "dependencies": {
     "@guolao/vue-monaco-editor": "^1.5.5",
-    "@kong-ui-public/entities-plugins": "9.41.1-pr.2254.adf914404.0",
+    "@kong-ui-public/entities-plugins": "9.83.4-pr.2254.99e2fd0d3.0",
     "@kong/design-tokens": "^1.17.3",
     "@kong/icons": "^1.33.2",
     "@kong/kongponents": "^9.36.6",
