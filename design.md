@@ -1,3 +1,5 @@
+Important! Please write the code and the comments in English!!!
+
 ## Tech Stack
 
 - **Frontend Framework**: Vue 3 + TypeScript + Vite
