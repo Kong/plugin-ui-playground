@@ -21,6 +21,7 @@
             :key="schema"
             :schema="schema"
             engine="freeform"
+            :plugin-name="store.selectedPluginName?.value"
           />
         </div>
       </div>
@@ -43,6 +44,7 @@
             :key="schema"
             :schema="schema"
             engine="vfg"
+            :plugin-name="store.selectedPluginName?.value"
           />
         </div>
       </div>

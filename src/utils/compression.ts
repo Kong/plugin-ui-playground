@@ -3,8 +3,6 @@ import { gzipSync, gunzipSync, strToU8, strFromU8 } from 'fflate'
 // States that should be synchronized to URL hash
 interface UrlSyncState {
   selectedSchema: string
-  enableVFG: boolean
-  editorWidthPercent: number
 }
 
 /**
@@ -16,6 +14,7 @@ export function compressState(state: UrlSyncState): string {
   try {
     // Convert state to JSON string
     const stateString = JSON.stringify(state)
+    console.log('Original state string:', stateString)
 
     // Convert string to Uint8Array
     const uint8Array = strToU8(stateString)
@@ -24,8 +23,9 @@ export function compressState(state: UrlSyncState): string {
     const compressed = gzipSync(uint8Array)
 
     // Convert to base64 string for URL safety
-    const base64String = strFromU8(compressed, true) // true for base64 encoding
+    const base64String = btoa(String.fromCharCode(...compressed))
 
+    console.log('Compressed and encoded:', base64String)
     return base64String
   } catch (error) {
     console.error('Failed to compress state:', error)
@@ -40,14 +40,21 @@ export function compressState(state: UrlSyncState): string {
  */
 export function decompressState(compressedData: string): UrlSyncState | null {
   try {
+    console.log('Decompressing:', compressedData)
+
     // Convert base64 string back to Uint8Array
-    const compressedArray = strToU8(compressedData, true) // true for base64 decoding
+    const binaryString = atob(compressedData)
+    const compressedArray = new Uint8Array(binaryString.length)
+    for (let i = 0; i < binaryString.length; i++) {
+      compressedArray[i] = binaryString.charCodeAt(i)
+    }
 
     // Decompress using gunzip
     const decompressed = gunzipSync(compressedArray)
 
     // Convert back to string
     const stateString = strFromU8(decompressed)
+    console.log('Decompressed state string:', stateString)
 
     // Parse JSON
     const state = JSON.parse(stateString) as UrlSyncState
@@ -76,14 +83,9 @@ function isValidStateStructure(state: any): state is UrlSyncState {
   }
 
   // Check required properties with correct types
-  const hasValidCode = typeof state.code === 'string'
   const hasValidSelectedSchema = typeof state.selectedSchema === 'string'
-  const hasValidEnableVFG = typeof state.enableVFG === 'boolean'
-  const hasValidEditorWidth = typeof state.editorWidthPercent === 'number' &&
-                             state.editorWidthPercent >= 30 &&
-                             state.editorWidthPercent <= 70
 
-  return hasValidCode && hasValidSelectedSchema && hasValidEnableVFG && hasValidEditorWidth
+  return hasValidSelectedSchema
 }
 
 /**
@@ -115,10 +117,11 @@ export function isUrlTooLong(compressedData: string, baseUrl?: string): boolean 
  * @returns Simplified state with only essential properties
  */
 export function createSimplifiedState(state: UrlSyncState): Partial<UrlSyncState> {
-  // For long URLs, only include essential states
+  // For long URLs, return empty state or truncated schema
   return {
-    enableVFG: state.enableVFG,
-    // Exclude selectedSchema and editorWidthPercent to reduce size
+    selectedSchema: state.selectedSchema.length > 1000
+      ? state.selectedSchema.substring(0, 1000) + '...'
+      : state.selectedSchema
   }
 }
 

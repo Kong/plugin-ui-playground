@@ -48,6 +48,11 @@ const actions = {
     state.schema = schema
   },
 
+  // Update selected plugin name
+  updateSelectedPluginName: (pluginName: string | undefined) => {
+    state.selectedPluginName = pluginName
+  },
+
   // Toggle VFG engine status
   toggleVFGEngine: () => {
     state.enableVFG = !state.enableVFG
@@ -137,6 +142,9 @@ const actions = {
   restoreState: (snapshot: Partial<AppState>) => {
     if (snapshot.schema !== undefined) {
       state.schema = snapshot.schema
+    }
+    if (snapshot.selectedPluginName !== undefined) {
+      state.selectedPluginName = snapshot.selectedPluginName
     }
     if (snapshot.enableVFG !== undefined) {
       state.enableVFG = snapshot.enableVFG

@@ -1,26 +1,22 @@
 <template>
   <div class="share-button-container">
-    <UButton
-      :icon="shareIcon"
-      :color="shareButtonColor"
-      :variant="shareButtonVariant"
-      size="sm"
-      :loading="isSharing"
-      @click="handleShare"
-      :title="shareButtonTitle"
+    <KTooltip
+      :text="tooltipText"
+      placement="top"
     >
-      {{ shareButtonText }}
-    </UButton>
-
-    <!-- Success notification -->
-    <div
-      v-if="showSuccess"
-      class="share-success-tooltip"
-      :class="{ 'visible': showSuccess }"
-    >
-      <UIcon name="i-heroicons-check-circle" class="w-4 h-4 text-green-500" />
-      <span>Link copied!</span>
-    </div>
+      <template #default>
+        <UButton
+          :icon="shareIcon"
+          :color="shareButtonColor"
+          :variant="shareButtonVariant"
+          size="sm"
+          :loading="isSharing"
+          @click="handleShare"
+        >
+          {{ shareButtonText }}
+        </UButton>
+      </template>
+    </KTooltip>
   </div>
 </template>
 
@@ -42,6 +38,12 @@ const hasContent = computed(() =>
   Boolean(store.schema.value.trim())
 )
 
+const tooltipText = computed(() => {
+  if (showSuccess.value) return 'Link copied!'
+  if (!hasContent.value) return 'Add some content first to enable sharing'
+  return 'Copy share link to clipboard'
+})
+
 const shareIcon = computed(() => {
   if (showSuccess.value) return 'i-heroicons-check-circle'
   return 'i-heroicons-share'
@@ -61,13 +63,6 @@ const shareButtonText = computed(() => {
   if (showSuccess.value) return 'Copied!'
   if (!hasContent.value) return 'Share'
   return 'Share'
-})
-
-const shareButtonTitle = computed(() => {
-  if (!hasContent.value) {
-    return 'Add some content first to enable sharing'
-  }
-  return 'Copy share link to clipboard'
 })
 
 /**
@@ -139,55 +134,5 @@ defineExpose({
 .share-button-container {
   position: relative;
   display: inline-block;
-}
-
-.share-success-tooltip {
-  position: absolute;
-  top: -40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 12px;
-  background-color: #065f46;
-  color: white;
-  border-radius: 6px;
-  font-size: 12px;
-  font-weight: 500;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1000;
-
-  // Tooltip arrow
-  &::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: #065f46;
-  }
-
-  &.visible {
-    opacity: 1;
-  }
-}
-
-// Responsive adjustments
-@media (max-width: 768px) {
-  .share-success-tooltip {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    &::after {
-      display: none;
-    }
-  }
 }
 </style>

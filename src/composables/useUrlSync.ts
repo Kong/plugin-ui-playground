@@ -1,7 +1,7 @@
 import { watchEffect, onMounted, onUnmounted } from 'vue'
 import { debounce } from 'lodash-es'
 import { useGlobalStore } from './useGlobalStore'
-import { compressState, decompressState, isUrlTooLong, createSimplifiedState } from '../utils/compression'
+import { compressState, decompressState, isUrlTooLong } from '../utils/compression'
 
 /**
  * Composable for handling URL state synchronization
@@ -21,8 +21,10 @@ export function useUrlSync() {
    */
   function syncStateToUrl() {
     try {
-      // Get current state snapshot for URL sync
-      const stateSnapshot = store.getStateSnapshot()
+      // Only sync schema content
+      const stateSnapshot = {
+        selectedSchema: store.schema.value
+      }
 
       // Skip sync if state is empty (initial load)
       if (!stateSnapshot.selectedSchema) {
@@ -34,16 +36,8 @@ export function useUrlSync() {
 
       // Check if URL would be too long
       if (isUrlTooLong(compressedData)) {
-        console.warn('URL too long, using simplified state for sharing')
-        // Try with simplified state
-        const simplifiedState = createSimplifiedState(stateSnapshot)
-        compressedData = compressState(simplifiedState as any)
-
-        // If still too long, skip URL update
-        if (isUrlTooLong(compressedData)) {
-          console.error('URL still too long even with simplified state')
-          return
-        }
+        console.warn('URL too long, skipping URL update')
+        return
       }
 
       // Update URL hash without triggering navigation
@@ -64,6 +58,7 @@ export function useUrlSync() {
   function loadStateFromUrl() {
     try {
       const hash = window.location.hash.slice(1) // Remove # prefix
+      console.log('Loading from URL hash:', hash ? 'Found hash' : 'No hash')
 
       if (!hash) {
         return // No state in URL
@@ -71,11 +66,12 @@ export function useUrlSync() {
 
       // Decompress state from URL
       const decompressedState = decompressState(hash)
+      console.log('Decompressed state:', decompressedState)
 
-      if (decompressedState) {
-        // Restore state to store
-        store.restoreState(decompressedState)
-        console.log('State loaded from URL:', decompressedState)
+      if (decompressedState && decompressedState.selectedSchema) {
+        // Restore only schema to store
+        store.updateSchema(decompressedState.selectedSchema)
+        console.log('Schema loaded from URL and applied to store')
       } else {
         console.warn('Failed to load state from URL hash')
         // Clean invalid hash
@@ -151,22 +147,27 @@ export function useUrlSync() {
    * Sets up watchers and event listeners
    */
   function startUrlSync() {
-    // Watch for state changes and sync to URL
-    unwatchStateChanges = watchEffect(() => {
-      // Watch relevant state properties to trigger reactivity
-      store.schema.value
-      store.enableVFG.value
-      store.editorWidthPercent.value
-
-      // Trigger debounced URL sync
-      debouncedSyncToUrl()
-    })
-
     // Listen for browser navigation events
     window.addEventListener('popstate', handlePopState)
 
-    // Load initial state from URL
-    loadStateFromUrl()
+    // Load initial state from URL first, before setting up watchers
+    // Use nextTick to ensure store is ready
+    setTimeout(() => {
+      loadStateFromUrl()
+    }, 0)
+
+    // Then set up watchers for future changes
+    setTimeout(() => {
+      unwatchStateChanges = watchEffect(() => {
+        // Watch only schema changes to trigger reactivity
+        const currentSchema = store.schema.value
+
+        // Only sync if schema has meaningful content and avoid infinite loops
+        if (currentSchema && currentSchema.trim()) {
+          debouncedSyncToUrl()
+        }
+      })
+    }, 100) // Small delay to avoid initial sync conflicts
   }
 
   /**

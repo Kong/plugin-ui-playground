@@ -15,14 +15,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref, watch } from 'vue';
 import { store } from '../composables/useGlobalStore';
 import fileIndex from '../file-index';
 import { SelectItem } from '@kong/kongponents';
 
+// Keep track of the originally loaded schema content for comparison
+const originalSchemaContent = ref<string>('');
+const selectedFileName = ref<string>('');
+
 // Reactive state
 const selectedFile = computed({
-  get: () => store.state.schema.value ? 'current' : '',
+  get: () => {
+    // Return the currently selected file name or empty if schema was manually edited
+    const currentPluginName = store.state.selectedPluginName?.value;
+    if (currentPluginName && !isSchemaManuallyEdited()) {
+      return currentPluginName;
+    }
+    return '';
+  },
   set: (value: string) => {
     if (value) {
       handleSchemaChange(value);
@@ -32,6 +43,32 @@ const selectedFile = computed({
 
 const schemaOptions = computed(() => store.state.schemaOptions.value);
 const isLoading = computed(() => store.state.isLoading.value);
+
+// Helper function to extract plugin name from file path
+const extractPluginName = (filePath: string): string => {
+  const fileName = filePath.split('/').pop() || '';
+  return fileName.replace(/\.json$/, '');
+};
+
+// Helper function to check if schema was manually edited
+const isSchemaManuallyEdited = (): boolean => {
+  const currentSchema = store.state.schema.value;
+  return originalSchemaContent.value !== '' &&
+         currentSchema !== originalSchemaContent.value;
+};
+
+// Watch for manual schema changes and clear selection if needed
+watch(
+  () => store.state.schema.value,
+  (newSchema) => {
+    if (originalSchemaContent.value && newSchema !== originalSchemaContent.value) {
+      // Schema was manually edited, clear selection
+      store.actions.updateSelectedPluginName(undefined);
+      originalSchemaContent.value = '';
+      selectedFileName.value = '';
+    }
+  }
+);
 
 const loadSchemaOptions = () => {
   // Convert file index structure to options
@@ -52,6 +89,15 @@ const handleSchemaChange = async (value: string) => {
 
     const schema = await store.actions.loadSchemaFile(value);
     store.actions.updateSchema(schema);
+
+    // Store the original content for comparison
+    originalSchemaContent.value = schema;
+    selectedFileName.value = value;
+
+    // Extract plugin name and update store
+    const pluginName = extractPluginName(value);
+    store.actions.updateSelectedPluginName(pluginName);
+
   } catch (error) {
     console.error('Error loading schema:', error);
     store.actions.setError(error instanceof Error ? error.message : 'Load schema failed');
