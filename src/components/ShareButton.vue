@@ -2,7 +2,6 @@
   <div class="share-button-container">
     <KTooltip
       :text="tooltipText"
-      placement="top"
     >
       <template #default>
         <UButton

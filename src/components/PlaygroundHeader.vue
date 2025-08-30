@@ -9,6 +9,7 @@
     </div>
 
     <div class="header-right">
+      <GitHubButton />
       <ShareButton />
     </div>
   </div>
@@ -17,6 +18,7 @@
 <script setup lang="ts">
 import SchemaSelector from './SchemaSelector.vue'
 import EngineControls from './EngineControls.vue'
+import GitHubButton from './GitHubButton.vue'
 import ShareButton from './ShareButton.vue'
 </script>
 
