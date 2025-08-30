@@ -1,0 +1,157 @@
+{
+  "fields": [
+    {
+      "consumer": {
+        "eq": null,
+        "reference": "consumers",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "type": "foreign"
+      }
+    },
+    {
+      "protocols": {
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "elements": {
+          "type": "string",
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https"
+          ]
+        },
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
+      }
+    },
+    {
+      "consumer_group": {
+        "eq": null,
+        "reference": "consumer_groups",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "type": "foreign"
+      }
+    },
+    {
+      "config": {
+        "type": "record",
+        "fields": [
+          {
+            "injection_types": {
+              "default": [
+                "sql"
+              ],
+              "type": "set",
+              "elements": {
+                "type": "string",
+                "one_of": [
+                  "sql",
+                  "js",
+                  "ssi",
+                  "xpath_abbreviated",
+                  "xpath_extended",
+                  "java_exception"
+                ]
+              },
+              "required": true,
+              "description": "The type of injections to check for."
+            }
+          },
+          {
+            "locations": {
+              "default": [
+                "path_and_query"
+              ],
+              "type": "set",
+              "elements": {
+                "type": "string",
+                "one_of": [
+                  "headers",
+                  "path_and_query",
+                  "body"
+                ]
+              },
+              "required": true,
+              "description": "The locations to check for injection."
+            }
+          },
+          {
+            "custom_injections": {
+              "type": "array",
+              "default": null,
+              "elements": {
+                "type": "record",
+                "fields": [
+                  {
+                    "name": {
+                      "type": "string",
+                      "required": true,
+                      "description": "A unique name for this injection."
+                    }
+                  },
+                  {
+                    "regex": {
+                      "type": "string",
+                      "required": true,
+                      "is_regex": true,
+                      "description": "The regex to match against."
+                    }
+                  }
+                ]
+              },
+              "description": "Custom regexes to check for."
+            }
+          },
+          {
+            "enforcement_mode": {
+              "one_of": [
+                "block",
+                "log_only"
+              ],
+              "default": "block",
+              "type": "string",
+              "required": true,
+              "description": "Enforcement mode of the security policy."
+            }
+          },
+          {
+            "error_status_code": {
+              "between": [
+                400,
+                499
+              ],
+              "default": 400,
+              "type": "integer",
+              "required": true,
+              "description": "The response status code when validation fails."
+            }
+          },
+          {
+            "error_message": {
+              "default": "Bad Request",
+              "description": "The response message when validation fails",
+              "required": true,
+              "type": "string"
+            }
+          }
+        ],
+        "required": true,
+        "entity_checks": [
+          {
+            "at_least_one_of": [
+              "injection_types",
+              "custom_injections"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "entity_checks": []
+}

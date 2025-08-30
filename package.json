@@ -4,35 +4,31 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "generate:file-index": "chmod +x ./generate-file-index.sh && ./generate-file-index.sh",
-    "cp:examples": "cp -r gateway-schema-watcher/plugins examples/plugins",
+    "exec": "tsx sync.ts",
     "dev": "vite",
     "build": "vue-tsc -b && vite build",
     "build:gh-pages": "vue-tsc -b && vite build --base=/learn-jsonforms",
-    "preview": "vite preview",
-    "prebuild:gh-pages": "pnpm generate:file-index"
+    "preview": "vite preview"
   },
-  "dependencies": {
+  "packageManager": "pnpm@10.6.1",
+  "devDependencies": {
     "@guolao/vue-monaco-editor": "^1.5.5",
     "@kong-ui-public/entities-plugins": "9.83.4-pr.2254.99e2fd0d3.0",
     "@kong/design-tokens": "^1.17.3",
     "@kong/icons": "^1.33.2",
     "@kong/kongponents": "^9.36.6",
     "@nuxt/ui": "^3.3.0",
-    "lodash": "^4.17.21",
-    "monaco-editor": "^0.52.2",
-    "vue": "^3.5.18"
-  },
-  "packageManager": "pnpm@10.6.1",
-  "devDependencies": {
-    "@types/lodash": "^4.17.16",
     "@types/lodash-es": "^4.17.12",
     "@vitejs/plugin-vue": "^6.0.0",
+    "chalk": "^5.6.0",
     "fflate": "^0.8.2",
     "lodash-es": "^4.17.21",
+    "monaco-editor": "^0.52.2",
     "sass": "^1.69.5",
+    "tsx": "^4.20.5",
     "typescript": "^5.8.3",
     "vite": "^7.0.6",
-    "vue-tsc": "^3.0.4"
+    "vue-tsc": "^3.0.4",
+    "vue": "^3.5.18"
   }
 }

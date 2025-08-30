@@ -1,0 +1,378 @@
+{
+  "fields": [
+    {
+      "consumer": {
+        "eq": null,
+        "reference": "consumers",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "type": "foreign"
+      }
+    },
+    {
+      "consumer_group": {
+        "eq": null,
+        "reference": "consumer_groups",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "type": "foreign"
+      }
+    },
+    {
+      "protocols": {
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "elements": {
+          "type": "string",
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https"
+          ]
+        },
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
+      }
+    },
+    {
+      "config": {
+        "fields": [
+          {
+            "session": {
+              "fields": [
+                {
+                  "host": {
+                    "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+                    "required": true,
+                    "referenceable": true,
+                    "type": "string"
+                  }
+                },
+                {
+                  "vpn_name": {
+                    "required": false,
+                    "type": "string"
+                  }
+                },
+                {
+                  "authentication": {
+                    "fields": [
+                      {
+                        "scheme": {
+                          "type": "string",
+                          "one_of": [
+                            "NONE",
+                            "BASIC",
+                            "OAUTH2"
+                          ],
+                          "required": true,
+                          "default": "BASIC"
+                        }
+                      },
+                      {
+                        "username": {
+                          "required": false,
+                          "referenceable": true,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "password": {
+                          "type": "string",
+                          "required": false,
+                          "referenceable": true,
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "access_token": {
+                          "type": "string",
+                          "required": false,
+                          "referenceable": true,
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "access_token_header": {
+                          "required": false,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "id_token": {
+                          "type": "string",
+                          "required": false,
+                          "referenceable": true,
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "id_token_header": {
+                          "required": false,
+                          "type": "string"
+                        }
+                      }
+                    ],
+                    "type": "record",
+                    "required": true,
+                    "entity_checks": [
+                      {
+                        "conditional": {
+                          "if_match": {
+                            "eq": "BASIC"
+                          },
+                          "then_field": "username",
+                          "if_field": "scheme",
+                          "then_match": {
+                            "required": true
+                          }
+                        }
+                      },
+                      {
+                        "conditional": {
+                          "if_match": {
+                            "eq": "BASIC"
+                          },
+                          "then_field": "password",
+                          "if_field": "scheme",
+                          "then_match": {
+                            "required": true
+                          }
+                        }
+                      },
+                      {
+                        "conditional_at_least_one_of": {
+                          "if_match": {
+                            "eq": "OAUTH2"
+                          },
+                          "then_err": "must set one of %s when 'scheme' is 'OAUTH2'",
+                          "if_field": "scheme",
+                          "then_at_least_one_of": [
+                            "access_token",
+                            "access_token_header",
+                            "id_token",
+                            "id_token_header"
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "connect_timeout": {
+                    "between": [
+                      100,
+                      100000
+                    ],
+                    "default": 3000,
+                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                    "required": true,
+                    "type": "integer"
+                  }
+                },
+                {
+                  "ssl_validate_certificate": {
+                    "type": "boolean",
+                    "required": true,
+                    "default": false
+                  }
+                },
+                {
+                  "properties": {
+                    "required": false,
+                    "values": {
+                      "required": true,
+                      "referenceable": true,
+                      "type": "string"
+                    },
+                    "keys": {
+                      "match": "^SESSION_",
+                      "required": true,
+                      "not_one_of": [
+                        "SESSION_AUTHENTICATION_SCHEME",
+                        "SESSION_USERNAME",
+                        "SESSION_PASSWORD",
+                        "SESSION_OAUTH2_ACCESS_TOKEN",
+                        "SESSION_OIDC_ID_TOKEN",
+                        "SESSION_HOST",
+                        "SESSION_VPN_NAME",
+                        "SESSION_ACK_EVENT_MODE",
+                        "SESSION_SSL_VALIDATE_CERTIFICATE",
+                        "SESSION_CONNECT_BLOCKING",
+                        "SESSION_CONNECT_TIMEOUT_MS",
+                        "SESSION_SEND_BLOCKING",
+                        "SESSION_SUBSCRIBE_BLOCKING",
+                        "SESSION_BLOCK_WHILE_CONNECTING"
+                      ],
+                      "type": "string"
+                    },
+                    "type": "map"
+                  }
+                }
+              ],
+              "required": true,
+              "type": "record"
+            }
+          },
+          {
+            "message": {
+              "fields": [
+                {
+                  "destinations": {
+                    "len_min": 1,
+                    "type": "array",
+                    "required": true,
+                    "elements": {
+                      "type": "record",
+                      "fields": [
+                        {
+                          "name": {
+                            "required": true,
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": {
+                            "type": "string",
+                            "one_of": [
+                              "QUEUE",
+                              "TOPIC"
+                            ],
+                            "required": true,
+                            "default": "QUEUE"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "delivery_mode": {
+                    "type": "string",
+                    "one_of": [
+                      "DIRECT",
+                      "PERSISTENT"
+                    ],
+                    "required": true,
+                    "default": "DIRECT"
+                  }
+                },
+                {
+                  "sender_id": {
+                    "type": "string",
+                    "required": false,
+                    "default": "kong"
+                  }
+                },
+                {
+                  "priority": {
+                    "type": "integer",
+                    "between": [
+                      0,
+                      255
+                    ],
+                    "required": true,
+                    "default": 4
+                  }
+                },
+                {
+                  "dmq_eligible": {
+                    "type": "boolean",
+                    "required": true,
+                    "default": false
+                  }
+                },
+                {
+                  "ttl": {
+                    "type": "integer",
+                    "gt": -1,
+                    "required": true,
+                    "default": 0
+                  }
+                },
+                {
+                  "ack_timeout": {
+                    "between": [
+                      1,
+                      100000
+                    ],
+                    "default": 2000,
+                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                    "required": true,
+                    "type": "integer"
+                  }
+                },
+                {
+                  "tracing": {
+                    "type": "boolean",
+                    "required": true,
+                    "default": false
+                  }
+                },
+                {
+                  "tracing_sampled": {
+                    "type": "boolean",
+                    "required": true,
+                    "default": false
+                  }
+                },
+                {
+                  "forward_method": {
+                    "type": "boolean",
+                    "required": true,
+                    "default": false
+                  }
+                },
+                {
+                  "forward_uri": {
+                    "type": "boolean",
+                    "required": true,
+                    "default": false
+                  }
+                },
+                {
+                  "forward_headers": {
+                    "type": "boolean",
+                    "required": true,
+                    "default": false
+                  }
+                },
+                {
+                  "forward_body": {
+                    "type": "boolean",
+                    "required": true,
+                    "default": false
+                  }
+                },
+                {
+                  "default_content": {
+                    "required": false,
+                    "type": "string"
+                  }
+                },
+                {
+                  "functions": {
+                    "type": "array",
+                    "required": false,
+                    "elements": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ],
+              "required": true,
+              "type": "record"
+            }
+          }
+        ],
+        "required": true,
+        "type": "record"
+      }
+    }
+  ],
+  "entity_checks": []
+}

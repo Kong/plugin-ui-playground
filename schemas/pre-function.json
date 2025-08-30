@@ -1,0 +1,183 @@
+{
+  "fields": [
+    {
+      "consumer": {
+        "eq": null,
+        "reference": "consumers",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "type": "foreign"
+      }
+    },
+    {
+      "consumer_group": {
+        "eq": null,
+        "reference": "consumer_groups",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "type": "foreign"
+      }
+    },
+    {
+      "protocols": {
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "elements": {
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https",
+            "tcp",
+            "tls",
+            "tls_passthrough",
+            "udp",
+            "ws",
+            "wss"
+          ],
+          "type": "string",
+          "description": "A string representing a protocol, such as HTTP or HTTPS."
+        },
+        "description": "A set of strings representing protocols.",
+        "required": true,
+        "type": "set"
+      }
+    },
+    {
+      "config": {
+        "fields": [
+          {
+            "certificate": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "rewrite": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "access": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "header_filter": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "body_filter": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "log": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "ws_handshake": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "ws_client_frame": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "ws_upstream_frame": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          },
+          {
+            "ws_close": {
+              "type": "array",
+              "elements": {
+                "required": false,
+                "type": "string"
+              },
+              "required": true,
+              "default": []
+            }
+          }
+        ],
+        "required": true,
+        "type": "record"
+      }
+    }
+  ],
+  "entity_checks": [
+    {
+      "at_least_one_of": [
+        "config.certificate",
+        "config.rewrite",
+        "config.access",
+        "config.header_filter",
+        "config.body_filter",
+        "config.log",
+        "config.ws_handshake",
+        "config.ws_upstream_frame",
+        "config.ws_client_frame",
+        "config.ws_close"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "fields": [
+    {
+      "protocols": {
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "elements": {
+          "type": "string",
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https"
+          ]
+        },
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
+      }
+    },
+    {
+      "config": {
+        "fields": [
+          {
+            "host": {
+              "type": "string",
+              "description": "The host of the sanitizer",
+              "required": true,
+              "default": "localhost"
+            }
+          },
+          {
+            "port": {
+              "type": "number",
+              "description": "The port of the sanitizer",
+              "required": true,
+              "default": 8080
+            }
+          },
+          {
+            "scheme": {
+              "type": "string",
+              "description": "The protocol can be http and https",
+              "required": true,
+              "default": "http"
+            }
+          },
+          {
+            "timeout": {
+              "type": "number",
+              "description": "Connection timeout with the sanitizer",
+              "default": 10000
+            }
+          },
+          {
+            "keepalive_timeout": {
+              "type": "number",
+              "description": "The keepalive timeout for the established http connnection",
+              "default": 60000
+            }
+          },
+          {
+            "stop_on_error": {
+              "type": "boolean",
+              "description": "Stop processing if an error occurs",
+              "default": true
+            }
+          },
+          {
+            "anonymize": {
+              "default": [
+                "all_and_credentials"
+              ],
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "one_of": [
+                  "general",
+                  "phone",
+                  "email",
+                  "creditcard",
+                  "crypto",
+                  "date",
+                  "ssn",
+                  "ip",
+                  "nrp",
+                  "domain",
+                  "credentials",
+                  "url",
+                  "medical",
+                  "driverlicense",
+                  "passport",
+                  "bank",
+                  "nationalid",
+                  "custom",
+                  "all",
+                  "all_and_credentials"
+                ]
+              },
+              "required": true,
+              "description": "List of types to be anonymized"
+            }
+          },
+          {
+            "recover_redacted": {
+              "type": "boolean",
+              "description": "Whether to recover redacted data",
+              "default": true
+            }
+          },
+          {
+            "redact_type": {
+              "type": "string",
+              "one_of": [
+                "placeholder",
+                "synthetic"
+              ],
+              "default": "placeholder",
+              "description": "What value to be used to redacted to"
+            }
+          },
+          {
+            "custom_patterns": {
+              "len_min": 1,
+              "description": "List of custom patterns to be used for anonymization",
+              "elements": {
+                "type": "record",
+                "fields": [
+                  {
+                    "name": {
+                      "required": true,
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "regex": {
+                      "required": true,
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "score": {
+                      "default": 0.5,
+                      "between": [
+                        0,
+                        1
+                      ],
+                      "required": true,
+                      "type": "number"
+                    }
+                  }
+                ]
+              },
+              "required": false,
+              "type": "array"
+            }
+          }
+        ],
+        "required": true,
+        "type": "record"
+      }
+    }
+  ],
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config"
+        ]
+      }
+    }
+  ]
+}

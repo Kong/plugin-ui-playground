@@ -1,0 +1,436 @@
+{
+  "fields": [
+    {
+      "protocols": {
+        "type": "set",
+        "elements": {
+          "type": "string",
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https",
+            "ws",
+            "wss"
+          ]
+        },
+        "required": true,
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ]
+      }
+    },
+    {
+      "consumer_group": {
+        "eq": null,
+        "reference": "consumer_groups",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "type": "foreign"
+      }
+    },
+    {
+      "config": {
+        "type": "record",
+        "fields": [
+          {
+            "bootstrap_servers": {
+              "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format.",
+              "type": "set",
+              "required": true,
+              "elements": {
+                "type": "record",
+                "fields": [
+                  {
+                    "host": {
+                      "description": "A string representing a host name, such as example.com.",
+                      "required": true,
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "port": {
+                      "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                      "between": [
+                        0,
+                        65535
+                      ],
+                      "required": true,
+                      "type": "integer"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "topics": {
+              "len_min": 1,
+              "type": "array",
+              "elements": {
+                "type": "record",
+                "fields": [
+                  {
+                    "name": {
+                      "required": true,
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "schema_registry": {
+                      "description": "The plugin-global schema registry configuration.",
+                      "fields": [
+                        {
+                          "confluent": {
+                            "type": "record",
+                            "required": false,
+                            "fields": [
+                              {
+                                "url": {
+                                  "description": "The URL of the schema registry.",
+                                  "required": false,
+                                  "type": "string"
+                                }
+                              },
+                              {
+                                "ttl": {
+                                  "between": [
+                                    0,
+                                    3600
+                                  ],
+                                  "description": "The TTL in seconds for the schema registry cache.",
+                                  "type": "number"
+                                }
+                              },
+                              {
+                                "ssl_verify": {
+                                  "default": true,
+                                  "type": "boolean",
+                                  "description": "Set to false to disable SSL certificate verification when connecting to the schema registry."
+                                }
+                              },
+                              {
+                                "authentication": {
+                                  "type": "record",
+                                  "fields": [
+                                    {
+                                      "mode": {
+                                        "one_of": [
+                                          "none",
+                                          "basic"
+                                        ],
+                                        "default": "none",
+                                        "description": "Authentication mode to use with the schema registry.",
+                                        "required": true,
+                                        "type": "string"
+                                      }
+                                    },
+                                    {
+                                      "basic": {
+                                        "type": "record",
+                                        "required": false,
+                                        "fields": [
+                                          {
+                                            "username": {
+                                              "encrypted": true,
+                                              "required": true,
+                                              "referenceable": true,
+                                              "type": "string"
+                                            }
+                                          },
+                                          {
+                                            "password": {
+                                              "encrypted": true,
+                                              "required": true,
+                                              "referenceable": true,
+                                              "type": "string"
+                                            }
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  ],
+                                  "required": true,
+                                  "entity_checks": [
+                                    {
+                                      "custom_entity_check": {
+                                        "field_sources": [
+                                          "mode",
+                                          "basic"
+                                        ]
+                                      }
+                                    }
+                                  ]
+                                }
+                              }
+                            ]
+                          }
+                        }
+                      ],
+                      "required": true,
+                      "type": "record"
+                    }
+                  }
+                ]
+              },
+              "required": true,
+              "description": "The Kafka topics and their configuration you want to consume from."
+            }
+          },
+          {
+            "schema_registry": {
+              "description": "The plugin-global schema registry configuration.",
+              "fields": [
+                {
+                  "confluent": {
+                    "type": "record",
+                    "required": false,
+                    "fields": [
+                      {
+                        "url": {
+                          "description": "The URL of the schema registry.",
+                          "required": false,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "ttl": {
+                          "between": [
+                            0,
+                            3600
+                          ],
+                          "description": "The TTL in seconds for the schema registry cache.",
+                          "type": "number"
+                        }
+                      },
+                      {
+                        "ssl_verify": {
+                          "default": true,
+                          "type": "boolean",
+                          "description": "Set to false to disable SSL certificate verification when connecting to the schema registry."
+                        }
+                      },
+                      {
+                        "authentication": {
+                          "type": "record",
+                          "fields": [
+                            {
+                              "mode": {
+                                "one_of": [
+                                  "none",
+                                  "basic"
+                                ],
+                                "default": "none",
+                                "description": "Authentication mode to use with the schema registry.",
+                                "required": true,
+                                "type": "string"
+                              }
+                            },
+                            {
+                              "basic": {
+                                "type": "record",
+                                "required": false,
+                                "fields": [
+                                  {
+                                    "username": {
+                                      "encrypted": true,
+                                      "required": true,
+                                      "referenceable": true,
+                                      "type": "string"
+                                    }
+                                  },
+                                  {
+                                    "password": {
+                                      "encrypted": true,
+                                      "required": true,
+                                      "referenceable": true,
+                                      "type": "string"
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ],
+                          "required": true,
+                          "entity_checks": [
+                            {
+                              "custom_entity_check": {
+                                "field_sources": [
+                                  "mode",
+                                  "basic"
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ],
+              "required": true,
+              "type": "record"
+            }
+          },
+          {
+            "mode": {
+              "one_of": [
+                "server-sent-events",
+                "http-get",
+                "websocket"
+              ],
+              "default": "http-get",
+              "type": "string",
+              "required": true,
+              "description": "The mode of operation for the plugin."
+            }
+          },
+          {
+            "message_deserializer": {
+              "one_of": [
+                "json",
+                "noop"
+              ],
+              "default": "noop",
+              "type": "string",
+              "required": true,
+              "description": "The deserializer to use for the consumed messages."
+            }
+          },
+          {
+            "auto_offset_reset": {
+              "one_of": [
+                "earliest",
+                "latest"
+              ],
+              "default": "latest",
+              "type": "string",
+              "required": true,
+              "description": "The offset to start from when there is no initial offset in the consumer group."
+            }
+          },
+          {
+            "commit_strategy": {
+              "one_of": [
+                "auto",
+                "off"
+              ],
+              "default": "auto",
+              "type": "string",
+              "required": true,
+              "description": "The strategy to use for committing offsets."
+            }
+          },
+          {
+            "authentication": {
+              "fields": [
+                {
+                  "strategy": {
+                    "description": "The authentication strategy for the plugin, the only option for the value is `sasl`.",
+                    "one_of": [
+                      "sasl"
+                    ],
+                    "required": false,
+                    "type": "string"
+                  }
+                },
+                {
+                  "mechanism": {
+                    "description": "The SASL authentication mechanism.  Supported options: `PLAIN` or `SCRAM-SHA-256`.",
+                    "one_of": [
+                      "PLAIN",
+                      "SCRAM-SHA-256",
+                      "SCRAM-SHA-512"
+                    ],
+                    "required": false,
+                    "type": "string"
+                  }
+                },
+                {
+                  "tokenauth": {
+                    "description": "Enable this to indicate `DelegationToken` authentication",
+                    "required": false,
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "user": {
+                    "referenceable": true,
+                    "encrypted": true,
+                    "type": "string",
+                    "required": false,
+                    "description": "Username for SASL authentication."
+                  }
+                },
+                {
+                  "password": {
+                    "referenceable": true,
+                    "encrypted": true,
+                    "type": "string",
+                    "required": false,
+                    "description": "Password for SASL authentication."
+                  }
+                }
+              ],
+              "required": true,
+              "type": "record"
+            }
+          },
+          {
+            "security": {
+              "fields": [
+                {
+                  "certificate_id": {
+                    "uuid": true,
+                    "description": "UUID of certificate entity for mTLS authentication.",
+                    "required": false,
+                    "type": "string"
+                  }
+                },
+                {
+                  "ssl": {
+                    "description": "Enables TLS.",
+                    "required": false,
+                    "type": "boolean"
+                  }
+                }
+              ],
+              "required": true,
+              "type": "record"
+            }
+          },
+          {
+            "cluster_name": {
+              "description": "An identifier for the Kafka cluster.",
+              "required": false,
+              "type": "string"
+            }
+          }
+        ],
+        "required": true,
+        "entity_checks": [
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "authentication"
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config"
+        ]
+      }
+    }
+  ]
+}

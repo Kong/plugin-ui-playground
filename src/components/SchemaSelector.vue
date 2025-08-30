@@ -6,6 +6,7 @@
     class="w-60"
     :loading="isLoading"
     @update:model-value="v => handleFileSelect(v as string)"
+    enable-filtering
   >
     <template #selected-item-template="{ item }">
       <UIcon name="i-heroicons-document-text" class="w-4 h-4" />

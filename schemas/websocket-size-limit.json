@@ -1,0 +1,66 @@
+{
+  "fields": [
+    {
+      "protocols": {
+        "type": "set",
+        "elements": {
+          "type": "string",
+          "one_of": [
+            "ws",
+            "wss"
+          ]
+        },
+        "required": true,
+        "default": [
+          "ws",
+          "wss"
+        ]
+      }
+    },
+    {
+      "consumer_group": {
+        "eq": null,
+        "reference": "consumer_groups",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "type": "foreign"
+      }
+    },
+    {
+      "config": {
+        "type": "record",
+        "fields": [
+          {
+            "client_max_payload": {
+              "between": [
+                1,
+                33554432
+              ],
+              "required": false,
+              "type": "integer"
+            }
+          },
+          {
+            "upstream_max_payload": {
+              "between": [
+                1,
+                33554432
+              ],
+              "required": false,
+              "type": "integer"
+            }
+          }
+        ],
+        "required": true,
+        "entity_checks": [
+          {
+            "at_least_one_of": [
+              "client_max_payload",
+              "upstream_max_payload"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "entity_checks": []
+}
