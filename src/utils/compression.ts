@@ -96,7 +96,7 @@ function isValidStateStructure(state: any): state is UrlSyncState {
 export function getMaxUrlLength(): number {
   // Conservative estimate for cross-browser compatibility
   // IE has the smallest limit at around 2048 characters
-  return 2000
+  return 20000
 }
 
 /**

@@ -1,54 +1,46 @@
-import { watchEffect, onMounted, onUnmounted } from 'vue'
-import { debounce } from 'lodash-es'
+import { onMounted, onUnmounted } from 'vue'
 import { useGlobalStore } from './useGlobalStore'
 import { compressState, decompressState, isUrlTooLong } from '../utils/compression'
 
 /**
  * Composable for handling URL state synchronization
- * Provides bidirectional sync between global store and URL hash
+ * Provides URL state loading and share functionality
  */
 export function useUrlSync() {
   const store = useGlobalStore()
 
-  // Debounced function to sync state to URL hash
-  // 500ms delay to avoid excessive URL updates during rapid state changes
-  const debouncedSyncToUrl = debounce(() => {
-    syncStateToUrl()
-  }, 500)
-
   /**
-   * Sync current application state to URL hash
+   * Generate compressed share URL with current state
+   * @returns Generated share URL or null if failed
    */
-  function syncStateToUrl() {
+  function generateShareUrl(): string | null {
     try {
-      // Only sync schema content
+      // Only include schema content in share URL
       const stateSnapshot = {
         selectedSchema: store.schema.value
       }
 
-      // Skip sync if state is empty (initial load)
+      // Skip if state is empty
       if (!stateSnapshot.selectedSchema) {
-        return
+        return null
       }
 
       // Compress state
-      let compressedData = compressState(stateSnapshot)
+      const compressedData = compressState(stateSnapshot)
 
       // Check if URL would be too long
       if (isUrlTooLong(compressedData)) {
-        console.warn('URL too long, skipping URL update')
-        return
+        console.warn('URL too long, cannot generate share URL')
+        return null
       }
 
-      // Update URL hash without triggering navigation
-      const newUrl = `${window.location.pathname}#${compressedData}`
-      window.history.replaceState(null, '', newUrl)
-
-      // Update share URL in store
-      store.updateShareUrl(window.location.href)
+      // Generate share URL
+      const shareUrl = `${window.location.origin}${window.location.pathname}#${compressedData}`
+      return shareUrl
 
     } catch (error) {
-      console.error('Failed to sync state to URL:', error)
+      console.error('Failed to generate share URL:', error)
+      return null
     }
   }
 
@@ -97,7 +89,6 @@ export function useUrlSync() {
    */
   function clearUrlState() {
     window.history.replaceState(null, '', window.location.pathname)
-    store.updateShareUrl('')
   }
 
   /**
@@ -105,16 +96,23 @@ export function useUrlSync() {
    * @returns Current share URL or empty string if none
    */
   function getShareUrl(): string {
-    return window.location.href
+    return generateShareUrl() || ''
   }
 
   /**
    * Copy share URL to clipboard
+   * Generates a new share URL with compressed state on demand
    * @returns Promise that resolves when copy is complete
    */
   async function copyShareUrl(): Promise<boolean> {
     try {
-      const shareUrl = getShareUrl()
+      // Generate fresh share URL with current state
+      const shareUrl = generateShareUrl()
+
+      if (!shareUrl) {
+        console.warn('Cannot generate share URL - state may be empty or too large')
+        return false
+      }
 
       if (navigator.clipboard && window.isSecureContext) {
         // Use modern clipboard API if available
@@ -132,6 +130,7 @@ export function useUrlSync() {
         document.body.removeChild(textArea)
       }
 
+      console.log('Share URL copied to clipboard:', shareUrl)
       return true
     } catch (error) {
       console.error('Failed to copy share URL:', error)
@@ -139,50 +138,28 @@ export function useUrlSync() {
     }
   }
 
-  // Set up reactive watching for state changes
-  let unwatchStateChanges: (() => void) | null = null
+  // Set up URL state loading without real-time sync
 
   /**
    * Start URL synchronization
-   * Sets up watchers and event listeners
+   * Only sets up URL state loading, no real-time sync
    */
   function startUrlSync() {
     // Listen for browser navigation events
     window.addEventListener('popstate', handlePopState)
 
-    // Load initial state from URL first, before setting up watchers
+    // Load initial state from URL first
     // Use nextTick to ensure store is ready
     setTimeout(() => {
       loadStateFromUrl()
     }, 0)
-
-    // Then set up watchers for future changes
-    setTimeout(() => {
-      unwatchStateChanges = watchEffect(() => {
-        // Watch only schema changes to trigger reactivity
-        const currentSchema = store.schema.value
-
-        // Only sync if schema has meaningful content and avoid infinite loops
-        if (currentSchema && currentSchema.trim()) {
-          debouncedSyncToUrl()
-        }
-      })
-    }, 100) // Small delay to avoid initial sync conflicts
   }
 
   /**
    * Stop URL synchronization
-   * Cleans up watchers and event listeners
+   * Cleans up event listeners
    */
   function stopUrlSync() {
-    if (unwatchStateChanges) {
-      unwatchStateChanges()
-      unwatchStateChanges = null
-    }
-
-    // Cancel pending debounced calls
-    debouncedSyncToUrl.cancel()
-
     // Remove event listeners
     window.removeEventListener('popstate', handlePopState)
   }
@@ -198,14 +175,14 @@ export function useUrlSync() {
 
   // Return public API
   return {
-    // Manual sync functions
-    syncStateToUrl,
+    // URL state loading
     loadStateFromUrl,
     clearUrlState,
 
     // Share functionality
     getShareUrl,
     copyShareUrl,
+    generateShareUrl,
 
     // Lifecycle control
     startUrlSync,
