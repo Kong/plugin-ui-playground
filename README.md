@@ -1,5 +1,5 @@
-# Plugin form playground
-[Live Demo](https://2eha0.github.io/learn-jsonforms/)
+# Kong plugin UI playground
+[Live Demo](https://kong.github.io/plugin-ui-playground/)
 
 ### For local development
 ```

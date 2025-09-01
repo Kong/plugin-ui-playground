@@ -19,6 +19,6 @@ import { GithubIcon } from '@kong/icons'
  * Handle GitHub button click
  */
 function openGitHub() {
-  window.open('https://github.com/2eha0/learn-jsonforms', '_blank', 'noopener,noreferrer')
+  window.open('https://github.com/Kong/plugin-ui-playground', '_blank', 'noopener,noreferrer')
 }
 </script>
