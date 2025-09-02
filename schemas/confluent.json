@@ -17,16 +17,16 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -36,10 +36,7 @@
         "fields": [
           {
             "bootstrap_servers": {
-              "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format.",
-              "type": "set",
               "elements": {
-                "type": "record",
                 "fields": [
                   {
                     "host": {
@@ -50,33 +47,35 @@
                   },
                   {
                     "port": {
-                      "description": "An integer representing a port number between 0 and 65535, inclusive.",
                       "between": [
                         0,
                         65535
                       ],
+                      "description": "An integer representing a port number between 0 and 65535, inclusive.",
                       "required": true,
                       "type": "integer"
                     }
                   }
-                ]
-              }
+                ],
+                "type": "record"
+              },
+              "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format.",
+              "type": "set"
             }
           },
           {
             "schema_registry": {
-              "description": "The plugin-global schema registry configuration. This can be overwritten by the topic configuration.",
+              "type": "record",
               "fields": [
                 {
                   "confluent": {
-                    "type": "record",
                     "required": false,
                     "fields": [
                       {
                         "url": {
-                          "description": "The URL of the schema registry.",
+                          "type": "string",
                           "required": false,
-                          "type": "string"
+                          "description": "The URL of the schema registry."
                         }
                       },
                       {
@@ -85,8 +84,8 @@
                             0,
                             3600
                           ],
-                          "description": "The TTL in seconds for the schema registry cache.",
-                          "type": "number"
+                          "type": "number",
+                          "description": "The TTL in seconds for the schema registry cache."
                         }
                       },
                       {
@@ -102,38 +101,258 @@
                           "fields": [
                             {
                               "mode": {
+                                "default": "none",
+                                "type": "string",
                                 "one_of": [
                                   "none",
-                                  "basic"
+                                  "basic",
+                                  "oauth2"
                                 ],
-                                "default": "none",
-                                "description": "Authentication mode to use with the schema registry.",
                                 "required": true,
-                                "type": "string"
+                                "description": "Authentication mode to use with the schema registry."
                               }
                             },
                             {
                               "basic": {
-                                "type": "record",
                                 "required": false,
                                 "fields": [
                                   {
                                     "username": {
+                                      "referenceable": true,
                                       "encrypted": true,
                                       "required": true,
-                                      "referenceable": true,
                                       "type": "string"
                                     }
                                   },
                                   {
                                     "password": {
+                                      "referenceable": true,
                                       "encrypted": true,
                                       "required": true,
-                                      "referenceable": true,
                                       "type": "string"
                                     }
                                   }
-                                ]
+                                ],
+                                "type": "record"
+                              }
+                            },
+                            {
+                              "oauth2": {
+                                "required": false,
+                                "fields": [
+                                  {
+                                    "token_endpoint": {
+                                      "description": "The token endpoint URI.",
+                                      "required": true,
+                                      "type": "string"
+                                    }
+                                  },
+                                  {
+                                    "token_headers": {
+                                      "type": "map",
+                                      "keys": {
+                                        "type": "string",
+                                        "description": "A string representing an HTTP header name."
+                                      },
+                                      "values": {
+                                        "referenceable": true,
+                                        "type": "string"
+                                      },
+                                      "description": "Extra headers to be passed in the token endpoint request."
+                                    }
+                                  },
+                                  {
+                                    "token_post_args": {
+                                      "type": "map",
+                                      "keys": {
+                                        "type": "string"
+                                      },
+                                      "values": {
+                                        "referenceable": true,
+                                        "type": "string"
+                                      },
+                                      "description": "Extra post arguments to be passed in the token endpoint request."
+                                    }
+                                  },
+                                  {
+                                    "grant_type": {
+                                      "one_of": [
+                                        "client_credentials",
+                                        "password"
+                                      ],
+                                      "type": "string",
+                                      "default": "client_credentials",
+                                      "required": true,
+                                      "description": "The OAuth grant type to be used."
+                                    }
+                                  },
+                                  {
+                                    "client_id": {
+                                      "encrypted": true,
+                                      "type": "string",
+                                      "referenceable": true,
+                                      "required": false,
+                                      "description": "The client ID for the application registration in the IdP."
+                                    }
+                                  },
+                                  {
+                                    "client_secret": {
+                                      "encrypted": true,
+                                      "type": "string",
+                                      "referenceable": true,
+                                      "required": false,
+                                      "description": "The client secret for the application registration in the IdP."
+                                    }
+                                  },
+                                  {
+                                    "username": {
+                                      "encrypted": true,
+                                      "type": "string",
+                                      "referenceable": true,
+                                      "required": false,
+                                      "description": "The username to use if `config.oauth.grant_type` is set to `password`."
+                                    }
+                                  },
+                                  {
+                                    "password": {
+                                      "encrypted": true,
+                                      "type": "string",
+                                      "referenceable": true,
+                                      "required": false,
+                                      "description": "The password to use if `config.oauth.grant_type` is set to `password`."
+                                    }
+                                  },
+                                  {
+                                    "scopes": {
+                                      "default": [
+                                        "openid"
+                                      ],
+                                      "elements": {
+                                        "type": "string"
+                                      },
+                                      "type": "array",
+                                      "required": false,
+                                      "description": "List of scopes to request from the IdP when obtaining a new token."
+                                    }
+                                  },
+                                  {
+                                    "audience": {
+                                      "default": [],
+                                      "elements": {
+                                        "type": "string"
+                                      },
+                                      "type": "array",
+                                      "required": false,
+                                      "description": "List of audiences passed to the IdP when obtaining a new token."
+                                    }
+                                  }
+                                ],
+                                "type": "record"
+                              }
+                            },
+                            {
+                              "oauth2_client": {
+                                "required": false,
+                                "fields": [
+                                  {
+                                    "auth_method": {
+                                      "one_of": [
+                                        "client_secret_post",
+                                        "client_secret_basic",
+                                        "client_secret_jwt",
+                                        "none"
+                                      ],
+                                      "type": "string",
+                                      "default": "client_secret_post",
+                                      "required": true,
+                                      "description": "The authentication method used in client requests to the IdP. Supported values are: `client_secret_basic` to send `client_id` and `client_secret` in the `Authorization: Basic` header, `client_secret_post` to send `client_id` and `client_secret` as part of the request body, or `client_secret_jwt` to send a JWT signed with the `client_secret` using the client assertion as part of the body."
+                                    }
+                                  },
+                                  {
+                                    "client_secret_jwt_alg": {
+                                      "one_of": [
+                                        "HS512",
+                                        "HS256"
+                                      ],
+                                      "type": "string",
+                                      "default": "HS512",
+                                      "required": true,
+                                      "description": "The algorithm to use with JWT when using `client_secret_jwt` authentication."
+                                    }
+                                  },
+                                  {
+                                    "http_version": {
+                                      "type": "number",
+                                      "default": 1.1,
+                                      "required": false,
+                                      "description": "The HTTP version used for requests made by this plugin. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0."
+                                    }
+                                  },
+                                  {
+                                    "http_proxy": {
+                                      "description": "The proxy to use when making HTTP requests to the IdP.",
+                                      "required": false,
+                                      "type": "string"
+                                    }
+                                  },
+                                  {
+                                    "http_proxy_authorization": {
+                                      "type": "string",
+                                      "required": false,
+                                      "description": "The `Proxy-Authorization` header value to be used with `http_proxy`."
+                                    }
+                                  },
+                                  {
+                                    "https_proxy": {
+                                      "description": "The proxy to use when making HTTPS requests to the IdP.",
+                                      "required": false,
+                                      "type": "string"
+                                    }
+                                  },
+                                  {
+                                    "https_proxy_authorization": {
+                                      "type": "string",
+                                      "required": false,
+                                      "description": "The `Proxy-Authorization` header value to be used with `https_proxy`."
+                                    }
+                                  },
+                                  {
+                                    "no_proxy": {
+                                      "type": "string",
+                                      "required": false,
+                                      "description": "A comma-separated list of hosts that should not be proxied."
+                                    }
+                                  },
+                                  {
+                                    "timeout": {
+                                      "between": [
+                                        0,
+                                        2147483646
+                                      ],
+                                      "default": 10000,
+                                      "description": "Network I/O timeout for requests to the IdP in milliseconds.",
+                                      "required": true,
+                                      "type": "integer"
+                                    }
+                                  },
+                                  {
+                                    "keep_alive": {
+                                      "type": "boolean",
+                                      "default": true,
+                                      "required": true,
+                                      "description": "Whether to use keepalive connections to the IdP."
+                                    }
+                                  },
+                                  {
+                                    "ssl_verify": {
+                                      "type": "boolean",
+                                      "default": false,
+                                      "required": false,
+                                      "description": "Whether to verify the certificate presented by the IdP when using HTTPS."
+                                    }
+                                  }
+                                ],
+                                "type": "record"
                               }
                             }
                           ],
@@ -143,7 +362,8 @@
                               "custom_entity_check": {
                                 "field_sources": [
                                   "mode",
-                                  "basic"
+                                  "basic",
+                                  "oauth2"
                                 ]
                               }
                             }
@@ -152,7 +372,6 @@
                       },
                       {
                         "value_schema": {
-                          "type": "record",
                           "required": false,
                           "fields": [
                             {
@@ -164,24 +383,24 @@
                             },
                             {
                               "schema_version": {
+                                "type": "string",
+                                "description": "The schema version to use for serialization/deserialization. Use 'latest' to always fetch the most recent version.",
+                                "required": false,
                                 "match_any": {
                                   "err": "must be either 'latest' or a positive integer",
                                   "patterns": [
                                     "^latest$",
                                     "^[0-9]+$"
                                   ]
-                                },
-                                "type": "string",
-                                "required": false,
-                                "description": "The schema version to use for serialization/deserialization. Use 'latest' to always fetch the most recent version."
+                                }
                               }
                             }
-                          ]
+                          ],
+                          "type": "record"
                         }
                       },
                       {
                         "key_schema": {
-                          "type": "record",
                           "required": false,
                           "fields": [
                             {
@@ -193,27 +412,29 @@
                             },
                             {
                               "schema_version": {
+                                "type": "string",
+                                "description": "The schema version to use for serialization/deserialization. Use 'latest' to always fetch the most recent version.",
+                                "required": false,
                                 "match_any": {
                                   "err": "must be either 'latest' or a positive integer",
                                   "patterns": [
                                     "^latest$",
                                     "^[0-9]+$"
                                   ]
-                                },
-                                "type": "string",
-                                "required": false,
-                                "description": "The schema version to use for serialization/deserialization. Use 'latest' to always fetch the most recent version."
+                                }
                               }
                             }
-                          ]
+                          ],
+                          "type": "record"
                         }
                       }
-                    ]
+                    ],
+                    "type": "record"
                   }
                 }
               ],
               "required": true,
-              "type": "record"
+              "description": "The plugin-global schema registry configuration. This can be overwritten by the topic configuration."
             }
           },
           {
@@ -225,10 +446,10 @@
           },
           {
             "allowed_topics": {
-              "description": "The list of allowed topic names to which messages can be sent. The default topic configured in the `topic` field is always allowed, regardless of its inclusion in `allowed_topics`.",
               "elements": {
                 "type": "string"
               },
+              "description": "The list of allowed topic names to which messages can be sent. The default topic configured in the `topic` field is always allowed, regardless of its inclusion in `allowed_topics`.",
               "required": false,
               "type": "array"
             }
@@ -249,16 +470,16 @@
           },
           {
             "timeout": {
+              "default": 10000,
               "description": "Socket timeout in milliseconds.",
-              "type": "integer",
-              "default": 10000
+              "type": "integer"
             }
           },
           {
             "keepalive": {
+              "default": 60000,
               "description": "Keepalive timeout in milliseconds.",
-              "type": "integer",
-              "default": 60000
+              "type": "integer"
             }
           },
           {
@@ -270,8 +491,8 @@
           {
             "cluster_api_key": {
               "referenceable": true,
-              "encrypted": true,
               "description": "Username/Apikey for SASL authentication.",
+              "encrypted": true,
               "required": true,
               "type": "string"
             }
@@ -279,8 +500,8 @@
           {
             "cluster_api_secret": {
               "referenceable": true,
-              "encrypted": true,
               "description": "Password/ApiSecret for SASL authentication.",
+              "encrypted": true,
               "required": true,
               "type": "string"
             }
@@ -288,8 +509,8 @@
           {
             "confluent_cloud_api_key": {
               "referenceable": true,
-              "encrypted": true,
               "description": "Apikey for authentication with Confluent Cloud. This allows for management tasks such as creating topics, ACLs, etc.",
+              "encrypted": true,
               "required": false,
               "type": "string"
             }
@@ -297,46 +518,46 @@
           {
             "confluent_cloud_api_secret": {
               "referenceable": true,
-              "encrypted": true,
               "description": "The corresponding secret for the Confluent Cloud API key.",
+              "encrypted": true,
               "required": false,
               "type": "string"
             }
           },
           {
             "forward_method": {
+              "default": false,
               "description": "Include the request method in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-              "type": "boolean",
-              "default": false
+              "type": "boolean"
             }
           },
           {
             "forward_uri": {
+              "default": false,
               "description": "Include the request URI and URI arguments (as in, query arguments) in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-              "type": "boolean",
-              "default": false
+              "type": "boolean"
             }
           },
           {
             "forward_headers": {
+              "default": false,
               "description": "Include the request headers in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-              "type": "boolean",
-              "default": false
+              "type": "boolean"
             }
           },
           {
             "forward_body": {
+              "default": true,
               "description": "Include the request body in the message. At least one of these must be true: `forward_method`, `forward_uri`, `forward_headers`, `forward_body`.",
-              "type": "boolean",
-              "default": true
+              "type": "boolean"
             }
           },
           {
             "message_by_lua_functions": {
-              "description": "The Lua functions that manipulates the message being sent to the Kafka topic.",
               "elements": {
                 "type": "string"
               },
+              "description": "The Lua functions that manipulates the message being sent to the Kafka topic.",
               "required": false,
               "type": "array"
             }
@@ -344,77 +565,77 @@
           {
             "cluster_name": {
               "description": "An identifier for the Kafka cluster. By default, this field generates a random string. You can also set your own custom cluster identifier.  If more than one Kafka plugin is configured without a `cluster_name` (that is, if the default autogenerated value is removed), these plugins will use the same producer, and by extension, the same cluster. Logs will be sent to the leader of the cluster.",
-              "auto": true,
+              "type": "string",
               "required": false,
-              "type": "string"
+              "auto": true
             }
           },
           {
             "producer_request_acks": {
               "description": "The number of acknowledgments the producer requires the leader to have received before considering a request complete. Allowed values: 0 for no acknowledgments; 1 for only the leader; and -1 for the full ISR (In-Sync Replica set).",
+              "default": 1,
               "one_of": [
                 -1,
                 0,
                 1
               ],
-              "default": 1,
               "type": "integer"
             }
           },
           {
             "producer_request_timeout": {
+              "default": 2000,
               "description": "Time to wait for a Produce response in milliseconds.",
-              "type": "integer",
-              "default": 2000
+              "type": "integer"
             }
           },
           {
             "producer_request_limits_messages_per_request": {
+              "default": 200,
               "description": "Maximum number of messages to include into a single producer request.",
-              "type": "integer",
-              "default": 200
+              "type": "integer"
             }
           },
           {
             "producer_request_limits_bytes_per_request": {
+              "default": 1048576,
               "description": "Maximum size of a Produce request in bytes.",
-              "type": "integer",
-              "default": 1048576
+              "type": "integer"
             }
           },
           {
             "producer_request_retries_max_attempts": {
+              "default": 10,
               "description": "Maximum number of retry attempts per single Produce request.",
-              "type": "integer",
-              "default": 10
+              "type": "integer"
             }
           },
           {
             "producer_request_retries_backoff_timeout": {
+              "default": 100,
               "description": "Backoff interval between retry attempts in milliseconds.",
-              "type": "integer",
-              "default": 100
+              "type": "integer"
             }
           },
           {
             "producer_async": {
+              "default": true,
               "description": "Flag to enable asynchronous mode.",
-              "type": "boolean",
-              "default": true
+              "type": "boolean"
             }
           },
           {
             "producer_async_flush_timeout": {
+              "default": 1000,
               "description": "Maximum time interval in milliseconds between buffer flushes in asynchronous mode.",
-              "type": "integer",
-              "default": 1000
+              "type": "integer"
             }
           },
           {
             "producer_async_buffering_limits_messages_in_memory": {
+              "default": 50000,
               "description": "Maximum number of messages that can be buffered in memory in asynchronous mode.",
-              "type": "integer",
-              "default": 50000
+              "type": "integer"
             }
           }
         ],

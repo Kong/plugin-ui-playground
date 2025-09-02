@@ -24,9 +24,9 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing protocols."
       }
     },
     {
@@ -44,32 +44,32 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],
@@ -82,33 +82,33 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],
@@ -121,33 +121,33 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
@@ -165,33 +165,33 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],
@@ -204,33 +204,33 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
                     "elements": {
                       "type": "string"
                     },
+                    "default": [],
                     "required": true,
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],

@@ -4,44 +4,6 @@
       "config.redis"
     ]
   },
-  "entity_checks": [
-    {
-      "conditional": {
-        "if_match": {
-          "eq": "redis"
-        },
-        "then_field": "config.redis.host",
-        "if_field": "config.policy",
-        "then_match": {
-          "required": true
-        }
-      }
-    },
-    {
-      "conditional": {
-        "if_match": {
-          "eq": "redis"
-        },
-        "then_field": "config.redis.port",
-        "if_field": "config.policy",
-        "then_match": {
-          "required": true
-        }
-      }
-    },
-    {
-      "conditional": {
-        "if_match": {
-          "eq": "redis"
-        },
-        "then_field": "config.redis.timeout",
-        "if_field": "config.policy",
-        "then_match": {
-          "required": true
-        }
-      }
-    }
-  ],
   "fields": [
     {
       "protocols": {
@@ -60,28 +22,27 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
-        "type": "record",
         "shorthand_fields": [
           {
             "redis_host": {
-              "type": "string",
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_host is deprecated, please use config.redis.host instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -89,16 +50,16 @@
                       "host"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
-              }
+                ]
+              },
+              "type": "string"
             }
           },
           {
             "redis_port": {
-              "type": "integer",
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_port is deprecated, please use config.redis.port instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -106,16 +67,16 @@
                       "port"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
-              }
+                ]
+              },
+              "type": "integer"
             }
           },
           {
             "redis_password": {
-              "len_min": 0,
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_password is deprecated, please use config.redis.password instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -123,17 +84,17 @@
                       "password"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
-              "type": "string"
+              "type": "string",
+              "len_min": 0
             }
           },
           {
             "redis_username": {
-              "type": "string",
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_username is deprecated, please use config.redis.username instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -141,16 +102,16 @@
                       "username"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
-              }
+                ]
+              },
+              "type": "string"
             }
           },
           {
             "redis_ssl": {
-              "type": "boolean",
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_ssl is deprecated, please use config.redis.ssl instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -158,16 +119,16 @@
                       "ssl"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
-              }
+                ]
+              },
+              "type": "boolean"
             }
           },
           {
             "redis_ssl_verify": {
-              "type": "boolean",
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -175,16 +136,16 @@
                       "ssl_verify"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
-              }
+                ]
+              },
+              "type": "boolean"
             }
           },
           {
             "redis_server_name": {
-              "type": "string",
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_server_name is deprecated, please use config.redis.server_name instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -192,16 +153,16 @@
                       "server_name"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
-              }
+                ]
+              },
+              "type": "string"
             }
           },
           {
             "redis_timeout": {
-              "type": "integer",
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_timeout is deprecated, please use config.redis.timeout instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -209,16 +170,16 @@
                       "timeout"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
-              }
+                ]
+              },
+              "type": "integer"
             }
           },
           {
             "redis_database": {
-              "type": "integer",
               "deprecation": {
                 "message": "response-ratelimiting: config.redis_database is deprecated, please use config.redis.database instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -226,58 +187,55 @@
                       "database"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
-              }
+                ]
+              },
+              "type": "integer"
             }
           }
         ],
-        "required": true,
         "fields": [
           {
             "header_name": {
+              "default": "x-kong-limit",
               "type": "string",
-              "description": "The name of the response header used to increment the counters.",
-              "default": "x-kong-limit"
+              "description": "The name of the response header used to increment the counters."
             }
           },
           {
             "limit_by": {
+              "type": "string",
               "default": "consumer",
               "one_of": [
                 "consumer",
                 "credential",
                 "ip"
               ],
-              "type": "string",
               "description": "The entity that will be used when aggregating the limits: `consumer`, `credential`, `ip`. If the `consumer` or the `credential` cannot be determined, the system will always fallback to `ip`."
             }
           },
           {
             "policy": {
+              "type": "string",
               "default": "local",
               "one_of": [
                 "local",
                 "cluster",
                 "redis"
               ],
-              "type": "string",
               "description": "The rate-limiting policies to use for retrieving and incrementing the limits."
             }
           },
           {
             "fault_tolerant": {
               "type": "boolean",
-              "description": "A boolean value that determines if the requests should be proxied even if Kong has troubles connecting a third-party datastore. If `true`, requests will be proxied anyway, effectively disabling the rate-limiting function until the datastore is working again. If `false`, then the clients will see `500` errors.",
+              "default": true,
               "required": true,
-              "default": true
+              "description": "A boolean value that determines if the requests should be proxied even if Kong has troubles connecting a third-party datastore. If `true`, requests will be proxied anyway, effectively disabling the rate-limiting function until the datastore is working again. If `false`, then the clients will see `500` errors."
             }
           },
           {
             "redis": {
               "description": "Redis configuration",
-              "type": "record",
-              "required": true,
               "fields": [
                 {
                   "host": {
@@ -287,46 +245,46 @@
                 },
                 {
                   "port": {
-                    "default": 6379,
                     "between": [
                       0,
                       65535
                     ],
+                    "default": 6379,
                     "description": "An integer representing a port number between 0 and 65535, inclusive.",
                     "type": "integer"
                   }
                 },
                 {
                   "timeout": {
-                    "default": 2000,
                     "between": [
                       0,
                       2147483646
                     ],
+                    "default": 2000,
                     "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
                     "type": "integer"
                   }
                 },
                 {
                   "username": {
-                    "type": "string",
                     "referenceable": true,
+                    "type": "string",
                     "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`."
                   }
                 },
                 {
                   "password": {
-                    "len_min": 0,
-                    "referenceable": true,
                     "encrypted": true,
                     "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+                    "len_min": 0,
+                    "referenceable": true,
                     "type": "string"
                   }
                 },
                 {
                   "database": {
-                    "type": "integer",
                     "default": 0,
+                    "type": "integer",
                     "description": "Database to use for the Redis connection when using the `redis` strategy"
                   }
                 },
@@ -353,44 +311,36 @@
                     "type": "string"
                   }
                 }
-              ]
+              ],
+              "required": true,
+              "type": "record"
             }
           },
           {
             "block_on_first_violation": {
               "type": "boolean",
-              "description": "A boolean value that determines if the requests should be blocked as soon as one limit is being exceeded. This will block requests that are supposed to consume other limits too.",
+              "default": false,
               "required": true,
-              "default": false
+              "description": "A boolean value that determines if the requests should be blocked as soon as one limit is being exceeded. This will block requests that are supposed to consume other limits too."
             }
           },
           {
             "hide_client_headers": {
               "type": "boolean",
-              "description": "Optionally hide informative response headers.",
+              "default": false,
               "required": true,
-              "default": false
+              "description": "Optionally hide informative response headers."
             }
           },
           {
             "limits": {
-              "len_min": 1,
+              "keys": {
+                "type": "string"
+              },
+              "type": "map",
               "description": "A map that defines rate limits for the plugin.",
-              "required": true,
               "values": {
                 "type": "record",
-                "entity_checks": [
-                  {
-                    "at_least_one_of": [
-                      "second",
-                      "minute",
-                      "hour",
-                      "day",
-                      "month",
-                      "year"
-                    ]
-                  }
-                ],
                 "required": true,
                 "fields": [
                   {
@@ -429,15 +379,65 @@
                       "type": "number"
                     }
                   }
+                ],
+                "entity_checks": [
+                  {
+                    "at_least_one_of": [
+                      "second",
+                      "minute",
+                      "hour",
+                      "day",
+                      "month",
+                      "year"
+                    ]
+                  }
                 ]
               },
-              "keys": {
-                "type": "string"
-              },
-              "type": "map"
+              "required": true,
+              "len_min": 1
             }
           }
-        ]
+        ],
+        "required": true,
+        "type": "record"
+      }
+    }
+  ],
+  "entity_checks": [
+    {
+      "conditional": {
+        "then_field": "config.redis.host",
+        "if_field": "config.policy",
+        "then_match": {
+          "required": true
+        },
+        "if_match": {
+          "eq": "redis"
+        }
+      }
+    },
+    {
+      "conditional": {
+        "then_field": "config.redis.port",
+        "if_field": "config.policy",
+        "then_match": {
+          "required": true
+        },
+        "if_match": {
+          "eq": "redis"
+        }
+      }
+    },
+    {
+      "conditional": {
+        "then_field": "config.redis.timeout",
+        "if_field": "config.policy",
+        "then_match": {
+          "required": true
+        },
+        "if_match": {
+          "eq": "redis"
+        }
       }
     }
   ]

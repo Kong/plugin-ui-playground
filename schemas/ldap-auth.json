@@ -2,15 +2,14 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
     {
       "protocols": {
-        "type": "set",
         "elements": {
           "type": "string",
           "one_of": [
@@ -22,7 +21,6 @@
             "wss"
           ]
         },
-        "required": true,
         "default": [
           "grpc",
           "grpcs",
@@ -30,36 +28,22 @@
           "https",
           "ws",
           "wss"
-        ]
+        ],
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
         "type": "record",
-        "entity_checks": [
-          {
-            "conditional": {
-              "if_match": {
-                "eq": true
-              },
-              "then_field": "start_tls",
-              "if_field": "ldaps",
-              "then_match": {
-                "eq": false
-              },
-              "then_err": "'ldaps' and 'start_tls' cannot be enabled simultaneously"
-            }
-          }
-        ],
-        "required": true,
         "fields": [
           {
             "ldap_host": {
@@ -136,28 +120,28 @@
           },
           {
             "timeout": {
-              "type": "number",
               "default": 10000,
+              "type": "number",
               "description": "An optional timeout in milliseconds when waiting for connection with LDAP server."
             }
           },
           {
             "keepalive": {
-              "type": "number",
               "default": 60000,
+              "type": "number",
               "description": "An optional value in milliseconds that defines how long an idle connection to LDAP server will live before being closed."
             }
           },
           {
             "anonymous": {
-              "type": "string",
-              "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request fails with an authentication failure `4xx`."
+              "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request fails with an authentication failure `4xx`.",
+              "type": "string"
             }
           },
           {
             "header_type": {
-              "type": "string",
               "default": "ldap",
+              "type": "string",
               "description": "An optional string to use as part of the Authorization header"
             }
           },
@@ -166,6 +150,22 @@
               "type": "string",
               "required": false,
               "description": "When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value."
+            }
+          }
+        ],
+        "required": true,
+        "entity_checks": [
+          {
+            "conditional": {
+              "then_field": "start_tls",
+              "if_field": "ldaps",
+              "then_match": {
+                "eq": false
+              },
+              "then_err": "'ldaps' and 'start_tls' cannot be enabled simultaneously",
+              "if_match": {
+                "eq": true
+              }
             }
           }
         ]

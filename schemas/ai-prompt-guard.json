@@ -17,9 +17,9 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
@@ -28,27 +28,27 @@
           {
             "allow_patterns": {
               "len_max": 10,
-              "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat.",
               "elements": {
-                "len_min": 1,
                 "len_max": 500,
-                "type": "string"
+                "type": "string",
+                "len_min": 1
               },
+              "type": "array",
               "required": false,
-              "type": "array"
+              "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat."
             }
           },
           {
             "deny_patterns": {
               "len_max": 10,
-              "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat.",
               "elements": {
-                "len_min": 1,
                 "len_max": 500,
-                "type": "string"
+                "type": "string",
+                "len_min": 1
               },
+              "type": "array",
               "required": false,
-              "type": "array"
+              "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat."
             }
           },
           {
@@ -61,10 +61,10 @@
           },
           {
             "max_request_body_size": {
-              "type": "integer",
               "gt": 0,
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-              "default": 8192
+              "default": 8192,
+              "type": "integer",
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
             }
           },
           {
@@ -77,6 +77,8 @@
           },
           {
             "llm_format": {
+              "default": "openai",
+              "description": "LLM input and output format and schema to use",
               "one_of": [
                 "openai",
                 "bedrock",
@@ -84,14 +86,14 @@
                 "cohere",
                 "huggingface"
               ],
-              "default": "openai",
-              "description": "LLM input and output format and schema to use",
               "required": false,
               "type": "string"
             }
           },
           {
             "genai_category": {
+              "default": "text/generation",
+              "description": "Generative AI category of the request",
               "one_of": [
                 "text/generation",
                 "text/embeddings",
@@ -101,8 +103,6 @@
                 "video/generation",
                 "realtime/generation"
               ],
-              "default": "text/generation",
-              "description": "Generative AI category of the request",
               "required": false,
               "type": "string"
             }
@@ -122,13 +122,13 @@
     },
     {
       "conditional": {
-        "if_match": {
-          "eq": true
-        },
         "then_field": "config.allow_all_conversation_history",
         "if_field": "config.match_all_roles",
         "then_match": {
           "eq": false
+        },
+        "if_match": {
+          "eq": true
         }
       }
     }

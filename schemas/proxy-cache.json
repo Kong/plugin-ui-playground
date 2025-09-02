@@ -24,9 +24,9 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing protocols."
       }
     },
     {
@@ -34,22 +34,22 @@
         "fields": [
           {
             "response_code": {
-              "len_min": 1,
               "default": [
                 200,
                 301,
                 404
               ],
-              "type": "array",
               "description": "Upstream response status code considered cacheable.",
-              "required": true,
               "elements": {
-                "type": "integer",
                 "between": [
                   100,
                   900
-                ]
-              }
+                ],
+                "type": "integer"
+              },
+              "type": "array",
+              "required": true,
+              "len_min": 1
             }
           },
           {
@@ -58,9 +58,6 @@
                 "GET",
                 "HEAD"
               ],
-              "type": "array",
-              "description": "Downstream request methods considered cacheable.",
-              "required": true,
               "elements": {
                 "type": "string",
                 "one_of": [
@@ -70,7 +67,10 @@
                   "PATCH",
                   "PUT"
                 ]
-              }
+              },
+              "description": "Downstream request methods considered cacheable.",
+              "required": true,
+              "type": "array"
             }
           },
           {
@@ -79,18 +79,18 @@
                 "text/plain",
                 "application/json"
               ],
-              "type": "array",
-              "description": "Upstream response content types considered cacheable. The plugin performs an **exact match** against each specified value.",
-              "required": true,
               "elements": {
                 "type": "string"
-              }
+              },
+              "description": "Upstream response content types considered cacheable. The plugin performs an **exact match** against each specified value.",
+              "required": true,
+              "type": "array"
             }
           },
           {
             "cache_ttl": {
-              "default": 300,
               "gt": 0,
+              "default": 300,
               "type": "integer",
               "description": "TTL, in seconds, of cache entities."
             }
@@ -107,10 +107,10 @@
           },
           {
             "cache_control": {
+              "type": "boolean",
               "default": false,
-              "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234.",
               "required": true,
-              "type": "boolean"
+              "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234."
             }
           },
           {
@@ -131,10 +131,10 @@
               "fields": [
                 {
                   "dictionary_name": {
+                    "type": "string",
                     "default": "kong_db_cache",
-                    "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
                     "required": true,
-                    "type": "string"
+                    "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template."
                   }
                 }
               ],
@@ -144,27 +144,25 @@
           },
           {
             "vary_query_params": {
-              "type": "array",
               "elements": {
                 "type": "string"
               },
+              "type": "array",
               "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration."
             }
           },
           {
             "vary_headers": {
-              "type": "array",
               "elements": {
                 "type": "string"
               },
+              "type": "array",
               "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration."
             }
           },
           {
             "response_headers": {
               "type": "record",
-              "description": "Caching related diagnostic headers that should be included in cached responses",
-              "required": true,
               "fields": [
                 {
                   "age": {
@@ -184,7 +182,9 @@
                     "default": true
                   }
                 }
-              ]
+              ],
+              "required": true,
+              "description": "Caching related diagnostic headers that should be included in cached responses"
             }
           }
         ],

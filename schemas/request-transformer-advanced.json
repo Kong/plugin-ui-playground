@@ -17,15 +17,13 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "type": "record",
-        "required": true,
         "fields": [
           {
             "http_method": {
@@ -39,29 +37,29 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 }
               ],
@@ -74,32 +72,32 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 }
               ],
@@ -112,38 +110,36 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "json_types": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "type": "string",
                       "one_of": [
@@ -151,7 +147,9 @@
                         "number",
                         "string"
                       ]
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
@@ -169,38 +167,36 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "json_types": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "type": "string",
                       "one_of": [
@@ -208,7 +204,9 @@
                         "number",
                         "string"
                       ]
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 }
               ],
@@ -221,38 +219,36 @@
               "fields": [
                 {
                   "body": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "querystring": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "referenceable": true,
                       "type": "string"
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 },
                 {
                   "json_types": {
-                    "type": "array",
-                    "default": [],
                     "elements": {
                       "type": "string",
                       "one_of": [
@@ -260,7 +256,9 @@
                         "number",
                         "string"
                       ]
-                    }
+                    },
+                    "default": [],
+                    "type": "array"
                   }
                 }
               ],
@@ -273,10 +271,10 @@
               "fields": [
                 {
                   "body": {
-                    "type": "set",
                     "elements": {
                       "type": "string"
-                    }
+                    },
+                    "type": "set"
                   }
                 }
               ],
@@ -286,12 +284,14 @@
           },
           {
             "dots_in_keys": {
-              "description": "Specify whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects.  See [Arrays and nested objects](#arrays-and-nested-objects).",
+              "default": true,
               "type": "boolean",
-              "default": true
+              "description": "Specify whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects."
             }
           }
-        ]
+        ],
+        "required": true,
+        "type": "record"
       }
     }
   ],

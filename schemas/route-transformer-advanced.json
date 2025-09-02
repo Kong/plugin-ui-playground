@@ -17,32 +17,22 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
         "type": "record",
-        "entity_checks": [
-          {
-            "at_least_one_of": [
-              "path",
-              "port",
-              "host"
-            ]
-          }
-        ],
-        "required": true,
         "fields": [
           {
             "path": {
@@ -61,9 +51,19 @@
           },
           {
             "escape_path": {
-              "type": "boolean",
-              "default": false
+              "default": false,
+              "type": "boolean"
             }
+          }
+        ],
+        "required": true,
+        "entity_checks": [
+          {
+            "at_least_one_of": [
+              "path",
+              "port",
+              "host"
+            ]
           }
         ]
       }

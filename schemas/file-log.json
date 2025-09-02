@@ -24,16 +24,16 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -43,16 +43,16 @@
           {
             "path": {
               "match": "^[^%s*&%%\\`][^*&%%\\`]*[^%s*&%%\\`]$",
-              "type": "string",
-              "err": "not a valid filename",
+              "description": "The file path of the output log file. The plugin creates the log file if it doesn't exist yet.",
               "required": true,
-              "description": "The file path of the output log file. The plugin creates the log file if it doesn't exist yet."
+              "err": "not a valid filename",
+              "type": "string"
             }
           },
           {
             "reopen": {
-              "default": false,
               "description": "Determines whether the log file is closed and reopened on every request.",
+              "default": false,
               "required": true,
               "type": "boolean"
             }
@@ -60,11 +60,11 @@
           {
             "custom_fields_by_lua": {
               "type": "map",
-              "values": {
-                "len_min": 1,
-                "type": "string"
-              },
               "keys": {
+                "type": "string",
+                "len_min": 1
+              },
+              "values": {
                 "len_min": 1,
                 "type": "string"
               },

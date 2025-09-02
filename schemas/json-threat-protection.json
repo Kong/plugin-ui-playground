@@ -2,9 +2,9 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -25,16 +25,16 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -116,19 +116,19 @@
           {
             "allow_duplicate_object_entry_name": {
               "type": "boolean",
-              "description": "Allow or disallow duplicate object entry name.",
+              "default": true,
               "required": false,
-              "default": true
+              "description": "Allow or disallow duplicate object entry name."
             }
           },
           {
             "enforcement_mode": {
+              "default": "block",
+              "type": "string",
               "one_of": [
                 "block",
                 "log_only"
               ],
-              "default": "block",
-              "type": "string",
               "required": false,
               "description": "Enforcement mode of the security policy."
             }
@@ -148,9 +148,9 @@
           {
             "error_message": {
               "type": "string",
-              "description": "The response message when validation fails",
+              "default": "Bad Request",
               "required": false,
-              "default": "Bad Request"
+              "description": "The response message when validation fails"
             }
           }
         ],

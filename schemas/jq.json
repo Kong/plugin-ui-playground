@@ -2,9 +2,9 @@
   "fields": [
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -25,23 +25,14 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
         "type": "record",
-        "entity_checks": [
-          {
-            "at_least_one_of": [
-              "request_jq_program",
-              "response_jq_program"
-            ]
-          }
-        ],
-        "required": true,
         "fields": [
           {
             "request_jq_program": {
@@ -51,9 +42,8 @@
           },
           {
             "request_jq_program_options": {
-              "type": "record",
-              "default": [],
               "required": false,
+              "default": [],
               "fields": [
                 {
                   "compact_output": {
@@ -90,19 +80,20 @@
                     "type": "boolean"
                   }
                 }
-              ]
+              ],
+              "type": "record"
             }
           },
           {
             "request_if_media_type": {
-              "type": "array",
+              "elements": {
+                "type": "string"
+              },
               "default": [
                 "application/json"
               ],
               "required": false,
-              "elements": {
-                "type": "string"
-              }
+              "type": "array"
             }
           },
           {
@@ -113,9 +104,8 @@
           },
           {
             "response_jq_program_options": {
-              "type": "record",
-              "default": [],
               "required": false,
+              "default": [],
               "fields": [
                 {
                   "compact_output": {
@@ -152,36 +142,46 @@
                     "type": "boolean"
                   }
                 }
-              ]
+              ],
+              "type": "record"
             }
           },
           {
             "response_if_media_type": {
-              "type": "array",
+              "elements": {
+                "type": "string"
+              },
               "default": [
                 "application/json"
               ],
               "required": false,
-              "elements": {
-                "type": "string"
-              }
+              "type": "array"
             }
           },
           {
             "response_if_status_code": {
-              "type": "array",
+              "elements": {
+                "between": [
+                  100,
+                  599
+                ],
+                "type": "integer"
+              },
               "default": [
                 200
               ],
               "required": false,
-              "elements": {
-                "type": "integer",
-                "between": [
-                  100,
-                  599
-                ]
-              }
+              "type": "array"
             }
+          }
+        ],
+        "required": true,
+        "entity_checks": [
+          {
+            "at_least_one_of": [
+              "request_jq_program",
+              "response_jq_program"
+            ]
           }
         ]
       }

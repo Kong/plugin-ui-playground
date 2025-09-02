@@ -17,9 +17,9 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
@@ -32,9 +32,9 @@
                 599
               ],
               "default": 301,
-              "description": "The response code to send. Must be an integer between 100 and 599.",
+              "type": "integer",
               "required": true,
-              "type": "integer"
+              "description": "The response code to send. Must be an integer between 100 and 599."
             }
           },
           {

@@ -2,20 +2,14 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
     {
       "protocols": {
-        "type": "set",
-        "default": [
-          "https",
-          "grpcs"
-        ],
-        "required": true,
         "elements": {
           "type": "string",
           "one_of": [
@@ -23,14 +17,20 @@
             "grpcs",
             "tls"
           ]
-        }
+        },
+        "default": [
+          "https",
+          "grpcs"
+        ],
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -39,11 +39,11 @@
         "fields": [
           {
             "tls_client_certificate": {
+              "default": "REQUEST",
+              "type": "string",
               "one_of": [
                 "REQUEST"
               ],
-              "default": "REQUEST",
-              "type": "string",
               "required": false,
               "description": "TLS Client Certificate"
             }

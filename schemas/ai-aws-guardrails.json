@@ -17,9 +17,9 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
@@ -42,49 +42,49 @@
           {
             "stop_on_error": {
               "default": true,
-              "description": "Stop processing if an error occurs",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Stop processing if an error occurs"
             }
           },
           {
             "timeout": {
+              "type": "number",
               "default": 10000,
-              "description": "Connection timeout with the bedrock service",
               "required": true,
-              "type": "number"
+              "description": "Connection timeout with the bedrock service"
             }
           },
           {
             "guarding_mode": {
+              "default": "INPUT",
+              "type": "string",
               "one_of": [
                 "INPUT",
                 "OUTPUT",
                 "BOTH"
               ],
-              "default": "INPUT",
-              "type": "string",
               "required": true,
               "description": "The guardrail mode to use for the request"
             }
           },
           {
             "text_source": {
+              "default": "concatenate_all_content",
+              "type": "string",
               "one_of": [
                 "concatenate_all_content",
                 "concatenate_user_content"
               ],
-              "default": "concatenate_all_content",
-              "type": "string",
               "required": true,
               "description": "Select where to pick the 'text' for the Content Guard Services request."
             }
           },
           {
             "response_buffer_size": {
+              "type": "number",
               "default": 100,
-              "description": "The amount of token receiving from upstream to be buffered before sending to the guardrails service. This only applies to the response content guard.",
               "required": true,
-              "type": "number"
+              "description": "The amount of bytes receiving from upstream to be buffered before sending to the guardrails service. This only applies to the response content guard."
             }
           },
           {
@@ -96,18 +96,39 @@
           },
           {
             "aws_access_key_id": {
+              "referenceable": true,
               "type": "string",
               "required": false,
-              "referenceable": true,
               "description": "The AWS access key ID to use for authentication"
             }
           },
           {
             "aws_secret_access_key": {
+              "referenceable": true,
               "type": "string",
               "required": false,
-              "referenceable": true,
               "description": "The AWS secret access key to use for authentication"
+            }
+          },
+          {
+            "aws_assume_role_arn": {
+              "type": "string",
+              "required": false,
+              "description": "The target AWS IAM role ARN used to access the guardrails service"
+            }
+          },
+          {
+            "aws_role_session_name": {
+              "type": "string",
+              "required": false,
+              "description": "The identifier of the assumed role session"
+            }
+          },
+          {
+            "aws_sts_endpoint_url": {
+              "description": "Override the STS endpoint URL when assuming a different role",
+              "required": false,
+              "type": "string"
             }
           }
         ],

@@ -281,19 +281,18 @@
             }
           },
           {
-            "message": {
+            "flow": {
               "type": "record",
               "fields": [
                 {
-                  "destinations": {
-                    "len_min": 1,
+                  "binds": {
                     "elements": {
                       "fields": [
                         {
                           "name": {
                             "type": "string",
                             "required": true,
-                            "description": "The name of the destination. You can use $(uri_captures['<capture-identifier>']) in this field (replace `<capture-identifier>` with a real value, for example `$uri_captures[’queue’]` when the matched route has a path `~/(?<queue>[a-z]+)`)."
+                            "description": "The name of the Queue that is the target of the bind. You can use $(uri_captures['<capture-identifier>']) in this field (replace `<capture-identifier>` with a real value, for example `$uri_captures['queue']` when the matched route has a path `~/(?<queue>[a-z]+)`)"
                           }
                         },
                         {
@@ -301,134 +300,71 @@
                             "default": "QUEUE",
                             "type": "string",
                             "one_of": [
-                              "QUEUE",
-                              "TOPIC"
+                              "QUEUE"
                             ],
                             "required": true,
-                            "description": "The type of the destination."
+                            "description": "The type of object to which this Flow is bound."
                           }
                         }
                       ],
                       "type": "record"
                     },
-                    "description": "The message destinations.",
+                    "type": "array",
                     "required": true,
-                    "type": "array"
+                    "len_min": 1
                   }
                 },
                 {
-                  "delivery_mode": {
-                    "default": "DIRECT",
+                  "selector": {
+                    "type": "string",
+                    "required": false,
+                    "description": "The selector when binding to an endpoint."
+                  }
+                },
+                {
+                  "ack_mode": {
+                    "default": "CLIENT",
                     "type": "string",
                     "one_of": [
-                      "DIRECT",
-                      "PERSISTENT"
+                      "AUTO",
+                      "CLIENT"
                     ],
                     "required": true,
-                    "description": "Sets the message delivery mode."
+                    "description": "Controls how acknowledgments are generated for received Guaranteed messages. When set to `AUTO`, the messages are positively acknowledged upon receiving them. When set to 'CLIENT', the messages are positively or negatively acknowledged by Kong regarding to client delivery status."
                   }
                 },
                 {
-                  "sender_id": {
-                    "type": "string",
-                    "required": false,
-                    "description": "Allows the application to set the content of the sender identifier."
-                  }
-                },
-                {
-                  "priority": {
-                    "between": [
-                      0,
-                      255
-                    ],
-                    "default": 4,
+                  "max_unacked_messages": {
+                    "default": -1,
+                    "ne": 0,
+                    "gt": -2,
                     "type": "integer",
                     "required": true,
-                    "description": "Sets the message priority."
+                    "description": "This property controls the maximum number of messages that may be unacknowledged on the Flow."
                   }
                 },
                 {
-                  "dmq_eligible": {
-                    "type": "boolean",
-                    "default": false,
-                    "required": true,
-                    "description": "Sets the dead message queue (DMQ) eligible property on the message."
-                  }
-                },
-                {
-                  "ttl": {
-                    "default": 0,
-                    "gt": -1,
-                    "type": "integer",
-                    "required": true,
-                    "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message."
-                  }
-                },
-                {
-                  "ack_timeout": {
+                  "window_size": {
                     "between": [
                       1,
-                      100000
+                      255
                     ],
-                    "default": 2000,
-                    "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the message acknowledgement timeout in milliseconds (waiting time).",
+                    "default": 255,
+                    "type": "integer",
                     "required": true,
-                    "type": "integer"
+                    "description": "The Guaranteed message window size for the Flow."
                   }
                 },
                 {
-                  "tracing": {
-                    "type": "boolean",
-                    "default": false,
+                  "wait_timeout": {
+                    "between": [
+                      1,
+                      5000
+                    ],
+                    "default": 50,
+                    "type": "integer",
                     "required": true,
-                    "description": "Enable or disable the tracing. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems."
-                  }
-                },
-                {
-                  "tracing_sampled": {
-                    "type": "boolean",
-                    "default": false,
-                    "required": true,
-                    "description": "Indicates whether the message should be included in distributed tracing (i.e., if it should be \"sampled\" for the tracing)"
-                  }
-                },
-                {
-                  "forward_method": {
-                    "type": "boolean",
-                    "default": false,
-                    "required": true,
-                    "description": "Include the request method in the message."
-                  }
-                },
-                {
-                  "forward_uri": {
-                    "type": "boolean",
-                    "default": false,
-                    "required": true,
-                    "description": "Include the request URI and the URI arguments (as in, query arguments) in the message."
-                  }
-                },
-                {
-                  "forward_headers": {
-                    "type": "boolean",
-                    "default": false,
-                    "required": true,
-                    "description": "Include the request headers in the message."
-                  }
-                },
-                {
-                  "forward_body": {
-                    "type": "boolean",
-                    "default": false,
-                    "required": true,
-                    "description": "Include the request body and the body arguments in the message."
-                  }
-                },
-                {
-                  "default_content": {
-                    "type": "string",
-                    "required": false,
-                    "description": "When not using `forward_method`, `forward_uri`, `forward_headers` or `forward_body`, this sets the message content."
+                    "description": "Specifies in milliseconds how long to wait for messages to appear on each poll before giving up or retrying."
                   }
                 },
                 {
@@ -438,12 +374,118 @@
                     },
                     "type": "array",
                     "required": false,
-                    "description": "The Lua functions that manipulates (or generates) the message being sent to Solace. The `message` variable can be used to access the current message content, and the function can return a new content."
+                    "description": "The Lua functions that manipulates the message being received from Solace. The `message` variable can be used to access the current message content, and the function can return a new content."
+                  }
+                },
+                {
+                  "properties": {
+                    "keys": {
+                      "match": "^FLOW_",
+                      "not_one_of": [
+                        "FLOW_BIND_ENTITY_ID",
+                        "FLOW_BIND_NAME",
+                        "FLOW_ACKMODE",
+                        "FLOW_BIND_BLOCKING",
+                        "FLOW_ACTIVE_FLOW_IND",
+                        "FLOW_REQUIRED_OUTCOME_FAILED",
+                        "FLOW_REQUIRED_OUTCOME_REJECTED",
+                        "FLOW_WINDOWSIZE",
+                        "FLOW_START_STATE",
+                        "FLOW_MAX_UNACKED_MESSAGES",
+                        "FLOW_SELECTOR",
+                        "FLOW_AUTOACK",
+                        "FLOW_TOPIC"
+                      ],
+                      "required": true,
+                      "type": "string"
+                    },
+                    "type": "map",
+                    "values": {
+                      "referenceable": true,
+                      "required": true,
+                      "type": "string"
+                    },
+                    "required": false,
+                    "description": "Additional Solace flow properties (each setting needs to have `FLOW_` prefix)."
                   }
                 }
               ],
               "required": true,
-              "description": "The message related configuration."
+              "description": "The flow related configuration."
+            }
+          },
+          {
+            "mode": {
+              "default": "POLLING",
+              "type": "string",
+              "one_of": [
+                "AUTO",
+                "POLLING",
+                "SERVER-SENT-EVENTS",
+                "WEBSOCKET"
+              ],
+              "required": true,
+              "description": "The mode of operation for the plugin. The `AUTO` determines the mode automatically from the client request."
+            }
+          },
+          {
+            "polling": {
+              "type": "record",
+              "fields": [
+                {
+                  "timeout": {
+                    "between": [
+                      0,
+                      300000
+                    ],
+                    "default": 0,
+                    "type": "integer",
+                    "required": true,
+                    "description": "Polling timeout in milliseconds. When set to `0`, the polling works like short-polling and waits at maximum the Flow `wait_timeout` amount of time for the new messages (short-polling). When set to larger than `0`, the connection is kept open and only closed after the timeout or in case messages appear earlier (long-polling)."
+                  }
+                }
+              ],
+              "required": true,
+              "description": "The `POLLING` mode related configuration settings."
+            }
+          },
+          {
+            "websocket": {
+              "type": "record",
+              "fields": [
+                {
+                  "timeout": {
+                    "between": [
+                      1,
+                      60000
+                    ],
+                    "default": 1000,
+                    "type": "integer",
+                    "required": true,
+                    "description": "Specifies the network timeout threshold in milliseconds."
+                  }
+                },
+                {
+                  "max_recv_len": {
+                    "default": 65536,
+                    "gt": 0,
+                    "type": "integer",
+                    "required": true,
+                    "description": "Specifies the maximal length of payload allowed when receiving WebSocket frames."
+                  }
+                },
+                {
+                  "max_send_len": {
+                    "default": 65536,
+                    "gt": 0,
+                    "type": "integer",
+                    "required": true,
+                    "description": "Specifies the maximal length of payload allowed when sending WebSocket frames."
+                  }
+                }
+              ],
+              "required": true,
+              "description": "The `WEBSOCKET` mode related configuration settings."
             }
           }
         ],

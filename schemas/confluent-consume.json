@@ -2,31 +2,34 @@
   "fields": [
     {
       "protocols": {
-        "default": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https"
-        ],
         "elements": {
           "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
-            "https"
+            "https",
+            "ws",
+            "wss"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ],
         "required": true,
         "type": "set"
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -36,9 +39,7 @@
         "fields": [
           {
             "bootstrap_servers": {
-              "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format.",
               "elements": {
-                "type": "record",
                 "fields": [
                   {
                     "host": {
@@ -49,26 +50,26 @@
                   },
                   {
                     "port": {
-                      "description": "An integer representing a port number between 0 and 65535, inclusive.",
                       "between": [
                         0,
                         65535
                       ],
+                      "description": "An integer representing a port number between 0 and 65535, inclusive.",
                       "required": true,
                       "type": "integer"
                     }
                   }
-                ]
+                ],
+                "type": "record"
               },
+              "description": "Set of bootstrap brokers in a `{host: host, port: port}` list format.",
               "type": "set"
             }
           },
           {
             "topics": {
-              "len_min": 1,
-              "type": "array",
+              "description": "The Kafka topics and their configuration you want to consume from.",
               "elements": {
-                "type": "record",
                 "fields": [
                   {
                     "name": {
@@ -78,18 +79,17 @@
                   },
                   {
                     "schema_registry": {
-                      "description": "The plugin-global schema registry configuration.",
+                      "type": "record",
                       "fields": [
                         {
                           "confluent": {
-                            "type": "record",
                             "required": false,
                             "fields": [
                               {
                                 "url": {
-                                  "description": "The URL of the schema registry.",
+                                  "type": "string",
                                   "required": false,
-                                  "type": "string"
+                                  "description": "The URL of the schema registry."
                                 }
                               },
                               {
@@ -98,8 +98,8 @@
                                     0,
                                     3600
                                   ],
-                                  "description": "The TTL in seconds for the schema registry cache.",
-                                  "type": "number"
+                                  "type": "number",
+                                  "description": "The TTL in seconds for the schema registry cache."
                                 }
                               },
                               {
@@ -115,38 +115,258 @@
                                   "fields": [
                                     {
                                       "mode": {
+                                        "default": "none",
+                                        "type": "string",
                                         "one_of": [
                                           "none",
-                                          "basic"
+                                          "basic",
+                                          "oauth2"
                                         ],
-                                        "default": "none",
-                                        "description": "Authentication mode to use with the schema registry.",
                                         "required": true,
-                                        "type": "string"
+                                        "description": "Authentication mode to use with the schema registry."
                                       }
                                     },
                                     {
                                       "basic": {
-                                        "type": "record",
                                         "required": false,
                                         "fields": [
                                           {
                                             "username": {
+                                              "referenceable": true,
                                               "encrypted": true,
                                               "required": true,
-                                              "referenceable": true,
                                               "type": "string"
                                             }
                                           },
                                           {
                                             "password": {
+                                              "referenceable": true,
                                               "encrypted": true,
                                               "required": true,
-                                              "referenceable": true,
                                               "type": "string"
                                             }
                                           }
-                                        ]
+                                        ],
+                                        "type": "record"
+                                      }
+                                    },
+                                    {
+                                      "oauth2": {
+                                        "required": false,
+                                        "fields": [
+                                          {
+                                            "token_endpoint": {
+                                              "description": "The token endpoint URI.",
+                                              "required": true,
+                                              "type": "string"
+                                            }
+                                          },
+                                          {
+                                            "token_headers": {
+                                              "type": "map",
+                                              "keys": {
+                                                "type": "string",
+                                                "description": "A string representing an HTTP header name."
+                                              },
+                                              "values": {
+                                                "referenceable": true,
+                                                "type": "string"
+                                              },
+                                              "description": "Extra headers to be passed in the token endpoint request."
+                                            }
+                                          },
+                                          {
+                                            "token_post_args": {
+                                              "type": "map",
+                                              "keys": {
+                                                "type": "string"
+                                              },
+                                              "values": {
+                                                "referenceable": true,
+                                                "type": "string"
+                                              },
+                                              "description": "Extra post arguments to be passed in the token endpoint request."
+                                            }
+                                          },
+                                          {
+                                            "grant_type": {
+                                              "one_of": [
+                                                "client_credentials",
+                                                "password"
+                                              ],
+                                              "type": "string",
+                                              "default": "client_credentials",
+                                              "required": true,
+                                              "description": "The OAuth grant type to be used."
+                                            }
+                                          },
+                                          {
+                                            "client_id": {
+                                              "encrypted": true,
+                                              "type": "string",
+                                              "referenceable": true,
+                                              "required": false,
+                                              "description": "The client ID for the application registration in the IdP."
+                                            }
+                                          },
+                                          {
+                                            "client_secret": {
+                                              "encrypted": true,
+                                              "type": "string",
+                                              "referenceable": true,
+                                              "required": false,
+                                              "description": "The client secret for the application registration in the IdP."
+                                            }
+                                          },
+                                          {
+                                            "username": {
+                                              "encrypted": true,
+                                              "type": "string",
+                                              "referenceable": true,
+                                              "required": false,
+                                              "description": "The username to use if `config.oauth.grant_type` is set to `password`."
+                                            }
+                                          },
+                                          {
+                                            "password": {
+                                              "encrypted": true,
+                                              "type": "string",
+                                              "referenceable": true,
+                                              "required": false,
+                                              "description": "The password to use if `config.oauth.grant_type` is set to `password`."
+                                            }
+                                          },
+                                          {
+                                            "scopes": {
+                                              "default": [
+                                                "openid"
+                                              ],
+                                              "elements": {
+                                                "type": "string"
+                                              },
+                                              "type": "array",
+                                              "required": false,
+                                              "description": "List of scopes to request from the IdP when obtaining a new token."
+                                            }
+                                          },
+                                          {
+                                            "audience": {
+                                              "default": [],
+                                              "elements": {
+                                                "type": "string"
+                                              },
+                                              "type": "array",
+                                              "required": false,
+                                              "description": "List of audiences passed to the IdP when obtaining a new token."
+                                            }
+                                          }
+                                        ],
+                                        "type": "record"
+                                      }
+                                    },
+                                    {
+                                      "oauth2_client": {
+                                        "required": false,
+                                        "fields": [
+                                          {
+                                            "auth_method": {
+                                              "one_of": [
+                                                "client_secret_post",
+                                                "client_secret_basic",
+                                                "client_secret_jwt",
+                                                "none"
+                                              ],
+                                              "type": "string",
+                                              "default": "client_secret_post",
+                                              "required": true,
+                                              "description": "The authentication method used in client requests to the IdP. Supported values are: `client_secret_basic` to send `client_id` and `client_secret` in the `Authorization: Basic` header, `client_secret_post` to send `client_id` and `client_secret` as part of the request body, or `client_secret_jwt` to send a JWT signed with the `client_secret` using the client assertion as part of the body."
+                                            }
+                                          },
+                                          {
+                                            "client_secret_jwt_alg": {
+                                              "one_of": [
+                                                "HS512",
+                                                "HS256"
+                                              ],
+                                              "type": "string",
+                                              "default": "HS512",
+                                              "required": true,
+                                              "description": "The algorithm to use with JWT when using `client_secret_jwt` authentication."
+                                            }
+                                          },
+                                          {
+                                            "http_version": {
+                                              "type": "number",
+                                              "default": 1.1,
+                                              "required": false,
+                                              "description": "The HTTP version used for requests made by this plugin. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0."
+                                            }
+                                          },
+                                          {
+                                            "http_proxy": {
+                                              "description": "The proxy to use when making HTTP requests to the IdP.",
+                                              "required": false,
+                                              "type": "string"
+                                            }
+                                          },
+                                          {
+                                            "http_proxy_authorization": {
+                                              "type": "string",
+                                              "required": false,
+                                              "description": "The `Proxy-Authorization` header value to be used with `http_proxy`."
+                                            }
+                                          },
+                                          {
+                                            "https_proxy": {
+                                              "description": "The proxy to use when making HTTPS requests to the IdP.",
+                                              "required": false,
+                                              "type": "string"
+                                            }
+                                          },
+                                          {
+                                            "https_proxy_authorization": {
+                                              "type": "string",
+                                              "required": false,
+                                              "description": "The `Proxy-Authorization` header value to be used with `https_proxy`."
+                                            }
+                                          },
+                                          {
+                                            "no_proxy": {
+                                              "type": "string",
+                                              "required": false,
+                                              "description": "A comma-separated list of hosts that should not be proxied."
+                                            }
+                                          },
+                                          {
+                                            "timeout": {
+                                              "between": [
+                                                0,
+                                                2147483646
+                                              ],
+                                              "default": 10000,
+                                              "description": "Network I/O timeout for requests to the IdP in milliseconds.",
+                                              "required": true,
+                                              "type": "integer"
+                                            }
+                                          },
+                                          {
+                                            "keep_alive": {
+                                              "type": "boolean",
+                                              "default": true,
+                                              "required": true,
+                                              "description": "Whether to use keepalive connections to the IdP."
+                                            }
+                                          },
+                                          {
+                                            "ssl_verify": {
+                                              "type": "boolean",
+                                              "default": false,
+                                              "required": false,
+                                              "description": "Whether to verify the certificate presented by the IdP when using HTTPS."
+                                            }
+                                          }
+                                        ],
+                                        "type": "record"
                                       }
                                     }
                                   ],
@@ -156,41 +376,44 @@
                                       "custom_entity_check": {
                                         "field_sources": [
                                           "mode",
-                                          "basic"
+                                          "basic",
+                                          "oauth2"
                                         ]
                                       }
                                     }
                                   ]
                                 }
                               }
-                            ]
+                            ],
+                            "type": "record"
                           }
                         }
                       ],
                       "required": true,
-                      "type": "record"
+                      "description": "The plugin-global schema registry configuration."
                     }
                   }
-                ]
+                ],
+                "type": "record"
               },
+              "len_min": 1,
               "required": true,
-              "description": "The Kafka topics and their configuration you want to consume from."
+              "type": "array"
             }
           },
           {
             "schema_registry": {
-              "description": "The plugin-global schema registry configuration.",
+              "type": "record",
               "fields": [
                 {
                   "confluent": {
-                    "type": "record",
                     "required": false,
                     "fields": [
                       {
                         "url": {
-                          "description": "The URL of the schema registry.",
+                          "type": "string",
                           "required": false,
-                          "type": "string"
+                          "description": "The URL of the schema registry."
                         }
                       },
                       {
@@ -199,8 +422,8 @@
                             0,
                             3600
                           ],
-                          "description": "The TTL in seconds for the schema registry cache.",
-                          "type": "number"
+                          "type": "number",
+                          "description": "The TTL in seconds for the schema registry cache."
                         }
                       },
                       {
@@ -216,38 +439,258 @@
                           "fields": [
                             {
                               "mode": {
+                                "default": "none",
+                                "type": "string",
                                 "one_of": [
                                   "none",
-                                  "basic"
+                                  "basic",
+                                  "oauth2"
                                 ],
-                                "default": "none",
-                                "description": "Authentication mode to use with the schema registry.",
                                 "required": true,
-                                "type": "string"
+                                "description": "Authentication mode to use with the schema registry."
                               }
                             },
                             {
                               "basic": {
-                                "type": "record",
                                 "required": false,
                                 "fields": [
                                   {
                                     "username": {
+                                      "referenceable": true,
                                       "encrypted": true,
                                       "required": true,
-                                      "referenceable": true,
                                       "type": "string"
                                     }
                                   },
                                   {
                                     "password": {
+                                      "referenceable": true,
                                       "encrypted": true,
                                       "required": true,
-                                      "referenceable": true,
                                       "type": "string"
                                     }
                                   }
-                                ]
+                                ],
+                                "type": "record"
+                              }
+                            },
+                            {
+                              "oauth2": {
+                                "required": false,
+                                "fields": [
+                                  {
+                                    "token_endpoint": {
+                                      "description": "The token endpoint URI.",
+                                      "required": true,
+                                      "type": "string"
+                                    }
+                                  },
+                                  {
+                                    "token_headers": {
+                                      "type": "map",
+                                      "keys": {
+                                        "type": "string",
+                                        "description": "A string representing an HTTP header name."
+                                      },
+                                      "values": {
+                                        "referenceable": true,
+                                        "type": "string"
+                                      },
+                                      "description": "Extra headers to be passed in the token endpoint request."
+                                    }
+                                  },
+                                  {
+                                    "token_post_args": {
+                                      "type": "map",
+                                      "keys": {
+                                        "type": "string"
+                                      },
+                                      "values": {
+                                        "referenceable": true,
+                                        "type": "string"
+                                      },
+                                      "description": "Extra post arguments to be passed in the token endpoint request."
+                                    }
+                                  },
+                                  {
+                                    "grant_type": {
+                                      "one_of": [
+                                        "client_credentials",
+                                        "password"
+                                      ],
+                                      "type": "string",
+                                      "default": "client_credentials",
+                                      "required": true,
+                                      "description": "The OAuth grant type to be used."
+                                    }
+                                  },
+                                  {
+                                    "client_id": {
+                                      "encrypted": true,
+                                      "type": "string",
+                                      "referenceable": true,
+                                      "required": false,
+                                      "description": "The client ID for the application registration in the IdP."
+                                    }
+                                  },
+                                  {
+                                    "client_secret": {
+                                      "encrypted": true,
+                                      "type": "string",
+                                      "referenceable": true,
+                                      "required": false,
+                                      "description": "The client secret for the application registration in the IdP."
+                                    }
+                                  },
+                                  {
+                                    "username": {
+                                      "encrypted": true,
+                                      "type": "string",
+                                      "referenceable": true,
+                                      "required": false,
+                                      "description": "The username to use if `config.oauth.grant_type` is set to `password`."
+                                    }
+                                  },
+                                  {
+                                    "password": {
+                                      "encrypted": true,
+                                      "type": "string",
+                                      "referenceable": true,
+                                      "required": false,
+                                      "description": "The password to use if `config.oauth.grant_type` is set to `password`."
+                                    }
+                                  },
+                                  {
+                                    "scopes": {
+                                      "default": [
+                                        "openid"
+                                      ],
+                                      "elements": {
+                                        "type": "string"
+                                      },
+                                      "type": "array",
+                                      "required": false,
+                                      "description": "List of scopes to request from the IdP when obtaining a new token."
+                                    }
+                                  },
+                                  {
+                                    "audience": {
+                                      "default": [],
+                                      "elements": {
+                                        "type": "string"
+                                      },
+                                      "type": "array",
+                                      "required": false,
+                                      "description": "List of audiences passed to the IdP when obtaining a new token."
+                                    }
+                                  }
+                                ],
+                                "type": "record"
+                              }
+                            },
+                            {
+                              "oauth2_client": {
+                                "required": false,
+                                "fields": [
+                                  {
+                                    "auth_method": {
+                                      "one_of": [
+                                        "client_secret_post",
+                                        "client_secret_basic",
+                                        "client_secret_jwt",
+                                        "none"
+                                      ],
+                                      "type": "string",
+                                      "default": "client_secret_post",
+                                      "required": true,
+                                      "description": "The authentication method used in client requests to the IdP. Supported values are: `client_secret_basic` to send `client_id` and `client_secret` in the `Authorization: Basic` header, `client_secret_post` to send `client_id` and `client_secret` as part of the request body, or `client_secret_jwt` to send a JWT signed with the `client_secret` using the client assertion as part of the body."
+                                    }
+                                  },
+                                  {
+                                    "client_secret_jwt_alg": {
+                                      "one_of": [
+                                        "HS512",
+                                        "HS256"
+                                      ],
+                                      "type": "string",
+                                      "default": "HS512",
+                                      "required": true,
+                                      "description": "The algorithm to use with JWT when using `client_secret_jwt` authentication."
+                                    }
+                                  },
+                                  {
+                                    "http_version": {
+                                      "type": "number",
+                                      "default": 1.1,
+                                      "required": false,
+                                      "description": "The HTTP version used for requests made by this plugin. Supported values: `1.1` for HTTP 1.1 and `1.0` for HTTP 1.0."
+                                    }
+                                  },
+                                  {
+                                    "http_proxy": {
+                                      "description": "The proxy to use when making HTTP requests to the IdP.",
+                                      "required": false,
+                                      "type": "string"
+                                    }
+                                  },
+                                  {
+                                    "http_proxy_authorization": {
+                                      "type": "string",
+                                      "required": false,
+                                      "description": "The `Proxy-Authorization` header value to be used with `http_proxy`."
+                                    }
+                                  },
+                                  {
+                                    "https_proxy": {
+                                      "description": "The proxy to use when making HTTPS requests to the IdP.",
+                                      "required": false,
+                                      "type": "string"
+                                    }
+                                  },
+                                  {
+                                    "https_proxy_authorization": {
+                                      "type": "string",
+                                      "required": false,
+                                      "description": "The `Proxy-Authorization` header value to be used with `https_proxy`."
+                                    }
+                                  },
+                                  {
+                                    "no_proxy": {
+                                      "type": "string",
+                                      "required": false,
+                                      "description": "A comma-separated list of hosts that should not be proxied."
+                                    }
+                                  },
+                                  {
+                                    "timeout": {
+                                      "between": [
+                                        0,
+                                        2147483646
+                                      ],
+                                      "default": 10000,
+                                      "description": "Network I/O timeout for requests to the IdP in milliseconds.",
+                                      "required": true,
+                                      "type": "integer"
+                                    }
+                                  },
+                                  {
+                                    "keep_alive": {
+                                      "type": "boolean",
+                                      "default": true,
+                                      "required": true,
+                                      "description": "Whether to use keepalive connections to the IdP."
+                                    }
+                                  },
+                                  {
+                                    "ssl_verify": {
+                                      "type": "boolean",
+                                      "default": false,
+                                      "required": false,
+                                      "description": "Whether to verify the certificate presented by the IdP when using HTTPS."
+                                    }
+                                  }
+                                ],
+                                "type": "record"
                               }
                             }
                           ],
@@ -257,131 +700,144 @@
                               "custom_entity_check": {
                                 "field_sources": [
                                   "mode",
-                                  "basic"
+                                  "basic",
+                                  "oauth2"
                                 ]
                               }
                             }
                           ]
                         }
                       }
-                    ]
+                    ],
+                    "type": "record"
                   }
                 }
               ],
               "required": true,
-              "type": "record"
+              "description": "The plugin-global schema registry configuration."
             }
           },
           {
             "mode": {
+              "default": "http-get",
+              "description": "The mode of operation for the plugin.",
               "one_of": [
                 "server-sent-events",
-                "http-get"
+                "http-get",
+                "websocket"
               ],
-              "default": "http-get",
-              "type": "string",
               "required": true,
-              "description": "The mode of operation for the plugin."
+              "type": "string"
             }
           },
           {
             "message_deserializer": {
+              "default": "noop",
+              "description": "The deserializer to use for the consumed messages.",
               "one_of": [
                 "json",
                 "noop"
               ],
-              "default": "noop",
-              "type": "string",
               "required": true,
-              "description": "The deserializer to use for the consumed messages."
+              "type": "string"
             }
           },
           {
             "auto_offset_reset": {
+              "default": "latest",
+              "description": "The offset to start from when there is no initial offset in the consumer group.",
               "one_of": [
                 "earliest",
                 "latest"
               ],
-              "default": "latest",
-              "type": "string",
               "required": true,
-              "description": "The offset to start from when there is no initial offset in the consumer group."
+              "type": "string"
             }
           },
           {
             "commit_strategy": {
+              "default": "auto",
+              "description": "The strategy to use for committing offsets.",
               "one_of": [
                 "auto",
                 "off"
               ],
-              "default": "auto",
-              "type": "string",
               "required": true,
-              "description": "The strategy to use for committing offsets."
+              "type": "string"
             }
           },
           {
             "timeout": {
               "default": 10000,
-              "type": "integer",
-              "description": "Socket timeout in milliseconds."
+              "description": "Socket timeout in milliseconds.",
+              "type": "integer"
             }
           },
           {
             "keepalive": {
               "default": 60000,
-              "type": "integer",
-              "description": "Keepalive timeout in milliseconds."
+              "description": "Keepalive timeout in milliseconds.",
+              "type": "integer"
             }
           },
           {
             "keepalive_enabled": {
-              "type": "boolean",
-              "default": false
+              "default": false,
+              "type": "boolean"
             }
           },
           {
             "cluster_api_key": {
               "referenceable": true,
+              "description": "Username/Apikey for SASL authentication.",
               "encrypted": true,
-              "type": "string",
               "required": true,
-              "description": "Username/Apikey for SASL authentication."
+              "type": "string"
             }
           },
           {
             "cluster_api_secret": {
               "referenceable": true,
+              "description": "Password/ApiSecret for SASL authentication.",
               "encrypted": true,
-              "type": "string",
               "required": true,
-              "description": "Password/ApiSecret for SASL authentication."
+              "type": "string"
             }
           },
           {
             "confluent_cloud_api_key": {
               "referenceable": true,
+              "description": "Apikey for authentication with Confluent Cloud. This allows for management tasks such as creating topics, ACLs, etc.",
               "encrypted": true,
-              "type": "string",
               "required": false,
-              "description": "Apikey for authentication with Confluent Cloud. This allows for management tasks such as creating topics, ACLs, etc."
+              "type": "string"
             }
           },
           {
             "confluent_cloud_api_secret": {
               "referenceable": true,
+              "description": "The corresponding secret for the Confluent Cloud API key.",
               "encrypted": true,
-              "type": "string",
               "required": false,
-              "description": "The corresponding secret for the Confluent Cloud API key."
+              "type": "string"
             }
           },
           {
             "cluster_name": {
               "description": "An identifier for the Kafka cluster. By default, this field generates a random string. You can also set your own custom cluster identifier.  If more than one Kafka plugin is configured without a `cluster_name` (that is, if the default autogenerated value is removed), these plugins will use the same producer, and by extension, the same cluster. Logs will be sent to the leader of the cluster.",
-              "auto": true,
+              "type": "string",
               "required": false,
-              "type": "string"
+              "auto": true
+            }
+          },
+          {
+            "message_by_lua_functions": {
+              "elements": {
+                "type": "string"
+              },
+              "description": "The Lua functions that manipulates the message being sent to the client.",
+              "required": false,
+              "type": "array"
             }
           }
         ],

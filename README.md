@@ -10,7 +10,7 @@ pnpm dev
 ### Update schemas
 1. Start the Kong Gateway service
 ```shell
-GW_IMAGE=kong/kong-gateway-dev:master docker compose -f ./kong-gateway.yml up -d
+GW_IMAGE=kong/kong-gateway-dev:master-ubuntu docker compose -f ./kong-gateway.yml up -d
 ```
 2. Run
 ```shell

@@ -23,52 +23,75 @@
       }
     },
     {
-      "consumer": {
-        "reference": "consumers",
-        "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
-        "type": "foreign"
-      }
-    },
-    {
       "config": {
         "fields": [
           {
             "prompt": {
-              "type": "string",
+              "description": "Use this prompt to tune the LLM system/assistant message for the llm as a judge prompt.",
+              "default": "You are a strict evaluator. You will be given a prompt and a response. Your task is to judge whether the response is correct or incorrect. You must assign a score between 1 and 100, where: 100 represents a completely correct and ideal response, 1 represents a completely incorrect or irrelevant response. Your score must be a single number only — no text, labels, or explanations. Use the full range of values (e.g., 13, 47, 86), not just round numbers like 10, 50, or 100. Be accurate and consistent, as this score will be used by another model for learning and evaluation.",
               "required": true,
-              "description": "Use this prompt to tune the LLM system/assistant message for the incoming proxy request (from the client), and what you are expecting in return."
+              "type": "string"
             }
           },
           {
-            "transformation_extract_pattern": {
-              "type": "string",
-              "required": false,
-              "description": "Defines the regular expression that must match to indicate a successful AI transformation at the request phase. The first match will be set as the outgoing body. If the AI service's response doesn't match this pattern, it is marked as a failure."
+            "message_countback": {
+              "between": [
+                1,
+                1000
+              ],
+              "default": 1,
+              "description": "Number of messages in the chat history to use for evaluating the request",
+              "required": true,
+              "type": "number"
+            }
+          },
+          {
+            "ignore_system_prompts": {
+              "default": true,
+              "description": "Ignore and discard any system prompts when evaluating the request",
+              "type": "boolean"
+            }
+          },
+          {
+            "ignore_assistant_prompts": {
+              "default": true,
+              "description": "Ignore and discard any assistant prompts when evaluating the request",
+              "type": "boolean"
+            }
+          },
+          {
+            "ignore_tool_prompts": {
+              "default": true,
+              "description": "Ignore and discard any tool prompts when evaluating the request",
+              "type": "boolean"
             }
           },
           {
             "http_timeout": {
-              "type": "integer",
+              "description": "Timeout in milliseconds for the AI upstream service.",
               "default": 60000,
               "required": true,
-              "description": "Timeout in milliseconds for the AI upstream service."
+              "type": "integer"
             }
           },
           {
             "https_verify": {
-              "type": "boolean",
+              "description": "Verify the TLS certificate of the AI upstream service.",
               "default": true,
               "required": true,
-              "description": "Verify the TLS certificate of the AI upstream service."
+              "type": "boolean"
             }
           },
           {
-            "max_request_body_size": {
-              "gt": 0,
-              "default": 8192,
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-              "type": "integer"
+            "sampling_rate": {
+              "between": [
+                0,
+                1
+              ],
+              "default": 1,
+              "description": "Judging request sampling rate for configuring the probability-based sampler.",
+              "required": false,
+              "type": "number"
             }
           },
           {
@@ -801,7 +824,7 @@
         "then_match": {
           "eq": "llm/v1/chat"
         },
-        "then_err": "'config.llm.route_type' must be 'llm/v1/chat' for AI transformer plugins",
+        "then_err": "'config.llm.route_type' must be 'llm/v1/chat' for AI llm as judge plugins",
         "if_match": {
           "not_one_of": [
             "llm/v1/chat"

@@ -17,9 +17,9 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
@@ -27,11 +27,7 @@
         "fields": [
           {
             "callouts": {
-              "type": "array",
-              "description": "A collection of callout objects, where each object represents an HTTP request made in the context of a proxy request.",
-              "required": true,
               "elements": {
-                "type": "record",
                 "fields": [
                   {
                     "name": {
@@ -43,25 +39,26 @@
                   {
                     "depends_on": {
                       "default": [],
-                      "type": "array",
-                      "description": "An array of callout names the current callout depends on. This dependency list determines the callout execution order via a topological sorting algorithm.",
-                      "required": true,
                       "elements": {
                         "required": true,
                         "type": "string"
-                      }
+                      },
+                      "type": "array",
+                      "required": true,
+                      "description": "An array of callout names the current callout depends on. This dependency list determines the callout execution order via a topological sorting algorithm."
                     }
                   },
                   {
                     "request": {
                       "description": "The customizations for the callout request.",
+                      "required": true,
                       "fields": [
                         {
                           "url": {
-                            "description": "The URL that will be requested.",
-                            "required": true,
                             "referenceable": true,
-                            "type": "string"
+                            "type": "string",
+                            "required": true,
+                            "description": "The URL that will be requested. Values can contain Lua expressions in the form `$(some_lua_expression)`. The syntax is based on `request-transformer-advanced` templates."
                           }
                         },
                         {
@@ -76,12 +73,13 @@
                         {
                           "http_opts": {
                             "description": "HTTP connection parameters.",
+                            "required": true,
                             "fields": [
                               {
                                 "ssl_verify": {
                                   "default": false,
-                                  "description": "If set to `true`, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-                                  "type": "boolean"
+                                  "type": "boolean",
+                                  "description": "If set to `true`, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly."
                                 }
                               },
                               {
@@ -143,8 +141,8 @@
                                   "fields": [
                                     {
                                       "auth_username": {
-                                        "type": "string",
                                         "referenceable": true,
+                                        "type": "string",
                                         "required": false,
                                         "description": "The username to authenticate with, if the forward proxy is protected by basic authentication."
                                       }
@@ -152,10 +150,10 @@
                                     {
                                       "auth_password": {
                                         "referenceable": true,
+                                        "description": "The password to authenticate with, if the forward proxy is protected by basic authentication.",
                                         "encrypted": true,
-                                        "type": "string",
                                         "required": false,
-                                        "description": "The password to authenticate with, if the forward proxy is protected by basic authentication."
+                                        "type": "string"
                                       }
                                     },
                                     {
@@ -175,27 +173,27 @@
                                 }
                               }
                             ],
-                            "required": true,
                             "type": "record"
                           }
                         },
                         {
                           "query": {
                             "description": "Callout request query param customizations.",
+                            "required": true,
                             "fields": [
                               {
                                 "forward": {
                                   "default": false,
-                                  "description": "If `true`, forwards the incoming request's query params to the callout request. ",
-                                  "type": "boolean"
+                                  "type": "boolean",
+                                  "description": "If `true`, forwards the incoming request's query params to the callout request. "
                                 }
                               },
                               {
                                 "custom": {
-                                  "type": "map",
                                   "keys": {
                                     "type": "string"
                                   },
+                                  "type": "map",
                                   "values": {
                                     "referenceable": true,
                                     "required": false,
@@ -206,27 +204,27 @@
                                 }
                               }
                             ],
-                            "required": true,
                             "type": "record"
                           }
                         },
                         {
                           "headers": {
                             "description": "Callout request header customizations.",
+                            "required": true,
                             "fields": [
                               {
                                 "forward": {
                                   "default": false,
-                                  "description": "If `true`, forwards the incoming request's headers to the callout request. ",
-                                  "type": "boolean"
+                                  "type": "boolean",
+                                  "description": "If `true`, forwards the incoming request's headers to the callout request. "
                                 }
                               },
                               {
                                 "custom": {
-                                  "type": "map",
                                   "keys": {
                                     "type": "string"
                                   },
+                                  "type": "map",
                                   "values": {
                                     "referenceable": true,
                                     "required": false,
@@ -237,34 +235,34 @@
                                 }
                               }
                             ],
-                            "required": true,
                             "type": "record"
                           }
                         },
                         {
                           "body": {
                             "description": "Callout request body customizations.",
+                            "required": true,
                             "fields": [
                               {
                                 "forward": {
                                   "default": false,
-                                  "description": "If `true`, forwards the incoming request's body to the callout request.",
-                                  "type": "boolean"
+                                  "type": "boolean",
+                                  "description": "If `true`, forwards the incoming request's body to the callout request."
                                 }
                               },
                               {
                                 "decode": {
                                   "default": false,
-                                  "description": "If `true`, decodes the request's body and make it available for customizations. Only JSON content type is supported.",
-                                  "type": "boolean"
+                                  "type": "boolean",
+                                  "description": "If `true`, decodes the request's body and make it available for customizations. Only JSON content type is supported."
                                 }
                               },
                               {
                                 "custom": {
-                                  "type": "map",
                                   "keys": {
                                     "type": "string"
                                   },
+                                  "type": "map",
                                   "values": {
                                     "referenceable": true,
                                     "required": false,
@@ -275,13 +273,13 @@
                                 }
                               }
                             ],
-                            "required": true,
                             "type": "record"
                           }
                         },
                         {
                           "error": {
                             "description": "The error handling policy the plugin will apply to TCP and HTTP errors.",
+                            "required": true,
                             "fields": [
                               {
                                 "on_error": {
@@ -297,39 +295,38 @@
                               {
                                 "retries": {
                                   "default": 2,
-                                  "description": "The number of retries the plugin will attempt on TCP and HTTP errors if `on_error` is set to `retry`.",
-                                  "type": "integer"
+                                  "type": "integer",
+                                  "description": "The number of retries the plugin will attempt on TCP and HTTP errors if `on_error` is set to `retry`."
                                 }
                               },
                               {
                                 "http_statuses": {
-                                  "description": "The list of HTTP status codes considered errors under the error handling policy.",
                                   "elements": {
-                                    "type": "integer",
                                     "between": [
                                       100,
                                       999
-                                    ]
+                                    ],
+                                    "type": "integer"
                                   },
+                                  "description": "The list of HTTP status codes considered errors under the error handling policy.",
                                   "type": "array"
                                 }
                               },
                               {
                                 "error_response_code": {
                                   "default": 400,
-                                  "description": "The error code to respond with if `on_error` is `fail` or if `retries` is achieved.",
-                                  "type": "integer"
+                                  "type": "integer",
+                                  "description": "The error code to respond with if `on_error` is `fail` or if `retries` is achieved."
                                 }
                               },
                               {
                                 "error_response_msg": {
                                   "default": "service callout error",
-                                  "description": "The error mesasge to respond with if `on_error` is set to `fail` or if `retries` is achieved. Templating with Lua expressions is supported.",
-                                  "type": "string"
+                                  "type": "string",
+                                  "description": "The error mesasge to respond with if `on_error` is set to `fail` or if `retries` is achieved. Templating with Lua expressions is supported."
                                 }
                               }
                             ],
-                            "required": true,
                             "type": "record"
                           }
                         },
@@ -341,50 +338,50 @@
                           }
                         }
                       ],
-                      "required": true,
                       "type": "record"
                     }
                   },
                   {
                     "response": {
                       "description": "Configurations of callout response handling.",
+                      "required": true,
                       "fields": [
                         {
                           "headers": {
                             "type": "record",
+                            "required": true,
                             "fields": [
                               {
                                 "store": {
                                   "default": true,
-                                  "description": "If `false`, skips storing the callout response headers into kong.ctx.shared.callouts.<name>.response.headers.",
-                                  "type": "boolean"
+                                  "type": "boolean",
+                                  "description": "If `false`, skips storing the callout response headers into kong.ctx.shared.callouts.<name>.response.headers."
                                 }
                               }
                             ],
-                            "required": true,
                             "description": "Callout response header customizations."
                           }
                         },
                         {
                           "body": {
-                            "type": "record",
                             "required": true,
                             "fields": [
                               {
                                 "store": {
                                   "default": true,
-                                  "description": "If `false`, skips storing the callout response body into kong.ctx.shared.callouts.<name>.response.body.",
-                                  "type": "boolean"
+                                  "type": "boolean",
+                                  "description": "If `false`, skips storing the callout response body into kong.ctx.shared.callouts.<name>.response.body."
                                 }
                               },
                               {
                                 "decode": {
                                   "default": false,
-                                  "description": "If `true`, decodes the response body before storing into the context. Only JSON is supported.",
-                                  "type": "boolean"
+                                  "type": "boolean",
+                                  "description": "If `true`, decodes the response body before storing into the context. Only JSON is supported."
                                 }
                               }
-                            ]
+                            ],
+                            "type": "record"
                           }
                         },
                         {
@@ -395,33 +392,37 @@
                           }
                         }
                       ],
-                      "required": true,
                       "type": "record"
                     }
                   },
                   {
                     "cache": {
                       "type": "record",
+                      "required": true,
                       "fields": [
                         {
                           "bypass": {
                             "default": false,
-                            "description": "If `true`, skips caching the callout response.",
-                            "type": "boolean"
+                            "type": "boolean",
+                            "description": "If `true`, skips caching the callout response."
                           }
                         }
                       ],
-                      "required": true,
                       "description": "Callout caching configuration."
                     }
                   }
-                ]
-              }
+                ],
+                "type": "record"
+              },
+              "type": "array",
+              "required": true,
+              "description": "A collection of callout objects, where each object represents an HTTP request made in the context of a proxy request."
             }
           },
           {
             "cache": {
               "description": "Plugin global caching configuration.",
+              "required": true,
               "fields": [
                 {
                   "strategy": {
@@ -430,8 +431,8 @@
                       "redis",
                       "off"
                     ],
-                    "default": "off",
                     "type": "string",
+                    "default": "off",
                     "required": true,
                     "description": "The backing data store in which to hold cache entities. Accepted values are: `off`, `memory`, and `redis`."
                   }
@@ -441,10 +442,10 @@
                     "fields": [
                       {
                         "dictionary_name": {
+                          "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template.",
                           "default": "kong_db_cache",
-                          "type": "string",
                           "required": true,
-                          "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template."
+                          "type": "string"
                         }
                       }
                     ],
@@ -457,9 +458,9 @@
                     "shorthand_fields": [
                       {
                         "timeout": {
-                          "type": "integer",
                           "deprecation": {
                             "message": "redis schema field `timeout` is deprecated, use `connect_timeout`, `send_timeout` and `read_timeout`",
+                            "removal_in_version": "4.0",
                             "replaced_with": [
                               {
                                 "path": [
@@ -476,49 +477,49 @@
                                   "read_timeout"
                                 ]
                               }
-                            ],
-                            "removal_in_version": "4.0"
-                          }
+                            ]
+                          },
+                          "type": "integer"
                         }
                       },
                       {
                         "sentinel_addresses": {
-                          "len_min": 1,
                           "deprecation": {
                             "message": "sentinel_addresses is deprecated, please use sentinel_nodes instead",
+                            "removal_in_version": "4.0",
                             "replaced_with": [
                               {
                                 "path": [
                                   "sentinel_nodes"
                                 ]
                               }
-                            ],
-                            "removal_in_version": "4.0"
+                            ]
                           },
-                          "type": "array",
+                          "len_min": 1,
                           "elements": {
                             "type": "string"
-                          }
+                          },
+                          "type": "array"
                         }
                       },
                       {
                         "cluster_addresses": {
-                          "len_min": 1,
                           "deprecation": {
                             "message": "cluster_addresses is deprecated, please use cluster_nodes instead",
+                            "removal_in_version": "4.0",
                             "replaced_with": [
                               {
                                 "path": [
                                   "cluster_nodes"
                                 ]
                               }
-                            ],
-                            "removal_in_version": "4.0"
+                            ]
                           },
-                          "type": "array",
+                          "len_min": 1,
                           "elements": {
                             "type": "string"
-                          }
+                          },
+                          "type": "array"
                         }
                       }
                     ],
@@ -545,141 +546,142 @@
                       },
                       {
                         "conditional": {
-                          "if_match": {
-                            "eq": true
-                          },
                           "then_field": "host",
                           "if_field": "connection_is_proxied",
                           "then_match": {
                             "required": true
+                          },
+                          "if_match": {
+                            "eq": true
                           }
                         }
                       },
                       {
                         "custom_entity_check": {
-                          "run_with_missing_fields": true,
                           "field_sources": [
                             "database",
                             "connection_is_proxied"
-                          ]
+                          ],
+                          "run_with_missing_fields": true
                         }
                       },
                       {
                         "custom_entity_check": {
-                          "run_with_missing_fields": true,
                           "field_sources": [
                             "cluster_nodes",
                             "connection_is_proxied"
-                          ]
+                          ],
+                          "run_with_missing_fields": true
                         }
                       },
                       {
                         "custom_entity_check": {
-                          "run_with_missing_fields": true,
                           "field_sources": [
                             "sentinel_role",
                             "connection_is_proxied"
-                          ]
+                          ],
+                          "run_with_missing_fields": true
                         }
                       }
                     ],
+                    "required": true,
                     "fields": [
                       {
                         "host": {
+                          "default": "127.0.0.1",
                           "description": "A string representing a host name, such as example.com.",
-                          "type": "string",
-                          "default": "127.0.0.1"
+                          "type": "string"
                         }
                       },
                       {
                         "port": {
-                          "default": 6379,
                           "between": [
                             0,
                             65535
                           ],
+                          "default": 6379,
                           "description": "An integer representing a port number between 0 and 65535, inclusive.",
                           "type": "integer"
                         }
                       },
                       {
                         "connect_timeout": {
-                          "default": 2000,
                           "between": [
                             0,
                             2147483646
                           ],
+                          "default": 2000,
                           "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
                           "type": "integer"
                         }
                       },
                       {
                         "send_timeout": {
-                          "default": 2000,
                           "between": [
                             0,
                             2147483646
                           ],
+                          "default": 2000,
                           "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
                           "type": "integer"
                         }
                       },
                       {
                         "read_timeout": {
-                          "default": 2000,
                           "between": [
                             0,
                             2147483646
                           ],
+                          "default": 2000,
                           "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
                           "type": "integer"
                         }
                       },
                       {
                         "username": {
-                          "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
                           "referenceable": true,
+                          "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
                           "type": "string"
                         }
                       },
                       {
                         "password": {
-                          "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
-                          "type": "string",
                           "referenceable": true,
-                          "encrypted": true
+                          "type": "string",
+                          "encrypted": true,
+                          "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis."
                         }
                       },
                       {
                         "sentinel_username": {
-                          "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
                           "referenceable": true,
+                          "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
                           "type": "string"
                         }
                       },
                       {
                         "sentinel_password": {
-                          "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.",
-                          "type": "string",
                           "referenceable": true,
-                          "encrypted": true
+                          "type": "string",
+                          "encrypted": true,
+                          "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels."
                         }
                       },
                       {
                         "database": {
+                          "default": 0,
                           "description": "Database to use for the Redis connection when using the `redis` strategy",
-                          "type": "integer",
-                          "default": 0
+                          "type": "integer"
                         }
                       },
                       {
                         "keepalive_pool_size": {
-                          "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
                           "between": [
                             1,
                             2147483646
                           ],
                           "default": 256,
+                          "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
                           "type": "integer"
                         }
                       },
@@ -713,9 +715,7 @@
                       {
                         "sentinel_nodes": {
                           "len_min": 1,
-                          "type": "array",
                           "elements": {
-                            "type": "record",
                             "fields": [
                               {
                                 "host": {
@@ -727,27 +727,27 @@
                               },
                               {
                                 "port": {
-                                  "default": 6379,
                                   "between": [
                                     0,
                                     65535
                                   ],
+                                  "default": 6379,
                                   "description": "An integer representing a port number between 0 and 65535, inclusive.",
                                   "type": "integer"
                                 }
                               }
-                            ]
+                            ],
+                            "type": "record"
                           },
+                          "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element.",
                           "required": false,
-                          "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
+                          "type": "array"
                         }
                       },
                       {
                         "cluster_nodes": {
                           "len_min": 1,
-                          "type": "array",
                           "elements": {
-                            "type": "record",
                             "fields": [
                               {
                                 "ip": {
@@ -759,35 +759,37 @@
                               },
                               {
                                 "port": {
-                                  "default": 6379,
                                   "between": [
                                     0,
                                     65535
                                   ],
+                                  "default": 6379,
                                   "description": "An integer representing a port number between 0 and 65535, inclusive.",
                                   "type": "integer"
                                 }
                               }
-                            ]
+                            ],
+                            "type": "record"
                           },
+                          "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element.",
                           "required": false,
-                          "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
+                          "type": "array"
                         }
                       },
                       {
                         "ssl": {
                           "description": "If set to true, uses SSL to connect to Redis.",
-                          "type": "boolean",
+                          "default": false,
                           "required": false,
-                          "default": false
+                          "type": "boolean"
                         }
                       },
                       {
                         "ssl_verify": {
                           "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-                          "type": "boolean",
+                          "default": false,
                           "required": false,
-                          "default": false
+                          "type": "boolean"
                         }
                       },
                       {
@@ -800,42 +802,38 @@
                       {
                         "cluster_max_redirections": {
                           "description": "Maximum retry attempts for redirection.",
-                          "type": "integer",
+                          "default": 5,
                           "required": false,
-                          "default": 5
+                          "type": "integer"
                         }
                       },
                       {
                         "connection_is_proxied": {
                           "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address.",
-                          "type": "boolean",
+                          "default": false,
                           "required": false,
-                          "default": false
+                          "type": "boolean"
                         }
                       }
                     ],
-                    "required": true,
                     "type": "record"
                   }
                 },
                 {
                   "cache_ttl": {
-                    "default": 300,
                     "gt": 0,
+                    "default": 300,
                     "description": "TTL in seconds of cache entities.",
                     "type": "integer"
                   }
                 }
               ],
-              "required": true,
               "type": "record"
             }
           },
           {
             "upstream": {
               "description": "Customizations to the upstream request.",
-              "type": "record",
-              "required": true,
               "fields": [
                 {
                   "by_lua": {
@@ -847,20 +845,21 @@
                 {
                   "query": {
                     "description": "Upstream request query param customizations.",
+                    "required": true,
                     "fields": [
                       {
                         "forward": {
                           "default": true,
-                          "description": "If `false`, does not forward request query params to upstream request.",
-                          "type": "boolean"
+                          "type": "boolean",
+                          "description": "If `false`, does not forward request query params to upstream request."
                         }
                       },
                       {
                         "custom": {
-                          "type": "map",
                           "keys": {
                             "type": "string"
                           },
+                          "type": "map",
                           "values": {
                             "referenceable": true,
                             "required": false,
@@ -871,27 +870,27 @@
                         }
                       }
                     ],
-                    "required": true,
                     "type": "record"
                   }
                 },
                 {
                   "headers": {
                     "description": "Callout request header customizations.",
+                    "required": true,
                     "fields": [
                       {
                         "forward": {
                           "default": true,
-                          "description": "If `false`, does not forward request headers to upstream request.",
-                          "type": "boolean"
+                          "type": "boolean",
+                          "description": "If `false`, does not forward request headers to upstream request."
                         }
                       },
                       {
                         "custom": {
-                          "type": "map",
                           "keys": {
                             "type": "string"
                           },
+                          "type": "map",
                           "values": {
                             "referenceable": true,
                             "required": false,
@@ -902,34 +901,34 @@
                         }
                       }
                     ],
-                    "required": true,
                     "type": "record"
                   }
                 },
                 {
                   "body": {
                     "description": "Callout request body customizations.",
+                    "required": true,
                     "fields": [
                       {
                         "forward": {
                           "default": true,
-                          "description": "If `false`, skips forwarding the incoming request's body to the upstream request.",
-                          "type": "boolean"
+                          "type": "boolean",
+                          "description": "If `false`, skips forwarding the incoming request's body to the upstream request."
                         }
                       },
                       {
                         "decode": {
                           "default": true,
-                          "description": "If `true`, decodes the request's body to make it available for upstream by_lua customizations. Only JSON content type is supported.",
-                          "type": "boolean"
+                          "type": "boolean",
+                          "description": "If `true`, decodes the request's body to make it available for upstream by_lua customizations. Only JSON content type is supported."
                         }
                       },
                       {
                         "custom": {
-                          "type": "map",
                           "keys": {
                             "type": "string"
                           },
+                          "type": "map",
                           "values": {
                             "referenceable": true,
                             "required": false,
@@ -940,11 +939,12 @@
                         }
                       }
                     ],
-                    "required": true,
                     "type": "record"
                   }
                 }
-              ]
+              ],
+              "required": true,
+              "type": "record"
             }
           }
         ],

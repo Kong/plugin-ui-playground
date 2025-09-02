@@ -2,17 +2,17 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -40,9 +40,9 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing protocols."
       }
     },
     {
@@ -50,112 +50,112 @@
         "fields": [
           {
             "certificate": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "rewrite": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "access": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "header_filter": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "body_filter": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "log": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "ws_handshake": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "ws_client_frame": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "ws_upstream_frame": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           },
           {
             "ws_close": {
-              "type": "array",
               "elements": {
                 "required": false,
                 "type": "string"
               },
+              "default": [],
               "required": true,
-              "default": []
+              "type": "array"
             }
           }
         ],

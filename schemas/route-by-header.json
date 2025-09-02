@@ -17,16 +17,16 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -35,11 +35,7 @@
         "fields": [
           {
             "rules": {
-              "type": "array",
-              "default": [],
-              "description": "Route by header rules.",
               "elements": {
-                "type": "record",
                 "fields": [
                   {
                     "upstream_name": {
@@ -49,19 +45,23 @@
                   },
                   {
                     "condition": {
-                      "len_min": 1,
-                      "required": true,
-                      "values": {
-                        "type": "string"
-                      },
                       "keys": {
                         "type": "string"
                       },
+                      "len_min": 1,
+                      "values": {
+                        "type": "string"
+                      },
+                      "required": true,
                       "type": "map"
                     }
                   }
-                ]
-              }
+                ],
+                "type": "record"
+              },
+              "default": [],
+              "description": "Route by header rules.",
+              "type": "array"
             }
           }
         ],

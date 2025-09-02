@@ -24,16 +24,16 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -57,9 +57,9 @@
           {
             "allow_origin_header": {
               "type": "string",
-              "description": "The value of the `Access-Control-Allow-Origin` header in the response to the gRPC-Web client.",
+              "default": "*",
               "required": false,
-              "default": "*"
+              "description": "The value of the `Access-Control-Allow-Origin` header in the response to the gRPC-Web client."
             }
           }
         ],

@@ -2,9 +2,9 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -25,16 +25,16 @@
             "https"
           ]
         },
-        "description": "A set of strings representing HTTP protocols.",
+        "type": "set",
         "required": true,
-        "type": "set"
+        "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null,
         "type": "foreign"
       }
     },
@@ -44,8 +44,8 @@
         "fields": [
           {
             "anonymous": {
-              "type": "string",
-              "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request fails with an authentication failure `4xx`. Note that this value must refer to the consumer `id` or `username` attribute, and **not** its `custom_id`."
+              "description": "An optional string (consumer UUID or username) value to use as an “anonymous” consumer if authentication fails. If empty (default null), the request fails with an authentication failure `4xx`. Note that this value must refer to the consumer `id` or `username` attribute, and **not** its `custom_id`.",
+              "type": "string"
             }
           },
           {
@@ -54,7 +54,6 @@
                 "username",
                 "custom_id"
               ],
-              "type": "array",
               "elements": {
                 "type": "string",
                 "one_of": [
@@ -62,68 +61,69 @@
                   "custom_id"
                 ]
               },
+              "description": "Whether to match the subject name of the client-supplied certificate against consumer's `username` and/or `custom_id` attribute. If set to `[]` (the empty array), then auto-matching is disabled.",
               "required": false,
-              "description": "Whether to match the subject name of the client-supplied certificate against consumer's `username` and/or `custom_id` attribute. If set to `[]` (the empty array), then auto-matching is disabled."
+              "type": "array"
             }
           },
           {
             "ca_certificates": {
-              "type": "array",
               "elements": {
                 "uuid": true,
                 "type": "string"
               },
+              "description": "List of CA Certificates strings to use as Certificate Authorities (CA) when validating a client certificate. At least one is required but you can specify as many as needed. The value of this array is comprised of primary keys (`id`).",
               "required": true,
-              "description": "List of CA Certificates strings to use as Certificate Authorities (CA) when validating a client certificate. At least one is required but you can specify as many as needed. The value of this array is comprised of primary keys (`id`)."
+              "type": "array"
             }
           },
           {
             "cache_ttl": {
-              "default": 60,
               "description": "Cache expiry time in seconds.",
+              "default": 60,
               "required": true,
               "type": "number"
             }
           },
           {
             "skip_consumer_lookup": {
-              "default": false,
               "description": "Skip consumer lookup once certificate is trusted against the configured CA list.",
+              "default": false,
               "required": true,
               "type": "boolean"
             }
           },
           {
             "allow_partial_chain": {
-              "default": false,
               "description": "Allow certificate verification with only an intermediate certificate. When this is enabled, you don't need to upload the full chain to Kong Certificates.",
+              "default": false,
               "required": true,
               "type": "boolean"
             }
           },
           {
             "authenticated_group_by": {
+              "default": "CN",
+              "description": "Certificate property to use as the authenticated group. Valid values are `CN` (Common Name) or `DN` (Distinguished Name). Once `skip_consumer_lookup` is applied, any client with a valid certificate can access the Service/API. To restrict usage to only some of the authenticated users, also add the ACL plugin (not covered here) and create allowed or denied groups of users.",
               "one_of": [
                 "CN",
                 "DN"
               ],
-              "default": "CN",
-              "type": "string",
               "required": false,
-              "description": "Certificate property to use as the authenticated group. Valid values are `CN` (Common Name) or `DN` (Distinguished Name). Once `skip_consumer_lookup` is applied, any client with a valid certificate can access the Service/API. To restrict usage to only some of the authenticated users, also add the ACL plugin (not covered here) and create allowed or denied groups of users."
+              "type": "string"
             }
           },
           {
             "revocation_check_mode": {
+              "default": "IGNORE_CA_ERROR",
+              "description": "Controls client certificate revocation check behavior. If set to `SKIP`, no revocation check is performed. If set to `IGNORE_CA_ERROR`, the plugin respects the revocation status when either OCSP or CRL URL is set, and doesn't fail on network issues. If set to `STRICT`, the plugin only treats the certificate as valid when it's able to verify the revocation status.",
               "one_of": [
                 "SKIP",
                 "IGNORE_CA_ERROR",
                 "STRICT"
               ],
-              "default": "IGNORE_CA_ERROR",
-              "type": "string",
               "required": false,
-              "description": "Controls client certificate revocation check behavior. If set to `SKIP`, no revocation check is performed. If set to `IGNORE_CA_ERROR`, the plugin respects the revocation status when either OCSP or CRL URL is set, and doesn't fail on network issues. If set to `STRICT`, the plugin only treats the certificate as valid when it's able to verify the revocation status."
+              "type": "string"
             }
           },
           {
@@ -149,8 +149,8 @@
           },
           {
             "default_consumer": {
-              "type": "string",
-              "description": "The UUID or username of the consumer to use when a trusted client certificate is presented but no consumer matches. Note that this value must refer to the consumer `id` or `username` attribute, and **not** its `custom_id`."
+              "description": "The UUID or username of the consumer to use when a trusted client certificate is presented but no consumer matches. Note that this value must refer to the consumer `id` or `username` attribute, and **not** its `custom_id`.",
+              "type": "string"
             }
           },
           {
