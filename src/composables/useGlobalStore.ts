@@ -1,5 +1,5 @@
 import { SelectItem } from '@kong/kongponents'
-import { reactive, toRefs, watch } from 'vue'
+import { reactive, toRefs } from 'vue'
 
 // Global application state interface
 export interface AppState {
