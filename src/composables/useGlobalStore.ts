@@ -1,5 +1,5 @@
 import { SelectItem } from '@kong/kongponents'
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs, watch } from 'vue'
 
 // Global application state interface
 export interface AppState {
@@ -28,6 +28,7 @@ export interface AppState {
 // Default state values
 const defaultState: AppState = {
   schema: '',
+  selectedPluginName: undefined, // 明确设置为 undefined，确保 toRefs 能创建 ref
   enableVFG: false,
   editorWidthPercent: 30,
   schemaOptions: [],
