@@ -10,6 +10,14 @@ updates:
     commit-message:
       prefix: "[bot]"
     open-pull-requests-limit: 10
+    allow:
+      - dependency-name: "@kong/*"
+      - dependency-name: "@kong-ui-public/*"
+    groups:
+      kong-packages:
+        patterns:
+          - "@kong/*"
+          - "@kong-ui-public/*"
     labels:
       - "dependencies"
       - "automated"
