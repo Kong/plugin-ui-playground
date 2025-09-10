@@ -13,7 +13,7 @@
   "packageManager": "pnpm@10.6.1",
   "devDependencies": {
     "@guolao/vue-monaco-editor": "^1.5.5",
-    "@kong-ui-public/entities-plugins": "9.92.2-pr.2473.e17fd1e52.0",
+    "@kong-ui-public/entities-plugins": "9.92.4",
     "@kong-ui-public/entities-plugins-icon": "^1.4.1",
     "@kong/design-tokens": "^1.17.3",
     "@kong/icons": "^1.37.0",
