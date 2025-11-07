@@ -17,49 +17,52 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "prompts": {
               "required": false,
+              "type": "record",
               "fields": [
                 {
                   "prepend": {
                     "len_max": 15,
                     "elements": {
                       "required": false,
+                      "type": "record",
                       "fields": [
                         {
                           "role": {
+                            "default": "system",
+                            "required": true,
+                            "type": "string",
                             "one_of": [
                               "system",
                               "assistant",
                               "user"
-                            ],
-                            "default": "system",
-                            "required": true,
-                            "type": "string"
+                            ]
                           }
                         },
                         {
                           "content": {
                             "len_max": 100000,
-                            "len_min": 1,
                             "required": true,
-                            "type": "string"
+                            "type": "string",
+                            "len_min": 1
                           }
                         }
-                      ],
-                      "type": "record"
+                      ]
                     },
-                    "type": "array",
                     "required": false,
+                    "type": "array",
                     "description": "Insert chat messages at the beginning of the chat message array. This array preserves exact order when adding messages."
                   }
                 },
@@ -68,65 +71,62 @@
                     "len_max": 15,
                     "elements": {
                       "required": false,
+                      "type": "record",
                       "fields": [
                         {
                           "role": {
+                            "default": "system",
+                            "required": true,
+                            "type": "string",
                             "one_of": [
                               "system",
                               "assistant",
                               "user"
-                            ],
-                            "default": "system",
-                            "required": true,
-                            "type": "string"
+                            ]
                           }
                         },
                         {
                           "content": {
                             "len_max": 100000,
-                            "len_min": 1,
                             "required": true,
-                            "type": "string"
+                            "type": "string",
+                            "len_min": 1
                           }
                         }
-                      ],
-                      "type": "record"
+                      ]
                     },
-                    "type": "array",
                     "required": false,
+                    "type": "array",
                     "description": "Insert chat messages at the end of the chat message array. This array preserves exact order when adding messages."
                   }
                 }
-              ],
-              "type": "record"
+              ]
             }
           },
           {
             "max_request_body_size": {
               "gt": 0,
               "default": 8192,
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-              "type": "integer"
+              "type": "integer",
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
             }
           },
           {
             "llm_format": {
               "default": "openai",
               "description": "LLM input and output format and schema to use",
+              "required": false,
+              "type": "string",
               "one_of": [
                 "openai",
                 "bedrock",
                 "gemini",
                 "cohere",
                 "huggingface"
-              ],
-              "required": false,
-              "type": "string"
+              ]
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

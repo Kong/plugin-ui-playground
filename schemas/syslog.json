@@ -24,24 +24,29 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "log_level": {
+              "default": "info",
+              "required": true,
+              "type": "string",
               "one_of": [
                 "debug",
                 "info",
@@ -51,14 +56,14 @@
                 "crit",
                 "alert",
                 "emerg"
-              ],
-              "default": "info",
-              "required": true,
-              "type": "string"
+              ]
             }
           },
           {
             "successful_severity": {
+              "default": "info",
+              "required": true,
+              "type": "string",
               "one_of": [
                 "debug",
                 "info",
@@ -68,14 +73,14 @@
                 "crit",
                 "alert",
                 "emerg"
-              ],
-              "default": "info",
-              "required": true,
-              "type": "string"
+              ]
             }
           },
           {
             "client_errors_severity": {
+              "default": "info",
+              "required": true,
+              "type": "string",
               "one_of": [
                 "debug",
                 "info",
@@ -85,14 +90,14 @@
                 "crit",
                 "alert",
                 "emerg"
-              ],
-              "default": "info",
-              "required": true,
-              "type": "string"
+              ]
             }
           },
           {
             "server_errors_severity": {
+              "default": "info",
+              "required": true,
+              "type": "string",
               "one_of": [
                 "debug",
                 "info",
@@ -102,10 +107,7 @@
                 "crit",
                 "alert",
                 "emerg"
-              ],
-              "default": "info",
-              "required": true,
-              "type": "string"
+              ]
             }
           },
           {
@@ -115,16 +117,18 @@
                 "type": "string",
                 "len_min": 1
               },
+              "description": "Lua code as a key-value map",
               "values": {
-                "len_min": 1,
-                "type": "string"
-              },
-              "description": "Lua code as a key-value map"
+                "type": "string",
+                "len_min": 1
+              }
             }
           },
           {
             "facility": {
               "default": "user",
+              "type": "string",
+              "required": true,
               "description": "The facility is used by the operating system to decide how to handle each log message.",
               "one_of": [
                 "auth",
@@ -147,14 +151,10 @@
                 "local5",
                 "local6",
                 "local7"
-              ],
-              "required": true,
-              "type": "string"
+              ]
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

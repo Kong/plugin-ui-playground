@@ -17,56 +17,56 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "rules": {
+              "default": [],
+              "type": "array",
+              "description": "Route by header rules.",
               "elements": {
+                "type": "record",
                 "fields": [
                   {
                     "upstream_name": {
-                      "required": true,
-                      "type": "string"
+                      "type": "string",
+                      "required": true
                     }
                   },
                   {
                     "condition": {
-                      "keys": {
-                        "type": "string"
-                      },
-                      "len_min": 1,
                       "values": {
                         "type": "string"
                       },
+                      "keys": {
+                        "type": "string"
+                      },
                       "required": true,
-                      "type": "map"
+                      "type": "map",
+                      "len_min": 1
                     }
                   }
-                ],
-                "type": "record"
-              },
-              "default": [],
-              "description": "Route by header rules.",
-              "type": "array"
+                ]
+              }
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

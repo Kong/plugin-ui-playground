@@ -2,17 +2,17 @@
   "fields": [
     {
       "consumer": {
+        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
@@ -40,127 +40,127 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing protocols."
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "certificate": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "rewrite": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "access": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "header_filter": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "body_filter": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "log": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "ws_handshake": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "ws_client_frame": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "ws_upstream_frame": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           },
           {
             "ws_close": {
-              "elements": {
-                "required": false,
-                "type": "string"
-              },
               "default": [],
               "required": true,
-              "type": "array"
+              "type": "array",
+              "elements": {
+                "type": "string",
+                "required": false
+              }
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

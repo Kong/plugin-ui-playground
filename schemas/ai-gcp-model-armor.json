@@ -17,34 +17,33 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "type": "record",
         "fields": [
           {
             "project_id": {
-              "description": "GCP Project ID for the GCP Model Armor subscription.",
               "required": true,
-              "type": "string"
+              "type": "string",
+              "description": "GCP Project ID for the GCP Model Armor subscription."
             }
           },
           {
             "location_id": {
-              "description": "GCP Location ID for the GCP Model Armor subscription.",
               "required": true,
-              "type": "string"
+              "type": "string",
+              "description": "GCP Location ID for the GCP Model Armor subscription."
             }
           },
           {
             "template_id": {
-              "description": "GCP Model Armor Template ID to enforce.",
               "required": true,
-              "type": "string"
+              "type": "string",
+              "description": "GCP Model Armor Template ID to enforce."
             }
           },
           {
@@ -56,9 +55,9 @@
           },
           {
             "source_language": {
-              "description": "Source language (ISO code) to use when 'enable_multi_language_detection' is enabled.",
               "required": false,
-              "type": "string"
+              "type": "string",
+              "description": "Source language (ISO code) to use when 'enable_multi_language_detection' is enabled."
             }
           },
           {
@@ -70,23 +69,23 @@
           },
           {
             "timeout": {
-              "type": "number",
               "default": 10000,
               "required": true,
+              "type": "number",
               "description": "Connection timeout with the GCP Model Armor service"
             }
           },
           {
             "guarding_mode": {
               "default": "INPUT",
+              "description": "The guardrail mode to use for the request",
+              "required": true,
               "type": "string",
               "one_of": [
                 "INPUT",
                 "OUTPUT",
                 "BOTH"
-              ],
-              "required": true,
-              "description": "The guardrail mode to use for the request"
+              ]
             }
           },
           {
@@ -112,44 +111,45 @@
           },
           {
             "response_buffer_size": {
-              "type": "number",
               "default": 100,
               "required": true,
+              "type": "number",
               "description": "The amount of bytes receiving from upstream to be buffered before sending to the model armor service. This only applies to the response content guard."
             }
           },
           {
             "text_source": {
               "default": "last_message",
+              "description": "Select where to pick the 'text' for the GCP Model Armor Services request.",
+              "required": true,
               "type": "string",
               "one_of": [
                 "concatenate_all_content",
                 "concatenate_user_content",
                 "last_message"
-              ],
-              "required": true,
-              "description": "Select where to pick the 'text' for the GCP Model Armor Services request."
+              ]
             }
           },
           {
             "gcp_use_service_account": {
-              "description": "Use service account auth for GCP-based providers and models.",
               "default": false,
               "required": false,
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Use service account auth for GCP-based providers and models."
             }
           },
           {
             "gcp_service_account_json": {
-              "referenceable": true,
               "type": "string",
-              "encrypted": true,
+              "referenceable": true,
               "required": false,
-              "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT` or from the instance/container metadata service."
+              "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT` or from the instance/container metadata service.",
+              "encrypted": true
             }
           }
         ],
         "required": true,
+        "type": "record",
         "entity_checks": [
           {
             "conditional": {

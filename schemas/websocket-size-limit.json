@@ -2,32 +2,31 @@
   "fields": [
     {
       "protocols": {
+        "default": [
+          "ws",
+          "wss"
+        ],
+        "required": true,
+        "type": "set",
         "elements": {
           "type": "string",
           "one_of": [
             "ws",
             "wss"
           ]
-        },
-        "default": [
-          "ws",
-          "wss"
-        ],
-        "required": true,
-        "type": "set"
+        }
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
-        "type": "record",
         "fields": [
           {
             "client_max_payload": {
@@ -51,6 +50,7 @@
           }
         ],
         "required": true,
+        "type": "record",
         "entity_checks": [
           {
             "at_least_one_of": [

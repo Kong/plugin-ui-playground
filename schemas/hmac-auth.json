@@ -2,14 +2,24 @@
   "fields": [
     {
       "consumer": {
+        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "protocols": {
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ],
+        "required": true,
+        "type": "set",
         "elements": {
           "type": "string",
           "one_of": [
@@ -20,44 +30,36 @@
             "ws",
             "wss"
           ]
-        },
-        "default": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "ws",
-          "wss"
-        ],
-        "required": true,
-        "type": "set"
+        }
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "hide_credentials": {
-              "type": "boolean",
               "default": false,
               "required": true,
+              "type": "boolean",
               "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service."
             }
           },
           {
             "clock_skew": {
               "gt": 0,
-              "default": 300,
+              "description": "Clock skew in seconds to prevent replay attacks.",
               "type": "number",
-              "description": "Clock skew in seconds to prevent replay attacks."
+              "default": 300
             }
           },
           {
@@ -68,24 +70,32 @@
           },
           {
             "validate_request_body": {
-              "type": "boolean",
               "default": false,
               "required": true,
+              "type": "boolean",
               "description": "A boolean value telling the plugin to enable body validation."
             }
           },
           {
             "enforce_headers": {
-              "elements": {
-                "type": "string"
-              },
               "default": [],
               "type": "array",
-              "description": "A list of headers that the client should at least use for HTTP signature creation."
+              "description": "A list of headers that the client should at least use for HTTP signature creation.",
+              "elements": {
+                "type": "string"
+              }
             }
           },
           {
             "algorithms": {
+              "default": [
+                "hmac-sha1",
+                "hmac-sha256",
+                "hmac-sha384",
+                "hmac-sha512"
+              ],
+              "type": "array",
+              "description": "A list of HMAC digest algorithms that the user wants to support. Allowed values are `hmac-sha1`, `hmac-sha256`, `hmac-sha384`, and `hmac-sha512`",
               "elements": {
                 "type": "string",
                 "one_of": [
@@ -94,27 +104,17 @@
                   "hmac-sha384",
                   "hmac-sha512"
                 ]
-              },
-              "default": [
-                "hmac-sha1",
-                "hmac-sha256",
-                "hmac-sha384",
-                "hmac-sha512"
-              ],
-              "type": "array",
-              "description": "A list of HMAC digest algorithms that the user wants to support. Allowed values are `hmac-sha1`, `hmac-sha256`, `hmac-sha384`, and `hmac-sha512`"
+              }
             }
           },
           {
             "realm": {
-              "type": "string",
               "required": false,
+              "type": "string",
               "description": "When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value."
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

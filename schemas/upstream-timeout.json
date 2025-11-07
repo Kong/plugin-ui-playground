@@ -17,21 +17,23 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "read_timeout": {
@@ -63,9 +65,7 @@
               "type": "integer"
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

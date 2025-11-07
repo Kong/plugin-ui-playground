@@ -17,68 +17,68 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "templates": {
+              "type": "array",
+              "required": true,
+              "description": "Array of templates available to the request context.",
               "elements": {
                 "required": true,
+                "type": "record",
                 "fields": [
                   {
                     "name": {
-                      "type": "string",
                       "required": true,
-                      "description": "Unique name for the template, can be called with `{template://NAME}`"
+                      "description": "Unique name for the template, can be called with `{template://NAME}`",
+                      "type": "string"
                     }
                   },
                   {
                     "template": {
-                      "type": "string",
                       "required": true,
-                      "description": "Template string for this request, supports mustache-style `{{placeholders}}`"
+                      "description": "Template string for this request, supports mustache-style `{{placeholders}}`",
+                      "type": "string"
                     }
                   }
-                ],
-                "type": "record"
-              },
-              "type": "array",
-              "required": true,
-              "description": "Array of templates available to the request context."
+                ]
+              }
             }
           },
           {
             "allow_untemplated_requests": {
-              "type": "boolean",
               "default": true,
               "required": true,
-              "description": "Set true to allow requests that don't call or match any template."
+              "description": "Set true to allow requests that don't call or match any template.",
+              "type": "boolean"
             }
           },
           {
             "log_original_request": {
-              "type": "boolean",
               "default": false,
               "required": true,
-              "description": "Set true to add the original request to the Kong log plugin(s) output."
+              "description": "Set true to add the original request to the Kong log plugin(s) output.",
+              "type": "boolean"
             }
           },
           {
             "max_request_body_size": {
-              "gt": 0,
               "default": 8192,
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
               "type": "integer",
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
+              "gt": 0
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

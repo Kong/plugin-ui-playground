@@ -2,17 +2,17 @@
   "fields": [
     {
       "consumer": {
+        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
@@ -33,313 +33,13 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "description": "The configuration for MCP authorization in OAuth2. If this is enabled, make sure the configured metadata_endpoint is also covered by the same route so the authorization can be applied correctly.",
-        "type": "record",
-        "fields": [
-          {
-            "max_request_body_size": {
-              "gt": 0,
-              "default": 8192,
-              "description": "max allowed body size allowed to be handled as MCP request.",
-              "type": "integer"
-            }
-          },
-          {
-            "metadata_endpoint": {
-              "starts_with": "/",
-              "type": "string",
-              "match_none": [
-                {
-                  "err": "must not have empty segments",
-                  "pattern": "//"
-                }
-              ],
-              "description": "The path for OAuth 2.0 Protected Resource Metadata. Default to $resource/.well-known/oauth-protected-resource. For example, if the configured resource is https://api.example.com/mcp, the metadata endpoint is /mcp/.well-known/oauth-protected-resource."
-            }
-          },
-          {
-            "resource": {
-              "type": "string",
-              "required": true,
-              "description": "The resource identifier."
-            }
-          },
-          {
-            "authorization_servers": {
-              "elements": {
-                "type": "string",
-                "description": "The authorization server identifier."
-              },
-              "type": "array",
-              "required": true,
-              "len_min": 1
-            }
-          },
-          {
-            "scopes_supported": {
-              "elements": {
-                "type": "string",
-                "description": "Recommended scopes that are used in authorization requests to request access to this protected resource."
-              },
-              "type": "array",
-              "required": false,
-              "len_min": 1
-            }
-          },
-          {
-            "claim_to_header": {
-              "elements": {
-                "fields": [
-                  {
-                    "claim": {
-                      "type": "string",
-                      "required": true,
-                      "description": "The claim name to be used in the access token."
-                    }
-                  },
-                  {
-                    "header": {
-                      "type": "string",
-                      "required": true,
-                      "description": "The HTTP header name to be used for forwarding the claim value to the upstream."
-                    }
-                  }
-                ],
-                "type": "record"
-              },
-              "type": "array",
-              "required": false,
-              "len_min": 1
-            }
-          },
-          {
-            "cache_introspection": {
-              "default": true,
-              "description": "If enabled, the plugin will cache the introspection response for the access token. This can improve performance by reducing the number of introspection requests to the authorization server.",
-              "type": "boolean"
-            }
-          },
-          {
-            "insecure_relaxed_audience_validation": {
-              "default": false,
-              "description": "If enabled, the plugin will not validate the audience of the access token. Disable it if the authorization server does not correctly set the audience claim according to RFC 8707 and MCP specification.",
-              "type": "boolean"
-            }
-          },
-          {
-            "introspection_endpoint": {
-              "description": "The introspection endpoint URL.",
-              "required": true,
-              "type": "string"
-            }
-          },
-          {
-            "mtls_introspection_endpoint": {
-              "description": "The mTLS alias for the introspection endpoint.",
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "client_id": {
-              "referenceable": true,
-              "description": "The client ID for authentication.",
-              "required": true,
-              "type": "string"
-            }
-          },
-          {
-            "client_secret": {
-              "encrypted": true,
-              "type": "string",
-              "referenceable": true,
-              "required": false,
-              "description": "The client secret for authentication."
-            }
-          },
-          {
-            "client_auth": {
-              "description": "The client authentication method.",
-              "one_of": [
-                "client_secret_basic",
-                "client_secret_post",
-                "client_secret_jwt",
-                "private_key_jwt",
-                "tls_client_auth",
-                "self_signed_tls_client_auth",
-                "none"
-              ],
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "client_jwk": {
-              "encrypted": true,
-              "type": "string",
-              "referenceable": true,
-              "required": false,
-              "description": "The client JWK for private_key_jwt authentication."
-            }
-          },
-          {
-            "client_alg": {
-              "description": "The client JWT signing algorithm.",
-              "one_of": [
-                "HS256",
-                "HS384",
-                "HS512",
-                "RS256",
-                "RS384",
-                "RS512",
-                "ES256",
-                "ES384",
-                "ES512",
-                "PS256",
-                "PS384",
-                "PS512",
-                "EdDSA"
-              ],
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "tls_client_auth_cert": {
-              "description": "PEM-encoded client certificate for mTLS.",
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "tls_client_auth_key": {
-              "description": "PEM-encoded private key for mTLS.",
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "tls_client_auth_ssl_verify": {
-              "description": "Verify server certificate in mTLS.",
-              "default": true,
-              "required": false,
-              "type": "boolean"
-            }
-          },
-          {
-            "args": {
-              "keys": {
-                "type": "string"
-              },
-              "type": "map",
-              "values": {
-                "type": "string"
-              },
-              "required": false,
-              "description": "Additional arguments to send in the POST body."
-            }
-          },
-          {
-            "headers": {
-              "keys": {
-                "type": "string"
-              },
-              "type": "map",
-              "values": {
-                "type": "string"
-              },
-              "required": false,
-              "description": "Additional headers for the introspection request."
-            }
-          },
-          {
-            "keepalive": {
-              "description": "Enable HTTP keepalive for requests.",
-              "default": true,
-              "required": false,
-              "type": "boolean"
-            }
-          },
-          {
-            "ssl_verify": {
-              "description": "Verify the SSL certificate.",
-              "default": true,
-              "required": false,
-              "type": "boolean"
-            }
-          },
-          {
-            "http_version": {
-              "type": "number",
-              "default": 1.1,
-              "required": false,
-              "description": "The HTTP version used for requests."
-            }
-          },
-          {
-            "timeout": {
-              "description": "Network I/O timeout in milliseconds.",
-              "default": 10000,
-              "required": false,
-              "type": "number"
-            }
-          },
-          {
-            "http_proxy": {
-              "description": "HTTP proxy to use.",
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "http_proxy_authorization": {
-              "description": "HTTP proxy authorization header.",
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "https_proxy": {
-              "description": "HTTPS proxy to use.",
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "https_proxy_authorization": {
-              "description": "HTTPS proxy authorization header.",
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "no_proxy": {
-              "description": "Comma-separated list of hosts to exclude from proxy.",
-              "required": false,
-              "type": "string"
-            }
-          },
-          {
-            "introspection_format": {
-              "description": "Controls introspection response format.",
-              "one_of": [
-                "string",
-                "base64",
-                "base64url"
-              ],
-              "required": false,
-              "type": "string"
-            }
-          }
-        ],
-        "required": false,
         "entity_checks": [
           {
             "conditional_at_least_one_of": {
@@ -376,6 +76,306 @@
               "if_match": {
                 "required": true
               }
+            }
+          }
+        ],
+        "description": "The configuration for MCP authorization in OAuth2. If this is enabled, make sure the configured metadata_endpoint is also covered by the same route so the authorization can be applied correctly.",
+        "required": false,
+        "type": "record",
+        "fields": [
+          {
+            "max_request_body_size": {
+              "gt": 0,
+              "default": 8192,
+              "description": "max allowed body size allowed to be handled as MCP request.",
+              "type": "integer"
+            }
+          },
+          {
+            "metadata_endpoint": {
+              "starts_with": "/",
+              "description": "The path for OAuth 2.0 Protected Resource Metadata. Default to $resource/.well-known/oauth-protected-resource. For example, if the configured resource is https://api.example.com/mcp, the metadata endpoint is /mcp/.well-known/oauth-protected-resource.",
+              "type": "string",
+              "match_none": [
+                {
+                  "err": "must not have empty segments",
+                  "pattern": "//"
+                }
+              ]
+            }
+          },
+          {
+            "resource": {
+              "required": true,
+              "type": "string",
+              "description": "The resource identifier."
+            }
+          },
+          {
+            "authorization_servers": {
+              "elements": {
+                "description": "The authorization server identifier.",
+                "type": "string"
+              },
+              "required": true,
+              "type": "array",
+              "len_min": 1
+            }
+          },
+          {
+            "scopes_supported": {
+              "elements": {
+                "type": "string",
+                "description": "Recommended scopes that are used in authorization requests to request access to this protected resource."
+              },
+              "required": false,
+              "type": "array",
+              "len_min": 1
+            }
+          },
+          {
+            "claim_to_header": {
+              "elements": {
+                "type": "record",
+                "fields": [
+                  {
+                    "claim": {
+                      "required": true,
+                      "type": "string",
+                      "description": "The claim name to be used in the access token."
+                    }
+                  },
+                  {
+                    "header": {
+                      "required": true,
+                      "type": "string",
+                      "description": "The HTTP header name to be used for forwarding the claim value to the upstream."
+                    }
+                  }
+                ]
+              },
+              "required": false,
+              "type": "array",
+              "len_min": 1
+            }
+          },
+          {
+            "cache_introspection": {
+              "default": true,
+              "type": "boolean",
+              "description": "If enabled, the plugin will cache the introspection response for the access token. This can improve performance by reducing the number of introspection requests to the authorization server."
+            }
+          },
+          {
+            "insecure_relaxed_audience_validation": {
+              "default": false,
+              "type": "boolean",
+              "description": "If enabled, the plugin will not validate the audience of the access token. Disable it if the authorization server does not correctly set the audience claim according to RFC 8707 and MCP specification."
+            }
+          },
+          {
+            "introspection_endpoint": {
+              "required": true,
+              "type": "string",
+              "description": "The introspection endpoint URL."
+            }
+          },
+          {
+            "mtls_introspection_endpoint": {
+              "required": false,
+              "type": "string",
+              "description": "The mTLS alias for the introspection endpoint."
+            }
+          },
+          {
+            "client_id": {
+              "referenceable": true,
+              "required": true,
+              "type": "string",
+              "description": "The client ID for authentication."
+            }
+          },
+          {
+            "client_secret": {
+              "type": "string",
+              "referenceable": true,
+              "required": false,
+              "description": "The client secret for authentication.",
+              "encrypted": true
+            }
+          },
+          {
+            "client_auth": {
+              "one_of": [
+                "client_secret_basic",
+                "client_secret_post",
+                "client_secret_jwt",
+                "private_key_jwt",
+                "tls_client_auth",
+                "self_signed_tls_client_auth",
+                "none"
+              ],
+              "required": false,
+              "type": "string",
+              "description": "The client authentication method."
+            }
+          },
+          {
+            "client_jwk": {
+              "type": "string",
+              "referenceable": true,
+              "required": false,
+              "description": "The client JWK for private_key_jwt authentication.",
+              "encrypted": true
+            }
+          },
+          {
+            "client_alg": {
+              "one_of": [
+                "HS256",
+                "HS384",
+                "HS512",
+                "RS256",
+                "RS384",
+                "RS512",
+                "ES256",
+                "ES384",
+                "ES512",
+                "PS256",
+                "PS384",
+                "PS512",
+                "EdDSA"
+              ],
+              "required": false,
+              "type": "string",
+              "description": "The client JWT signing algorithm."
+            }
+          },
+          {
+            "tls_client_auth_cert": {
+              "required": false,
+              "type": "string",
+              "description": "PEM-encoded client certificate for mTLS."
+            }
+          },
+          {
+            "tls_client_auth_key": {
+              "required": false,
+              "type": "string",
+              "description": "PEM-encoded private key for mTLS."
+            }
+          },
+          {
+            "tls_client_auth_ssl_verify": {
+              "default": true,
+              "required": false,
+              "type": "boolean",
+              "description": "Verify server certificate in mTLS."
+            }
+          },
+          {
+            "args": {
+              "values": {
+                "type": "string"
+              },
+              "description": "Additional arguments to send in the POST body.",
+              "required": false,
+              "type": "map",
+              "keys": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "headers": {
+              "values": {
+                "type": "string"
+              },
+              "description": "Additional headers for the introspection request.",
+              "required": false,
+              "type": "map",
+              "keys": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "keepalive": {
+              "default": true,
+              "required": false,
+              "type": "boolean",
+              "description": "Enable HTTP keepalive for requests."
+            }
+          },
+          {
+            "ssl_verify": {
+              "default": true,
+              "required": false,
+              "type": "boolean",
+              "description": "Verify the SSL certificate."
+            }
+          },
+          {
+            "http_version": {
+              "default": 1.1,
+              "required": false,
+              "type": "number",
+              "description": "The HTTP version used for requests."
+            }
+          },
+          {
+            "timeout": {
+              "default": 10000,
+              "required": false,
+              "type": "number",
+              "description": "Network I/O timeout in milliseconds."
+            }
+          },
+          {
+            "http_proxy": {
+              "required": false,
+              "type": "string",
+              "description": "HTTP proxy to use."
+            }
+          },
+          {
+            "http_proxy_authorization": {
+              "required": false,
+              "type": "string",
+              "description": "HTTP proxy authorization header."
+            }
+          },
+          {
+            "https_proxy": {
+              "required": false,
+              "type": "string",
+              "description": "HTTPS proxy to use."
+            }
+          },
+          {
+            "https_proxy_authorization": {
+              "required": false,
+              "type": "string",
+              "description": "HTTPS proxy authorization header."
+            }
+          },
+          {
+            "no_proxy": {
+              "required": false,
+              "type": "string",
+              "description": "Comma-separated list of hosts to exclude from proxy."
+            }
+          },
+          {
+            "introspection_format": {
+              "one_of": [
+                "string",
+                "base64",
+                "base64url"
+              ],
+              "required": false,
+              "type": "string",
+              "description": "Controls introspection response format."
             }
           }
         ]

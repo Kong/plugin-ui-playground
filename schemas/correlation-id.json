@@ -17,53 +17,53 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "header_name": {
               "default": "Kong-Request-ID",
-              "type": "string",
-              "description": "The HTTP header name to use for the correlation ID."
+              "description": "The HTTP header name to use for the correlation ID.",
+              "type": "string"
             }
           },
           {
             "generator": {
               "default": "uuid#counter",
               "type": "string",
+              "required": true,
+              "description": "The generator to use for the correlation ID. Accepted values are `uuid`, `uuid#counter`, and `tracker`. See [Generators](#generators).",
               "one_of": [
                 "uuid",
                 "uuid#counter",
                 "tracker"
-              ],
-              "required": true,
-              "description": "The generator to use for the correlation ID. Accepted values are `uuid`, `uuid#counter`, and `tracker`. See [Generators](#generators)."
+              ]
             }
           },
           {
             "echo_downstream": {
-              "type": "boolean",
               "default": false,
               "required": true,
-              "description": "Whether to echo the header back to downstream (the client)."
+              "description": "Whether to echo the header back to downstream (the client).",
+              "type": "boolean"
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

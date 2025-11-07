@@ -2,9 +2,9 @@
   "fields": [
     {
       "consumer": {
+        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
@@ -25,35 +25,35 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "secret_v1": {
-              "encrypted": true,
               "description": "Webhook secret",
               "referenceable": true,
               "required": true,
-              "type": "string"
+              "type": "string",
+              "encrypted": true
             }
           },
           {
             "tolerance_second": {
               "default": 300,
               "gt": -1,
-              "description": "Tolerance of the webhook timestamp in seconds. If the webhook timestamp is older than this number of seconds, it will be rejected with a '400' response.",
               "required": true,
+              "description": "Tolerance of the webhook timestamp in seconds. If the webhook timestamp is older than this number of seconds, it will be rejected with a '400' response.",
               "type": "integer"
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

@@ -17,41 +17,40 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
-        "type": "record",
         "fields": [
           {
             "body_schema": {
-              "description": "The request body schema specification. One of `body_schema` or `parameter_schema` must be specified.",
               "required": false,
+              "description": "The request body schema specification. One of `body_schema` or `parameter_schema` must be specified.",
               "type": "string"
             }
           },
           {
             "allowed_content_types": {
-              "elements": {
-                "required": true,
-                "type": "string"
-              },
               "default": [
                 "application/json"
               ],
               "description": "List of allowed content types. The value can be configured with the `charset` parameter. For example, `application/json; charset=UTF-8`.",
-              "type": "set"
+              "type": "set",
+              "elements": {
+                "type": "string",
+                "required": true
+              }
             }
           },
           {
@@ -65,39 +64,41 @@
                 "draft202012"
               ],
               "description": "Which validator to use. Supported values are `kong` (default) for using Kong's own schema validator, or `draft4`, `draft7`, `draft201909`, and `draft202012` for using their respective JSON Schema Draft compliant validators.",
-              "default": "kong",
               "required": true,
-              "type": "string"
+              "type": "string",
+              "default": "kong"
             }
           },
           {
             "parameter_schema": {
+              "description": "Array of parameter validator specification. One of `body_schema` or `parameter_schema` must be specified.",
+              "required": false,
+              "type": "array",
               "elements": {
-                "type": "record",
                 "fields": [
                   {
                     "in": {
-                      "description": "The location of the parameter.",
                       "one_of": [
                         "query",
                         "header",
                         "path"
                       ],
                       "required": true,
+                      "description": "The location of the parameter.",
                       "type": "string"
                     }
                   },
                   {
                     "name": {
-                      "description": "The name of the parameter. Parameter names are case-sensitive, and correspond to the parameter name used by the `in` property. If `in` is `path`, the `name` field MUST correspond to the named capture group from the configured `route`.",
                       "required": true,
+                      "description": "The name of the parameter. Parameter names are case-sensitive, and correspond to the parameter name used by the `in` property. If `in` is `path`, the `name` field MUST correspond to the named capture group from the configured `route`.",
                       "type": "string"
                     }
                   },
                   {
                     "required": {
-                      "description": "Determines whether this parameter is mandatory.",
                       "required": true,
+                      "description": "Determines whether this parameter is mandatory.",
                       "type": "boolean"
                     }
                   },
@@ -129,6 +130,7 @@
                     }
                   }
                 ],
+                "type": "record",
                 "entity_checks": [
                   {
                     "mutually_required": [
@@ -146,30 +148,28 @@
                     }
                   }
                 ]
-              },
-              "description": "Array of parameter validator specification. One of `body_schema` or `parameter_schema` must be specified.",
-              "required": false,
-              "type": "array"
+              }
             }
           },
           {
             "verbose_response": {
-              "description": "If enabled, the plugin returns more verbose and detailed validation errors.",
               "default": false,
               "required": true,
+              "description": "If enabled, the plugin returns more verbose and detailed validation errors.",
               "type": "boolean"
             }
           },
           {
             "content_type_parameter_validation": {
-              "description": "Determines whether to enable parameters validation of request content-type.",
               "default": true,
               "required": true,
+              "description": "Determines whether to enable parameters validation of request content-type.",
               "type": "boolean"
             }
           }
         ],
         "required": true,
+        "type": "record",
         "entity_checks": [
           {
             "at_least_one_of": [

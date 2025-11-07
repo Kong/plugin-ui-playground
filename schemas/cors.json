@@ -2,9 +2,9 @@
   "fields": [
     {
       "consumer": {
+        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
@@ -17,7 +17,6 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
@@ -25,53 +24,69 @@
             "https"
           ],
           "required": true,
+          "type": "string",
           "len_min": 1
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "origins": {
+              "description": "List of allowed domains for the `Access-Control-Allow-Origin` header. If you want to allow all origins, add `*` as a single value to this configuration field. The accepted values can either be flat strings or PCRE regexes. NOTE: If you don't specify any allowed domains, all origins are allowed.",
+              "type": "array",
               "elements": {
                 "type": "string"
-              },
-              "description": "List of allowed domains for the `Access-Control-Allow-Origin` header. If you want to allow all origins, add `*` as a single value to this configuration field. The accepted values can either be flat strings or PCRE regexes. NOTE: If you don't specify any allowed domains, all origins are allowed.",
-              "type": "array"
+              }
             }
           },
           {
             "headers": {
+              "description": "Value for the `Access-Control-Allow-Headers` header.",
+              "type": "array",
               "elements": {
                 "type": "string"
-              },
-              "description": "Value for the `Access-Control-Allow-Headers` header.",
-              "type": "array"
+              }
             }
           },
           {
             "exposed_headers": {
+              "description": "Value for the `Access-Control-Expose-Headers` header. If not specified, no custom headers are exposed.",
+              "type": "array",
               "elements": {
                 "type": "string"
-              },
-              "description": "Value for the `Access-Control-Expose-Headers` header. If not specified, no custom headers are exposed.",
-              "type": "array"
+              }
             }
           },
           {
             "methods": {
+              "default": [
+                "GET",
+                "HEAD",
+                "PUT",
+                "PATCH",
+                "POST",
+                "DELETE",
+                "OPTIONS",
+                "TRACE",
+                "CONNECT"
+              ],
+              "description": "'Value for the `Access-Control-Allow-Methods` header. Available options include `GET`, `HEAD`, `PUT`, `PATCH`, `POST`, `DELETE`, `OPTIONS`, `TRACE`, `CONNECT`. By default, all options are allowed.'",
+              "type": "array",
               "elements": {
                 "type": "string",
                 "one_of": [
@@ -85,20 +100,7 @@
                   "TRACE",
                   "CONNECT"
                 ]
-              },
-              "default": [
-                "GET",
-                "HEAD",
-                "PUT",
-                "PATCH",
-                "POST",
-                "DELETE",
-                "OPTIONS",
-                "TRACE",
-                "CONNECT"
-              ],
-              "description": "'Value for the `Access-Control-Allow-Methods` header. Available options include `GET`, `HEAD`, `PUT`, `PATCH`, `POST`, `DELETE`, `OPTIONS`, `TRACE`, `CONNECT`. By default, all options are allowed.'",
-              "type": "array"
+              }
             }
           },
           {
@@ -109,39 +111,37 @@
           },
           {
             "credentials": {
-              "description": "Flag to determine whether the `Access-Control-Allow-Credentials` header should be sent with `true` as the value.",
               "default": false,
               "required": true,
+              "description": "Flag to determine whether the `Access-Control-Allow-Credentials` header should be sent with `true` as the value.",
               "type": "boolean"
             }
           },
           {
             "private_network": {
-              "description": "Flag to determine whether the `Access-Control-Allow-Private-Network` header should be sent with `true` as the value.",
               "default": false,
               "required": true,
+              "description": "Flag to determine whether the `Access-Control-Allow-Private-Network` header should be sent with `true` as the value.",
               "type": "boolean"
             }
           },
           {
             "preflight_continue": {
-              "description": "A boolean value that instructs the plugin to proxy the `OPTIONS` preflight request to the Upstream service.",
               "default": false,
               "required": true,
+              "description": "A boolean value that instructs the plugin to proxy the `OPTIONS` preflight request to the Upstream service.",
               "type": "boolean"
             }
           },
           {
             "allow_origin_absent": {
-              "description": "A boolean value that skip cors response headers when origin header of request is empty",
               "default": true,
               "required": true,
+              "description": "A boolean value that skip cors response headers when origin header of request is empty",
               "type": "boolean"
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

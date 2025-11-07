@@ -24,21 +24,23 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "timeout": {
@@ -57,8 +59,8 @@
           {
             "https": {
               "default": true,
-              "description": "Use of HTTPS to connect with the Azure Functions server.",
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Use of HTTPS to connect with the Azure Functions server."
             }
           },
           {
@@ -70,32 +72,32 @@
           },
           {
             "apikey": {
-              "encrypted": true,
-              "type": "string",
               "referenceable": true,
-              "description": "The apikey to access the Azure resources. If provided, it is injected as the `x-functions-key` header."
+              "type": "string",
+              "description": "The apikey to access the Azure resources. If provided, it is injected as the `x-functions-key` header.",
+              "encrypted": true
             }
           },
           {
             "clientid": {
-              "encrypted": true,
-              "type": "string",
               "referenceable": true,
-              "description": "The `clientid` to access the Azure resources. If provided, it is injected as the `x-functions-clientid` header."
+              "type": "string",
+              "description": "The `clientid` to access the Azure resources. If provided, it is injected as the `x-functions-clientid` header.",
+              "encrypted": true
             }
           },
           {
             "appname": {
-              "type": "string",
               "required": true,
+              "type": "string",
               "description": "The Azure app name."
             }
           },
           {
             "hostdomain": {
-              "type": "string",
               "default": "azurewebsites.net",
               "required": true,
+              "type": "string",
               "description": "The domain where the function resides."
             }
           },
@@ -108,14 +110,12 @@
           },
           {
             "functionname": {
-              "type": "string",
               "required": true,
+              "type": "string",
               "description": "Name of the Azure function to invoke."
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

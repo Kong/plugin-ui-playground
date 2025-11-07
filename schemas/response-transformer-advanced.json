@@ -17,96 +17,102 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "remove": {
+              "required": true,
+              "type": "record",
               "fields": [
                 {
                   "json": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "headers": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 }
-              ],
-              "required": true,
-              "type": "record"
+              ]
             }
           },
           {
             "rename": {
+              "required": true,
+              "type": "record",
               "fields": [
                 {
                   "headers": {
-                    "elements": {
-                      "match": "^[^:]+:.*$",
-                      "type": "string"
-                    },
                     "default": [],
-                    "type": "array"
+                    "type": "array",
+                    "elements": {
+                      "type": "string",
+                      "match": "^[^:]+:.*$"
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 }
-              ],
-              "required": true,
-              "type": "record"
+              ]
             }
           },
           {
             "replace": {
+              "required": true,
+              "type": "record",
               "fields": [
                 {
                   "body": {
-                    "description": "String with which to replace the entire response body.",
-                    "type": "string"
+                    "type": "string",
+                    "description": "String with which to replace the entire response body."
                   }
                 },
                 {
                   "json": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string",
                       "one_of": [
@@ -114,48 +120,48 @@
                         "number",
                         "string"
                       ]
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "headers": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 }
-              ],
-              "required": true,
-              "type": "record"
+              ]
             }
           },
           {
             "add": {
+              "required": true,
+              "type": "record",
               "fields": [
                 {
                   "json": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string",
                       "one_of": [
@@ -163,48 +169,48 @@
                         "number",
                         "string"
                       ]
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "headers": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 }
-              ],
-              "required": true,
-              "type": "record"
+              ]
             }
           },
           {
             "append": {
+              "required": true,
+              "type": "record",
               "fields": [
                 {
                   "json": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string",
                       "one_of": [
@@ -212,83 +218,79 @@
                         "number",
                         "string"
                       ]
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "headers": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 }
-              ],
-              "required": true,
-              "type": "record"
+              ]
             }
           },
           {
             "allow": {
+              "required": true,
+              "type": "record",
               "fields": [
                 {
                   "json": {
+                    "type": "set",
                     "elements": {
                       "type": "string"
-                    },
-                    "type": "set"
+                    }
                   }
                 }
-              ],
-              "required": true,
-              "type": "record"
+              ]
             }
           },
           {
             "transform": {
+              "required": true,
+              "type": "record",
               "fields": [
                 {
                   "functions": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 },
                 {
                   "json": {
+                    "default": [],
+                    "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": [],
-                    "type": "array"
+                    }
                   }
                 }
-              ],
-              "required": true,
-              "type": "record"
+              ]
             }
           },
           {
@@ -298,9 +300,7 @@
               "type": "boolean"
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

@@ -17,13 +17,15 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "allow_patterns": {
@@ -33,8 +35,8 @@
                 "type": "string",
                 "len_min": 1
               },
-              "type": "array",
               "required": false,
+              "type": "array",
               "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat."
             }
           },
@@ -46,54 +48,56 @@
                 "type": "string",
                 "len_min": 1
               },
-              "type": "array",
               "required": false,
+              "type": "array",
               "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat."
             }
           },
           {
             "allow_all_conversation_history": {
-              "type": "boolean",
               "default": false,
               "required": true,
-              "description": "If true, will ignore all previous chat prompts from the conversation history."
+              "description": "If true, will ignore all previous chat prompts from the conversation history.",
+              "type": "boolean"
             }
           },
           {
             "max_request_body_size": {
               "gt": 0,
-              "default": 8192,
               "type": "integer",
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+              "default": 8192
             }
           },
           {
             "match_all_roles": {
-              "type": "boolean",
               "default": false,
               "required": true,
-              "description": "If true, will match all roles in addition to 'user' role in conversation history."
+              "description": "If true, will match all roles in addition to 'user' role in conversation history.",
+              "type": "boolean"
             }
           },
           {
             "llm_format": {
               "default": "openai",
               "description": "LLM input and output format and schema to use",
+              "required": false,
+              "type": "string",
               "one_of": [
                 "openai",
                 "bedrock",
                 "gemini",
                 "cohere",
                 "huggingface"
-              ],
-              "required": false,
-              "type": "string"
+              ]
             }
           },
           {
             "genai_category": {
               "default": "text/generation",
               "description": "Generative AI category of the request",
+              "required": false,
+              "type": "string",
               "one_of": [
                 "text/generation",
                 "text/embeddings",
@@ -102,14 +106,10 @@
                 "image/generation",
                 "video/generation",
                 "realtime/generation"
-              ],
-              "required": false,
-              "type": "string"
+              ]
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

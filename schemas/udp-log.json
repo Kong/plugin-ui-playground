@@ -24,26 +24,28 @@
           "type": "string",
           "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "host": {
-              "description": "A string representing a host name, such as example.com.",
               "required": true,
+              "description": "A string representing a host name, such as example.com.",
               "type": "string"
             }
           },
@@ -53,9 +55,9 @@
                 0,
                 65535
               ],
-              "description": "An integer representing a port number between 0 and 65535, inclusive.",
               "required": true,
-              "type": "integer"
+              "type": "integer",
+              "description": "An integer representing a port number between 0 and 65535, inclusive."
             }
           },
           {
@@ -72,16 +74,14 @@
                 "type": "string",
                 "len_min": 1
               },
+              "description": "Lua code as a key-value map",
               "values": {
-                "len_min": 1,
-                "type": "string"
-              },
-              "description": "Lua code as a key-value map"
+                "type": "string",
+                "len_min": 1
+              }
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

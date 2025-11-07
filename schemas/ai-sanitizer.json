@@ -17,35 +17,37 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
+        "required": true,
+        "type": "record",
         "fields": [
           {
             "host": {
-              "description": "The host of the sanitizer",
               "default": "localhost",
               "required": true,
+              "description": "The host of the sanitizer",
               "type": "string"
             }
           },
           {
             "port": {
-              "description": "The port of the sanitizer",
               "default": 8080,
               "required": true,
+              "description": "The port of the sanitizer",
               "type": "number"
             }
           },
           {
             "scheme": {
-              "description": "The protocol can be http and https",
               "default": "http",
               "required": true,
+              "description": "The protocol can be http and https",
               "type": "string"
             }
           },
@@ -66,14 +68,14 @@
           {
             "sanitization_mode": {
               "default": "INPUT",
+              "type": "string",
+              "required": true,
               "description": "The sanitization mode to use for the request",
               "one_of": [
                 "INPUT",
                 "OUTPUT",
                 "BOTH"
-              ],
-              "required": true,
-              "type": "string"
+              ]
             }
           },
           {
@@ -113,9 +115,9 @@
                   "all_and_credentials"
                 ]
               },
-              "description": "List of types to be anonymized",
               "required": true,
-              "type": "array"
+              "type": "array",
+              "description": "List of types to be anonymized"
             }
           },
           {
@@ -134,54 +136,52 @@
           },
           {
             "redact_type": {
-              "description": "What value to be used to redacted to",
               "default": "placeholder",
               "one_of": [
                 "placeholder",
                 "synthetic"
               ],
+              "description": "What value to be used to redacted to",
               "type": "string"
             }
           },
           {
             "custom_patterns": {
-              "len_min": 1,
               "elements": {
+                "type": "record",
                 "fields": [
                   {
                     "name": {
-                      "required": true,
-                      "type": "string"
+                      "type": "string",
+                      "required": true
                     }
                   },
                   {
                     "regex": {
-                      "required": true,
-                      "type": "string"
+                      "type": "string",
+                      "required": true
                     }
                   },
                   {
                     "score": {
+                      "default": 0.5,
+                      "required": true,
+                      "type": "number",
                       "between": [
                         0,
                         1
-                      ],
-                      "default": 0.5,
-                      "required": true,
-                      "type": "number"
+                      ]
                     }
                   }
-                ],
-                "type": "record"
+                ]
               },
-              "type": "array",
+              "description": "List of custom patterns to be used for anonymization",
               "required": false,
-              "description": "List of custom patterns to be used for anonymization"
+              "type": "array",
+              "len_min": 1
             }
           }
-        ],
-        "required": true,
-        "type": "record"
+        ]
       }
     }
   ],

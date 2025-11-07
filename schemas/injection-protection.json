@@ -2,9 +2,9 @@
   "fields": [
     {
       "consumer": {
+        "eq": null,
         "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
@@ -25,22 +25,21 @@
             "https"
           ]
         },
-        "type": "set",
         "required": true,
+        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
+        "eq": null,
         "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "eq": null,
         "type": "foreign"
       }
     },
     {
       "config": {
-        "type": "record",
         "fields": [
           {
             "injection_types": {
@@ -58,8 +57,8 @@
                   "java_exception"
                 ]
               },
-              "type": "set",
               "required": true,
+              "type": "set",
               "description": "The type of injections to check for."
             }
           },
@@ -78,72 +77,73 @@
                   "body"
                 ]
               },
-              "type": "set",
               "required": true,
+              "type": "set",
               "description": "The locations to check for injection."
             }
           },
           {
             "custom_injections": {
+              "default": null,
+              "description": "Custom regexes to check for.",
+              "type": "array",
               "elements": {
+                "type": "record",
                 "fields": [
                   {
                     "name": {
-                      "description": "A unique name for this injection.",
                       "required": true,
+                      "description": "A unique name for this injection.",
                       "type": "string"
                     }
                   },
                   {
                     "regex": {
-                      "description": "The regex to match against.",
+                      "type": "string",
                       "is_regex": true,
-                      "required": true,
-                      "type": "string"
+                      "description": "The regex to match against.",
+                      "required": true
                     }
                   }
-                ],
-                "type": "record"
-              },
-              "default": null,
-              "description": "Custom regexes to check for.",
-              "type": "array"
+                ]
+              }
             }
           },
           {
             "enforcement_mode": {
               "default": "block",
+              "description": "Enforcement mode of the security policy.",
+              "required": true,
               "type": "string",
               "one_of": [
                 "block",
                 "log_only"
-              ],
-              "required": true,
-              "description": "Enforcement mode of the security policy."
+              ]
             }
           },
           {
             "error_status_code": {
+              "default": 400,
+              "description": "The response status code when validation fails.",
+              "required": true,
+              "type": "integer",
               "between": [
                 400,
                 499
-              ],
-              "default": 400,
-              "type": "integer",
-              "required": true,
-              "description": "The response status code when validation fails."
+              ]
             }
           },
           {
             "error_message": {
-              "description": "The response message when validation fails",
               "default": "Bad Request",
               "required": true,
+              "description": "The response message when validation fails",
               "type": "string"
             }
           }
         ],
         "required": true,
+        "type": "record",
         "entity_checks": [
           {
             "at_least_one_of": [
