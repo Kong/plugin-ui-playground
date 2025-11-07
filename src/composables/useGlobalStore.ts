@@ -114,8 +114,15 @@ const actions = {
       try {
         let modules
         modules = import.meta.glob(`../../schemas/**/*.json`, { eager: true })
+
+        // 更严谨的路径匹配：确保路径以指定名称结尾
+        const normalizedPath = path.endsWith('.json') ? path : `${path}.json`
         const jsonData: any = Object.keys(modules)
-          .filter(key => key.includes(path))
+          .filter(key => {
+            // 提取文件名进行精确匹配
+            const fileName = key.split('/').pop() || ''
+            return fileName === normalizedPath
+          })
           .map(key => modules[key])[0]
 
         return JSON.stringify(jsonData.default, null, 2)

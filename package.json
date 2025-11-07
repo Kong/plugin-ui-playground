@@ -13,7 +13,7 @@
   "packageManager": "pnpm@10.6.1",
   "devDependencies": {
     "@guolao/vue-monaco-editor": "^1.5.5",
-    "@kong-ui-public/entities-plugins": "9.111.0",
+    "@kong-ui-public/entities-plugins": "9.113.3-pr.2622.d225a8784.0",
     "@kong-ui-public/entities-plugins-icon": "^1.4.3",
     "@kong/design-tokens": "^1.18.1",
     "@kong/icons": "^1.39.1",
@@ -31,5 +31,8 @@
     "vite": "^7.0.6",
     "vue": "^3.5.18",
     "vue-tsc": "^3.0.4"
+  },
+  "dependencies": {
+    "@kong-ui-public/entities-shared": "3.33.1-pr.2622.aa88c7375.0"
   }
 }
