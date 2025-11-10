@@ -38,14 +38,16 @@
 
 <script setup lang="ts">
 import '@kong-ui-public/entities-plugins/dist/style.css'
-import { KongManagerPluginFormConfig, PluginForm } from '@kong-ui-public/entities-plugins'
-import { computed, defineComponent, ref, watch } from 'vue'
+import { KongManagerPluginFormConfig, PluginForm, FEATURE_FLAGS } from '@kong-ui-public/entities-plugins'
+import { computed, defineComponent, provide, ref, watch } from 'vue'
 
 const props = defineProps<{
   schema: string
   pluginName?: string
   engine: 'vfg' | 'freeform'
 }>()
+
+provide(FEATURE_FLAGS.KM_1945_NEW_PLUGIN_CONFIG_FORM, props.engine === 'freeform')
 
 const hasError = ref(false)
 const errorMessage = ref('')
