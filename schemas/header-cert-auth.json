@@ -2,14 +2,16 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
-        "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumers"
       }
     },
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -25,17 +27,15 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
@@ -50,21 +50,21 @@
           },
           {
             "certificate_header_format": {
+              "required": true,
               "one_of": [
                 "base64_encoded",
                 "url_encoded"
               ],
-              "required": true,
               "type": "string",
               "description": "Format of the certificate header. Supported formats: `base64_encoded`, `url_encoded`."
             }
           },
           {
             "secure_source": {
-              "default": true,
-              "required": true,
               "description": "Whether to secure the source of the request. If set to `true`, the plugin will only allow requests from trusted IPs (configured by the `trusted_ips` config option).",
-              "type": "boolean"
+              "default": true,
+              "type": "boolean",
+              "required": true
             }
           },
           {
@@ -75,20 +75,20 @@
           },
           {
             "consumer_by": {
+              "description": "Whether to match the subject name of the client-supplied certificate against consumer's `username` and/or `custom_id` attribute. If set to `[]` (the empty array), then auto-matching is disabled.",
+              "type": "array",
               "default": [
                 "username",
                 "custom_id"
               ],
+              "required": false,
               "elements": {
                 "type": "string",
                 "one_of": [
                   "username",
                   "custom_id"
                 ]
-              },
-              "required": false,
-              "description": "Whether to match the subject name of the client-supplied certificate against consumer's `username` and/or `custom_id` attribute. If set to `[]` (the empty array), then auto-matching is disabled.",
-              "type": "array"
+              }
             }
           },
           {
@@ -104,34 +104,34 @@
           },
           {
             "cache_ttl": {
-              "default": 60,
-              "required": true,
               "description": "Cache expiry time in seconds.",
-              "type": "number"
+              "default": 60,
+              "type": "number",
+              "required": true
             }
           },
           {
             "skip_consumer_lookup": {
-              "default": false,
-              "required": true,
               "description": "Skip consumer lookup once certificate is trusted against the configured CA list.",
-              "type": "boolean"
+              "default": false,
+              "type": "boolean",
+              "required": true
             }
           },
           {
             "allow_partial_chain": {
-              "default": false,
-              "required": true,
               "description": "Allow certificate verification with only an intermediate certificate. When this is enabled, you don't need to upload the full chain to Kong Certificates.",
-              "type": "boolean"
+              "default": false,
+              "type": "boolean",
+              "required": true
             }
           },
           {
             "authenticated_group_by": {
-              "default": "CN",
               "description": "Certificate property to use as the authenticated group. Valid values are `CN` (Common Name) or `DN` (Distinguished Name). Once `skip_consumer_lookup` is applied, any client with a valid certificate can access the Service/API. To restrict usage to only some of the authenticated users, also add the ACL plugin (not covered here) and create allowed or denied groups of users.",
-              "required": false,
               "type": "string",
+              "default": "CN",
+              "required": false,
               "one_of": [
                 "CN",
                 "DN"
@@ -140,10 +140,10 @@
           },
           {
             "revocation_check_mode": {
-              "default": "IGNORE_CA_ERROR",
               "description": "Controls client certificate revocation check behavior. If set to `SKIP`, no revocation check is performed. If set to `IGNORE_CA_ERROR`, the plugin respects the revocation status when either OCSP or CRL URL is set, and doesn't fail on network issues. If set to `STRICT`, the plugin only treats the certificate as valid when it's able to verify the revocation status.",
-              "required": false,
               "type": "string",
+              "default": "IGNORE_CA_ERROR",
+              "required": false,
               "one_of": [
                 "SKIP",
                 "IGNORE_CA_ERROR",
@@ -153,15 +153,15 @@
           },
           {
             "http_timeout": {
-              "default": 30000,
               "description": "HTTP timeout threshold in milliseconds when communicating with the OCSP server or downloading CRL.",
+              "default": 30000,
               "type": "number"
             }
           },
           {
             "cert_cache_ttl": {
-              "default": 60000,
               "description": "The length of time in milliseconds between refreshes of the revocation check status cache.",
+              "default": 60000,
               "type": "number"
             }
           },
@@ -173,8 +173,8 @@
           },
           {
             "http_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
+              "description": "A string representing a host name, such as example.com.",
+              "type": "string"
             }
           },
           {
@@ -189,8 +189,8 @@
           },
           {
             "https_proxy_host": {
-              "type": "string",
-              "description": "A string representing a host name, such as example.com."
+              "description": "A string representing a host name, such as example.com.",
+              "type": "string"
             }
           },
           {

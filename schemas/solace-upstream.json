@@ -2,22 +2,24 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
-        "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumers"
       }
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -33,40 +35,36 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "session": {
               "description": "Session related configuration.",
-              "required": true,
-              "type": "record",
               "fields": [
                 {
                   "host": {
-                    "referenceable": true,
-                    "required": true,
                     "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
-                    "type": "string"
+                    "referenceable": true,
+                    "type": "string",
+                    "required": true
                   }
                 },
                 {
                   "vpn_name": {
-                    "len_max": 32,
-                    "required": false,
                     "description": "The name of the Message VPN to attempt to join when connecting to an event broker.",
-                    "type": "string"
+                    "len_max": 32,
+                    "type": "string",
+                    "required": false
                   }
                 },
                 {
                   "authentication": {
+                    "description": "Session authentication related configuration.",
+                    "type": "record",
                     "entity_checks": [
                       {
                         "conditional_at_least_one_of": {
@@ -103,16 +101,13 @@
                         }
                       }
                     ],
-                    "description": "Session authentication related configuration.",
-                    "required": true,
-                    "type": "record",
                     "fields": [
                       {
                         "scheme": {
-                          "default": "BASIC",
-                          "type": "string",
-                          "required": true,
                           "description": "The client authentication scheme used when connection to an event broker.",
+                          "type": "string",
+                          "default": "BASIC",
+                          "required": true,
                           "one_of": [
                             "NONE",
                             "BASIC",
@@ -122,135 +117,134 @@
                       },
                       {
                         "username": {
-                          "len_max": 189,
                           "description": "The username used with `BASIC` authentication scheme when connecting to an event broker.",
+                          "type": "string",
+                          "len_max": 189,
                           "referenceable": true,
                           "required": false,
-                          "type": "string",
                           "encrypted": true
                         }
                       },
                       {
                         "password": {
-                          "len_max": 128,
                           "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
+                          "type": "string",
+                          "len_max": 128,
                           "referenceable": true,
                           "required": false,
-                          "type": "string",
                           "encrypted": true
                         }
                       },
                       {
                         "basic_auth_header": {
-                          "required": false,
                           "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields.",
-                          "type": "string"
+                          "type": "string",
+                          "required": false
                         }
                       },
                       {
                         "access_token": {
-                          "type": "string",
-                          "referenceable": true,
-                          "required": false,
                           "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                          "encrypted": true
+                          "type": "string",
+                          "encrypted": true,
+                          "referenceable": true,
+                          "required": false
                         }
                       },
                       {
                         "access_token_header": {
-                          "required": false,
                           "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field.",
-                          "type": "string"
+                          "type": "string",
+                          "required": false
                         }
                       },
                       {
                         "id_token": {
-                          "type": "string",
-                          "referenceable": true,
-                          "required": false,
                           "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                          "encrypted": true
+                          "type": "string",
+                          "encrypted": true,
+                          "referenceable": true,
+                          "required": false
                         }
                       },
                       {
                         "id_token_header": {
-                          "required": false,
                           "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field.",
-                          "type": "string"
+                          "type": "string",
+                          "required": false
                         }
                       }
-                    ]
+                    ],
+                    "required": true
                   }
                 },
                 {
                   "connect_timeout": {
-                    "default": 3000,
+                    "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
+                    "type": "integer",
                     "between": [
                       100,
                       100000
                     ],
-                    "required": true,
-                    "type": "integer",
-                    "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host)."
+                    "default": 3000,
+                    "required": true
                   }
                 },
                 {
                   "ssl_validate_certificate": {
-                    "default": false,
-                    "required": true,
                     "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
-                    "type": "boolean"
+                    "default": false,
+                    "type": "boolean",
+                    "required": true
                   }
                 },
                 {
                   "calculate_message_expiry": {
-                    "default": true,
-                    "required": true,
                     "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
-                    "type": "boolean"
+                    "default": true,
+                    "type": "boolean",
+                    "required": true
                   }
                 },
                 {
                   "generate_rcv_timestamps": {
-                    "default": true,
-                    "required": true,
                     "description": "When enabled, a receive timestamp is recorded for each message.",
-                    "type": "boolean"
+                    "default": true,
+                    "type": "boolean",
+                    "required": true
                   }
                 },
                 {
                   "generate_send_timestamps": {
-                    "default": true,
-                    "required": true,
                     "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-                    "type": "boolean"
+                    "default": true,
+                    "type": "boolean",
+                    "required": true
                   }
                 },
                 {
                   "generate_sender_id": {
-                    "default": true,
-                    "required": true,
                     "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-                    "type": "boolean"
+                    "default": true,
+                    "type": "boolean",
+                    "required": true
                   }
                 },
                 {
                   "generate_sequence_number": {
-                    "default": true,
-                    "required": true,
                     "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
-                    "type": "boolean"
+                    "default": true,
+                    "type": "boolean",
+                    "required": true
                   }
                 },
                 {
                   "properties": {
-                    "values": {
-                      "referenceable": true,
-                      "required": true,
-                      "type": "string"
-                    },
+                    "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix).",
+                    "type": "map",
                     "required": false,
                     "keys": {
+                      "required": true,
                       "not_one_of": [
                         "SESSION_HOST",
                         "SESSION_CONNECT_BLOCKING",
@@ -275,25 +269,31 @@
                         "SESSION_OAUTH2_ACCESS_TOKEN",
                         "SESSION_OIDC_ID_TOKEN"
                       ],
-                      "required": true,
                       "type": "string",
                       "match": "^SESSION_"
                     },
-                    "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix).",
-                    "type": "map"
+                    "values": {
+                      "required": true,
+                      "referenceable": true,
+                      "type": "string"
+                    }
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           },
           {
             "message": {
-              "type": "record",
-              "required": true,
               "description": "The message related configuration.",
               "fields": [
                 {
                   "destinations": {
+                    "required": true,
+                    "type": "array",
+                    "len_min": 1,
+                    "description": "The message destinations.",
                     "elements": {
                       "type": "record",
                       "fields": [
@@ -306,10 +306,10 @@
                         },
                         {
                           "type": {
-                            "default": "QUEUE",
                             "description": "The type of the destination.",
-                            "required": true,
                             "type": "string",
+                            "default": "QUEUE",
+                            "required": true,
                             "one_of": [
                               "QUEUE",
                               "TOPIC"
@@ -317,19 +317,15 @@
                           }
                         }
                       ]
-                    },
-                    "description": "The message destinations.",
-                    "required": true,
-                    "type": "array",
-                    "len_min": 1
+                    }
                   }
                 },
                 {
                   "delivery_mode": {
-                    "default": "DIRECT",
                     "description": "Sets the message delivery mode.",
-                    "required": true,
                     "type": "string",
+                    "default": "DIRECT",
+                    "required": true,
                     "one_of": [
                       "DIRECT",
                       "PERSISTENT"
@@ -345,91 +341,91 @@
                 },
                 {
                   "priority": {
-                    "default": 4,
                     "description": "Sets the message priority.",
-                    "required": true,
                     "type": "integer",
                     "between": [
                       0,
                       255
-                    ]
+                    ],
+                    "default": 4,
+                    "required": true
                   }
                 },
                 {
                   "dmq_eligible": {
+                    "description": "Sets the dead message queue (DMQ) eligible property on the message.",
                     "default": false,
-                    "required": true,
                     "type": "boolean",
-                    "description": "Sets the dead message queue (DMQ) eligible property on the message."
+                    "required": true
                   }
                 },
                 {
                   "ttl": {
-                    "default": 0,
-                    "gt": -1,
-                    "required": true,
+                    "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message.",
                     "type": "integer",
-                    "description": "Sets the time to live (TTL) in milliseconds for the message. Setting the time to live to zero disables the TTL for the message."
+                    "default": 0,
+                    "required": true,
+                    "gt": -1
                   }
                 },
                 {
                   "ack_timeout": {
-                    "default": 2000,
+                    "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the message acknowledgement timeout in milliseconds (waiting time).",
+                    "type": "integer",
                     "between": [
                       1,
                       100000
                     ],
-                    "required": true,
-                    "type": "integer",
-                    "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the message acknowledgement timeout in milliseconds (waiting time)."
+                    "default": 2000,
+                    "required": true
                   }
                 },
                 {
                   "tracing": {
+                    "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
                     "default": false,
-                    "required": true,
                     "type": "boolean",
-                    "description": "Enable or disable the tracing. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems."
+                    "required": true
                   }
                 },
                 {
                   "tracing_sampled": {
+                    "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
                     "default": false,
-                    "required": true,
                     "type": "boolean",
-                    "description": "Indicates whether the message should be included in distributed tracing (i.e., if it should be \"sampled\" for the tracing)"
+                    "required": true
                   }
                 },
                 {
                   "forward_method": {
+                    "description": "Include the request method in the message.",
                     "default": false,
-                    "required": true,
                     "type": "boolean",
-                    "description": "Include the request method in the message."
+                    "required": true
                   }
                 },
                 {
                   "forward_uri": {
+                    "description": "Include the request URI and the URI arguments (as in, query arguments) in the message.",
                     "default": false,
-                    "required": true,
                     "type": "boolean",
-                    "description": "Include the request URI and the URI arguments (as in, query arguments) in the message."
+                    "required": true
                   }
                 },
                 {
                   "forward_headers": {
+                    "description": "Include the request headers in the message.",
                     "default": false,
-                    "required": true,
                     "type": "boolean",
-                    "description": "Include the request headers in the message."
+                    "required": true
                   }
                 },
                 {
                   "forward_body": {
+                    "description": "Include the request body and the body arguments in the message.",
                     "default": false,
-                    "required": true,
                     "type": "boolean",
-                    "description": "Include the request body and the body arguments in the message."
+                    "required": true
                   }
                 },
                 {
@@ -441,18 +437,22 @@
                 },
                 {
                   "functions": {
-                    "type": "array",
                     "required": false,
                     "description": "The Lua functions that manipulates (or generates) the message being sent to Solace. The `message` variable can be used to access the current message content, and the function can return a new content.",
+                    "type": "array",
                     "elements": {
                       "type": "string"
                     }
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

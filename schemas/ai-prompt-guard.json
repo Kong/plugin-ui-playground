@@ -2,6 +2,8 @@
   "fields": [
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -17,87 +19,84 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "allow_patterns": {
+              "required": false,
+              "type": "array",
               "len_max": 10,
+              "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat.",
               "elements": {
                 "len_max": 500,
                 "type": "string",
                 "len_min": 1
-              },
-              "required": false,
-              "type": "array",
-              "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat."
+              }
             }
           },
           {
             "deny_patterns": {
+              "required": false,
+              "type": "array",
               "len_max": 10,
+              "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat.",
               "elements": {
                 "len_max": 500,
                 "type": "string",
                 "len_min": 1
-              },
-              "required": false,
-              "type": "array",
-              "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat."
+              }
             }
           },
           {
             "allow_all_conversation_history": {
-              "default": false,
               "required": true,
-              "description": "If true, will ignore all previous chat prompts from the conversation history.",
-              "type": "boolean"
+              "default": false,
+              "type": "boolean",
+              "description": "If true, will ignore all previous chat prompts from the conversation history."
             }
           },
           {
             "max_request_body_size": {
-              "gt": 0,
+              "gt": -1,
+              "default": 1048576,
               "type": "integer",
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-              "default": 8192
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
             }
           },
           {
             "match_all_roles": {
-              "default": false,
               "required": true,
-              "description": "If true, will match all roles in addition to 'user' role in conversation history.",
-              "type": "boolean"
+              "default": false,
+              "type": "boolean",
+              "description": "If true, will match all roles in addition to 'user' role in conversation history."
             }
           },
           {
             "llm_format": {
-              "default": "openai",
-              "description": "LLM input and output format and schema to use",
               "required": false,
               "type": "string",
+              "default": "openai",
+              "description": "LLM input and output format and schema to use",
               "one_of": [
                 "openai",
                 "bedrock",
                 "gemini",
                 "cohere",
-                "huggingface"
+                "huggingface",
+                "anthropic"
               ]
             }
           },
           {
             "genai_category": {
-              "default": "text/generation",
-              "description": "Generative AI category of the request",
               "required": false,
               "type": "string",
+              "default": "text/generation",
+              "description": "Generative AI category of the request",
               "one_of": [
                 "text/generation",
                 "text/embeddings",
@@ -109,7 +108,9 @@
               ]
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

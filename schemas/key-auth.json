@@ -2,14 +2,15 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
-        "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumers"
       }
     },
     {
       "protocols": {
+        "required": true,
         "default": [
           "grpc",
           "grpcs",
@@ -18,7 +19,6 @@
           "ws",
           "wss"
         ],
-        "required": true,
         "type": "set",
         "elements": {
           "type": "string",
@@ -35,37 +35,35 @@
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "key_names": {
+              "required": true,
+              "type": "array",
               "default": [
                 "apikey"
               ],
-              "elements": {
-                "type": "string",
-                "description": "A string representing an HTTP header name."
-              },
-              "required": true,
               "description": "Describes an array of parameter names where the plugin will look for a key. The key names may only contain [a-z], [A-Z], [0-9], [_] underscore, and [-] hyphen.",
-              "type": "array"
+              "elements": {
+                "description": "A string representing an HTTP header name.",
+                "type": "string"
+              }
             }
           },
           {
             "hide_credentials": {
+              "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service. If `true`, the plugin strips the credential from the request.",
               "default": false,
-              "required": true,
               "type": "boolean",
-              "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service. If `true`, the plugin strips the credential from the request."
+              "required": true
             }
           },
           {
@@ -76,53 +74,53 @@
           },
           {
             "key_in_header": {
+              "description": "If enabled (default), the plugin reads the request header and tries to find the key in it.",
               "default": true,
-              "required": true,
               "type": "boolean",
-              "description": "If enabled (default), the plugin reads the request header and tries to find the key in it."
+              "required": true
             }
           },
           {
             "key_in_query": {
+              "description": "If enabled (default), the plugin reads the query parameter in the request and tries to find the key in it.",
               "default": true,
-              "required": true,
               "type": "boolean",
-              "description": "If enabled (default), the plugin reads the query parameter in the request and tries to find the key in it."
+              "required": true
             }
           },
           {
             "key_in_body": {
+              "description": "If enabled, the plugin reads the request body. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
               "default": false,
-              "required": true,
               "type": "boolean",
-              "description": "If enabled, the plugin reads the request body. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`."
+              "required": true
             }
           },
           {
             "run_on_preflight": {
+              "description": "A boolean value that indicates whether the plugin should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
               "default": true,
-              "required": true,
               "type": "boolean",
-              "description": "A boolean value that indicates whether the plugin should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed."
+              "required": true
             }
           },
           {
             "realm": {
-              "required": false,
+              "description": "When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value.",
               "type": "string",
-              "description": "When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value."
+              "required": false
             }
           },
           {
             "identity_realms": {
+              "description": "A configuration of Konnect Identity Realms that indicate where to source a consumer from.",
               "default": [
                 {
+                  "scope": "cp",
                   "region": null,
-                  "id": null,
-                  "scope": "cp"
+                  "id": null
                 }
               ],
-              "description": "A configuration of Konnect Identity Realms that indicate where to source a consumer from.",
               "type": "set",
               "elements": {
                 "fields": [
@@ -137,10 +135,10 @@
                   },
                   {
                     "id": {
-                      "auto": false,
+                      "uuid": true,
                       "description": "A string representing a UUID (universally unique identifier).",
                       "type": "string",
-                      "uuid": true
+                      "auto": false
                     }
                   },
                   {
@@ -168,8 +166,8 @@
                       "then_field": "id",
                       "if_field": "scope",
                       "then_match": {
-                        "eq": null,
-                        "required": false
+                        "required": false,
+                        "eq": null
                       },
                       "if_match": {
                         "eq": "cp"
@@ -181,8 +179,8 @@
                       "then_field": "region",
                       "if_field": "scope",
                       "then_match": {
-                        "eq": null,
-                        "required": false
+                        "required": false,
+                        "eq": null
                       },
                       "if_match": {
                         "eq": "cp"
@@ -193,7 +191,9 @@
               }
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

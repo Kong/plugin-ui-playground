@@ -2,6 +2,8 @@
   "fields": [
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -17,8 +19,6 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
@@ -27,60 +27,60 @@
         "fields": [
           {
             "project_id": {
-              "required": true,
+              "description": "GCP Project ID for the GCP Model Armor subscription.",
               "type": "string",
-              "description": "GCP Project ID for the GCP Model Armor subscription."
+              "required": true
             }
           },
           {
             "location_id": {
-              "required": true,
+              "description": "GCP Location ID for the GCP Model Armor subscription.",
               "type": "string",
-              "description": "GCP Location ID for the GCP Model Armor subscription."
+              "required": true
             }
           },
           {
             "template_id": {
-              "required": true,
+              "description": "GCP Model Armor Template ID to enforce.",
               "type": "string",
-              "description": "GCP Model Armor Template ID to enforce."
+              "required": true
             }
           },
           {
             "enable_multi_language_detection": {
+              "description": "Enables multi-language detection mode. Must be used with 'source_language'.",
               "default": false,
-              "type": "boolean",
-              "description": "Enables multi-language detection mode. Must be used with 'source_language'."
+              "type": "boolean"
             }
           },
           {
             "source_language": {
-              "required": false,
+              "description": "Source language (ISO code) to use when 'enable_multi_language_detection' is enabled.",
               "type": "string",
-              "description": "Source language (ISO code) to use when 'enable_multi_language_detection' is enabled."
+              "required": false
             }
           },
           {
             "stop_on_error": {
+              "description": "Stop processing if an error occurs.",
               "default": true,
-              "type": "boolean",
-              "description": "Stop processing if an error occurs."
+              "type": "boolean"
             }
           },
           {
             "timeout": {
+              "description": "Connection timeout with the GCP Model Armor service",
               "default": 10000,
-              "required": true,
               "type": "number",
-              "description": "Connection timeout with the GCP Model Armor service"
+              "required": true
             }
           },
           {
             "guarding_mode": {
-              "default": "INPUT",
-              "description": "The guardrail mode to use for the request",
               "required": true,
               "type": "string",
+              "default": "INPUT",
+              "description": "The guardrail mode to use for the request",
               "one_of": [
                 "INPUT",
                 "OUTPUT",
@@ -90,39 +90,39 @@
           },
           {
             "reveal_failure_categories": {
+              "description": "Whether to reveal failure categories in the response to the caller.",
               "default": false,
-              "type": "boolean",
-              "description": "Whether to reveal failure categories in the response to the caller."
+              "type": "boolean"
             }
           },
           {
             "request_failure_message": {
+              "description": "The message to return when a failure occurs on the request phase.",
               "default": "Request was filtered by GCP Model Armor",
-              "type": "string",
-              "description": "The message to return when a failure occurs on the request phase."
+              "type": "string"
             }
           },
           {
             "response_failure_message": {
+              "description": "The message to return when a failure occurs on the response phase.",
               "default": "Response was filtered by GCP Model Armor",
-              "type": "string",
-              "description": "The message to return when a failure occurs on the response phase."
+              "type": "string"
             }
           },
           {
             "response_buffer_size": {
-              "default": 100,
               "required": true,
+              "default": 100,
               "type": "number",
               "description": "The amount of bytes receiving from upstream to be buffered before sending to the model armor service. This only applies to the response content guard."
             }
           },
           {
             "text_source": {
-              "default": "last_message",
-              "description": "Select where to pick the 'text' for the GCP Model Armor Services request.",
               "required": true,
               "type": "string",
+              "default": "last_message",
+              "description": "Select where to pick the 'text' for the GCP Model Armor Services request.",
               "one_of": [
                 "concatenate_all_content",
                 "concatenate_user_content",
@@ -132,19 +132,19 @@
           },
           {
             "gcp_use_service_account": {
+              "description": "Use service account auth for GCP-based providers and models.",
               "default": false,
-              "required": false,
               "type": "boolean",
-              "description": "Use service account auth for GCP-based providers and models."
+              "required": false
             }
           },
           {
             "gcp_service_account_json": {
-              "type": "string",
-              "referenceable": true,
               "required": false,
-              "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT` or from the instance/container metadata service.",
-              "encrypted": true
+              "type": "string",
+              "encrypted": true,
+              "referenceable": true,
+              "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT` or from the instance/container metadata service."
             }
           }
         ],

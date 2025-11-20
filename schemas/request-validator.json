@@ -2,6 +2,8 @@
   "fields": [
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -17,17 +19,15 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
@@ -35,26 +35,30 @@
         "fields": [
           {
             "body_schema": {
-              "required": false,
               "description": "The request body schema specification. One of `body_schema` or `parameter_schema` must be specified.",
-              "type": "string"
+              "type": "string",
+              "required": false
             }
           },
           {
             "allowed_content_types": {
+              "description": "List of allowed content types. The value can be configured with the `charset` parameter. For example, `application/json; charset=UTF-8`.",
               "default": [
                 "application/json"
               ],
-              "description": "List of allowed content types. The value can be configured with the `charset` parameter. For example, `application/json; charset=UTF-8`.",
               "type": "set",
               "elements": {
-                "type": "string",
-                "required": true
+                "required": true,
+                "type": "string"
               }
             }
           },
           {
             "version": {
+              "required": true,
+              "type": "string",
+              "default": "kong",
+              "description": "Which validator to use. Supported values are `kong` (default) for using Kong's own schema validator, or `draft4`, `draft7`, `draft201909`, and `draft202012` for using their respective JSON Schema Draft compliant validators.",
               "one_of": [
                 "kong",
                 "draft4",
@@ -62,11 +66,7 @@
                 "draft7",
                 "draft201909",
                 "draft202012"
-              ],
-              "description": "Which validator to use. Supported values are `kong` (default) for using Kong's own schema validator, or `draft4`, `draft7`, `draft201909`, and `draft202012` for using their respective JSON Schema Draft compliant validators.",
-              "required": true,
-              "type": "string",
-              "default": "kong"
+              ]
             }
           },
           {
@@ -78,32 +78,34 @@
                 "fields": [
                   {
                     "in": {
+                      "required": true,
+                      "description": "The location of the parameter.",
                       "one_of": [
                         "query",
                         "header",
                         "path"
                       ],
-                      "required": true,
-                      "description": "The location of the parameter.",
                       "type": "string"
                     }
                   },
                   {
                     "name": {
-                      "required": true,
                       "description": "The name of the parameter. Parameter names are case-sensitive, and correspond to the parameter name used by the `in` property. If `in` is `path`, the `name` field MUST correspond to the named capture group from the configured `route`.",
-                      "type": "string"
+                      "type": "string",
+                      "required": true
                     }
                   },
                   {
                     "required": {
-                      "required": true,
                       "description": "Determines whether this parameter is mandatory.",
-                      "type": "boolean"
+                      "type": "boolean",
+                      "required": true
                     }
                   },
                   {
                     "style": {
+                      "description": "Required when `schema` and `explode` are set. Describes how the parameter value will be deserialized depending on the type of the parameter value.",
+                      "type": "string",
                       "one_of": [
                         "label",
                         "form",
@@ -112,15 +114,13 @@
                         "spaceDelimited",
                         "pipeDelimited",
                         "deepObject"
-                      ],
-                      "description": "Required when `schema` and `explode` are set. Describes how the parameter value will be deserialized depending on the type of the parameter value.",
-                      "type": "string"
+                      ]
                     }
                   },
                   {
                     "explode": {
-                      "description": "Required when `schema` and `style` are set. When `explode` is `true`, parameter values of type `array` or `object` generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters, this property has no effect.",
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Required when `schema` and `style` are set. When `explode` is `true`, parameter values of type `array` or `object` generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters, this property has no effect."
                     }
                   },
                   {
@@ -153,18 +153,18 @@
           },
           {
             "verbose_response": {
-              "default": false,
               "required": true,
-              "description": "If enabled, the plugin returns more verbose and detailed validation errors.",
-              "type": "boolean"
+              "default": false,
+              "type": "boolean",
+              "description": "If enabled, the plugin returns more verbose and detailed validation errors."
             }
           },
           {
             "content_type_parameter_validation": {
-              "default": true,
               "required": true,
-              "description": "Determines whether to enable parameters validation of request content-type.",
-              "type": "boolean"
+              "default": true,
+              "type": "boolean",
+              "description": "Determines whether to enable parameters validation of request content-type."
             }
           }
         ],

@@ -2,6 +2,8 @@
   "fields": [
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -17,25 +19,19 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "remove": {
-              "required": true,
-              "type": "record",
               "fields": [
                 {
                   "json": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
@@ -44,26 +40,26 @@
                 },
                 {
                   "headers": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
                     }
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           },
           {
             "rename": {
-              "required": true,
-              "type": "record",
               "fields": [
                 {
                   "json": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string",
@@ -73,8 +69,8 @@
                 },
                 {
                   "headers": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string",
@@ -82,18 +78,18 @@
                     }
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           },
           {
             "replace": {
-              "required": true,
-              "type": "record",
               "fields": [
                 {
                   "json": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string",
@@ -103,6 +99,8 @@
                 },
                 {
                   "json_types": {
+                    "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
+                    "type": "array",
                     "default": [],
                     "elements": {
                       "type": "string",
@@ -112,15 +110,13 @@
                         "string"
                       ]
                     },
-                    "required": true,
-                    "type": "array",
-                    "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string."
+                    "required": true
                   }
                 },
                 {
                   "headers": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string",
@@ -128,18 +124,18 @@
                     }
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           },
           {
             "add": {
-              "required": true,
-              "type": "record",
               "fields": [
                 {
                   "json": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string",
@@ -149,6 +145,8 @@
                 },
                 {
                   "json_types": {
+                    "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
+                    "type": "array",
                     "default": [],
                     "elements": {
                       "type": "string",
@@ -158,15 +156,13 @@
                         "string"
                       ]
                     },
-                    "required": true,
-                    "type": "array",
-                    "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string."
+                    "required": true
                   }
                 },
                 {
                   "headers": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string",
@@ -174,18 +170,18 @@
                     }
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           },
           {
             "append": {
-              "required": true,
-              "type": "record",
               "fields": [
                 {
                   "json": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string",
@@ -195,6 +191,8 @@
                 },
                 {
                   "json_types": {
+                    "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
+                    "type": "array",
                     "default": [],
                     "elements": {
                       "type": "string",
@@ -204,15 +202,13 @@
                         "string"
                       ]
                     },
-                    "required": true,
-                    "type": "array",
-                    "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string."
+                    "required": true
                   }
                 },
                 {
                   "headers": {
-                    "default": [],
                     "required": true,
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string",
@@ -220,10 +216,14 @@
                     }
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

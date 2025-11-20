@@ -2,6 +2,8 @@
   "fields": [
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -9,6 +11,8 @@
           "https"
         ],
         "elements": {
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
@@ -20,22 +24,19 @@
             "udp",
             "ws",
             "wss"
-          ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing protocols."
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "response_code": {
+              "required": true,
+              "type": "array",
+              "len_min": 1,
               "default": [
                 200,
                 301,
@@ -48,14 +49,13 @@
                   900
                 ]
               },
-              "type": "array",
-              "required": true,
-              "description": "Upstream response status code considered cacheable.",
-              "len_min": 1
+              "description": "Upstream response status code considered cacheable."
             }
           },
           {
             "request_method": {
+              "required": true,
+              "type": "array",
               "default": [
                 "GET",
                 "HEAD"
@@ -70,13 +70,13 @@
                   "PUT"
                 ]
               },
-              "required": true,
-              "type": "array",
               "description": "Downstream request methods considered cacheable."
             }
           },
           {
             "content_type": {
+              "required": true,
+              "type": "array",
               "default": [
                 "text/plain",
                 "application/json"
@@ -84,70 +84,68 @@
               "elements": {
                 "type": "string"
               },
-              "required": true,
-              "type": "array",
               "description": "Upstream response content types considered cacheable. The plugin performs an **exact match** against each specified value."
             }
           },
           {
             "cache_ttl": {
               "gt": 0,
-              "description": "TTL, in seconds, of cache entities.",
+              "default": 300,
               "type": "integer",
-              "default": 300
+              "description": "TTL, in seconds, of cache entities."
             }
           },
           {
             "strategy": {
+              "description": "The backing data store in which to hold cache entities.",
+              "required": true,
               "one_of": [
                 "memory"
               ],
-              "required": true,
-              "type": "string",
-              "description": "The backing data store in which to hold cache entities."
+              "type": "string"
             }
           },
           {
             "cache_control": {
-              "default": false,
               "required": true,
+              "default": false,
               "type": "boolean",
               "description": "When enabled, respect the Cache-Control behaviors defined in RFC7234."
             }
           },
           {
             "ignore_uri_case": {
-              "default": false,
               "required": false,
+              "default": false,
               "type": "boolean"
             }
           },
           {
             "storage_ttl": {
-              "description": "Number of seconds to keep resources in the storage backend. This value is independent of `cache_ttl` or resource TTLs defined by Cache-Control behaviors.",
-              "type": "integer"
+              "type": "integer",
+              "description": "Number of seconds to keep resources in the storage backend. This value is independent of `cache_ttl` or resource TTLs defined by Cache-Control behaviors."
             }
           },
           {
             "memory": {
-              "required": true,
-              "type": "record",
               "fields": [
                 {
                   "dictionary_name": {
-                    "default": "kong_db_cache",
                     "required": true,
+                    "default": "kong_db_cache",
                     "type": "string",
                     "description": "The name of the shared dictionary in which to hold cache entities when the memory strategy is selected. Note that this dictionary currently must be defined manually in the Kong Nginx template."
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           },
           {
             "vary_query_params": {
-              "type": "array",
               "description": "Relevant query parameters considered for the cache key. If undefined, all params are taken into consideration.",
+              "type": "array",
               "elements": {
                 "type": "string"
               }
@@ -155,8 +153,8 @@
           },
           {
             "vary_headers": {
-              "type": "array",
               "description": "Relevant headers considered for the cache key. If undefined, none of the headers are taken into consideration.",
+              "type": "array",
               "elements": {
                 "type": "string"
               }
@@ -164,8 +162,6 @@
           },
           {
             "response_headers": {
-              "type": "record",
-              "required": true,
               "description": "Caching related diagnostic headers that should be included in cached responses",
               "fields": [
                 {
@@ -186,10 +182,14 @@
                     "default": true
                   }
                 }
-              ]
+              ],
+              "type": "record",
+              "required": true
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

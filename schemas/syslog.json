@@ -2,6 +2,8 @@
   "fields": [
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -9,6 +11,8 @@
           "https"
         ],
         "elements": {
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
@@ -20,32 +24,26 @@
             "udp",
             "ws",
             "wss"
-          ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "log_level": {
-              "default": "info",
               "required": true,
+              "default": "info",
               "type": "string",
               "one_of": [
                 "debug",
@@ -61,8 +59,8 @@
           },
           {
             "successful_severity": {
-              "default": "info",
               "required": true,
+              "default": "info",
               "type": "string",
               "one_of": [
                 "debug",
@@ -78,8 +76,8 @@
           },
           {
             "client_errors_severity": {
-              "default": "info",
               "required": true,
+              "default": "info",
               "type": "string",
               "one_of": [
                 "debug",
@@ -95,8 +93,8 @@
           },
           {
             "server_errors_severity": {
-              "default": "info",
               "required": true,
+              "default": "info",
               "type": "string",
               "one_of": [
                 "debug",
@@ -112,24 +110,23 @@
           },
           {
             "custom_fields_by_lua": {
-              "type": "map",
+              "description": "Lua code as a key-value map",
               "keys": {
                 "type": "string",
                 "len_min": 1
               },
-              "description": "Lua code as a key-value map",
               "values": {
                 "type": "string",
                 "len_min": 1
-              }
+              },
+              "type": "map"
             }
           },
           {
             "facility": {
-              "default": "user",
-              "type": "string",
-              "required": true,
               "description": "The facility is used by the operating system to decide how to handle each log message.",
+              "type": "string",
+              "default": "user",
               "one_of": [
                 "auth",
                 "authpriv",
@@ -151,10 +148,13 @@
                 "local5",
                 "local6",
                 "local7"
-              ]
+              ],
+              "required": true
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

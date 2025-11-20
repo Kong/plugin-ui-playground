@@ -2,14 +2,16 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
-        "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumers"
       }
     },
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -25,40 +27,38 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "graphql_server_path": {
-              "default": "/graphql",
-              "starts_with": "/",
-              "description": "The GraphQL endpoint serve path",
               "required": true,
+              "type": "string",
+              "starts_with": "/",
+              "default": "/graphql",
+              "description": "The GraphQL endpoint serve path",
               "match_none": [
                 {
                   "pattern": "//",
                   "err": "must not have empty segments"
                 }
-              ],
-              "type": "string"
+              ]
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

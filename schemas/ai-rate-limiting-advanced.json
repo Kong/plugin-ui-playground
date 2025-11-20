@@ -1,21 +1,9 @@
 {
-  "entity_checks": [
-    {
-      "custom_entity_check": {
-        "field_sources": [
-          "config"
-        ]
-      }
-    }
-  ],
-  "supported_partials": {
-    "redis-ee": [
-      "config.redis"
-    ]
-  },
   "fields": [
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -31,18 +19,16 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "identifier": {
+              "description": "The type of identifier used to generate the rate limit key. Defines the scope used to increment the rate limiting counters. Can be `ip`, `credential`, `consumer`, `service`, `header`, `path` or `consumer-group`. Note if `identifier` is `consumer-group`, the plugin must be applied on a consumer group entity. Because a consumer may belong to multiple consumer groups, the plugin needs to know explicitly which consumer group to limit the rate.",
+              "type": "string",
               "default": "consumer",
               "one_of": [
                 "ip",
@@ -53,20 +39,18 @@
                 "path",
                 "consumer-group"
               ],
-              "required": true,
-              "type": "string",
-              "description": "The type of identifier used to generate the rate limit key. Defines the scope used to increment the rate limiting counters. Can be `ip`, `credential`, `consumer`, `service`, `header`, `path` or `consumer-group`. Note if `identifier` is `consumer-group`, the plugin must be applied on a consumer group entity. Because a consumer may belong to multiple consumer groups, the plugin needs to know explicitly which consumer group to limit the rate."
+              "required": true
             }
           },
           {
             "window_type": {
+              "description": "Sets the time window type to either `sliding` (default) or `fixed`. Sliding windows apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight. Fixed windows consist of buckets that are statically assigned to a definitive time range, each request is mapped to only one fixed window based on its timestamp and will affect only that window's counters.",
               "default": "sliding",
+              "type": "string",
               "one_of": [
                 "fixed",
                 "sliding"
-              ],
-              "type": "string",
-              "description": "Sets the time window type to either `sliding` (default) or `fixed`. Sliding windows apply the rate limiting logic while taking into account previous hit rates (from the window that immediately precedes the current) using a dynamic weight. Fixed windows consist of buckets that are statically assigned to a definitive time range, each request is mapped to only one fixed window based on its timestamp and will affect only that window's counters."
+              ]
             }
           },
           {
@@ -83,16 +67,16 @@
           },
           {
             "llm_providers": {
-              "description": "The provider config. Takes an array of `name`, `limit` and `window size` values.",
               "required": true,
+              "description": "The provider config. Takes an array of `name`, `limit` and `window size` values.",
               "type": "array",
               "elements": {
                 "type": "record",
                 "fields": [
                   {
                     "window_size": {
-                      "description": "One or more window sizes to apply a limit to (defined in seconds). There must be a matching number of window limits and sizes specified.",
                       "required": true,
+                      "description": "One or more window sizes to apply a limit to (defined in seconds). There must be a matching number of window limits and sizes specified.",
                       "type": "array",
                       "elements": {
                         "type": "number"
@@ -101,6 +85,8 @@
                   },
                   {
                     "name": {
+                      "required": true,
+                      "description": "The LLM provider to which the rate limit applies.",
                       "one_of": [
                         "openai",
                         "azure",
@@ -111,17 +97,16 @@
                         "bedrock",
                         "gemini",
                         "huggingface",
-                        "requestPrompt"
+                        "requestPrompt",
+                        "customCost"
                       ],
-                      "required": true,
-                      "description": "The LLM provider to which the rate limit applies.",
                       "type": "string"
                     }
                   },
                   {
                     "limit": {
-                      "description": "One or more requests-per-window limits to apply. There must be a matching number of window limits and sizes specified.",
                       "required": true,
+                      "description": "One or more requests-per-window limits to apply. There must be a matching number of window limits and sizes specified.",
                       "type": "array",
                       "elements": {
                         "type": "number"
@@ -134,60 +119,423 @@
           },
           {
             "strategy": {
+              "description": "The rate-limiting strategy to use for retrieving and incrementing the limits. Available values are: `local`, `redis` and `cluster`.",
+              "type": "string",
               "default": "local",
               "one_of": [
                 "cluster",
                 "redis",
                 "local"
               ],
-              "required": true,
-              "type": "string",
-              "description": "The rate-limiting strategy to use for retrieving and incrementing the limits. Available values are: `local`, `redis` and `cluster`."
+              "required": true
             }
           },
           {
             "dictionary_name": {
-              "default": "kong_rate_limiting_counters",
               "required": true,
-              "description": "The shared dictionary where counters are stored. When the plugin is configured to synchronize counter data externally (that is `config.strategy` is `cluster` or `redis` and `config.sync_rate` isn't `-1`), this dictionary serves as a buffer to populate counters in the data store on each synchronization cycle.",
-              "type": "string"
+              "default": "kong_rate_limiting_counters",
+              "type": "string",
+              "description": "The shared dictionary where counters are stored. When the plugin is configured to synchronize counter data externally (that is `config.strategy` is `cluster` or `redis` and `config.sync_rate` isn't `-1`), this dictionary serves as a buffer to populate counters in the data store on each synchronization cycle."
             }
           },
           {
             "hide_client_headers": {
-              "default": false,
               "description": "Optionally hide informative response headers that would otherwise provide information about the current status of limits and counters.",
+              "default": false,
               "type": "boolean"
             }
           },
           {
             "retry_after_jitter_max": {
-              "default": 0,
               "description": "The upper bound of a jitter (random delay) in seconds to be added to the `Retry-After` header of denied requests (status = `429`) in order to prevent all the clients from coming back at the same time. The lower bound of the jitter is `0`; in this case, the `Retry-After` header is equal to the `RateLimit-Reset` header.",
+              "default": 0,
               "type": "number"
             }
           },
           {
             "header_name": {
-              "type": "string",
-              "description": "A string representing an HTTP header name."
+              "description": "A string representing an HTTP header name.",
+              "type": "string"
             }
           },
           {
             "path": {
-              "starts_with": "/",
+              "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
               "match_none": [
                 {
                   "pattern": "//",
                   "err": "must not have empty segments"
                 }
               ],
-              "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
-              "type": "string"
+              "type": "string",
+              "starts_with": "/"
             }
           },
           {
             "redis": {
+              "fields": [
+                {
+                  "host": {
+                    "description": "A string representing a host name, such as example.com.",
+                    "referenceable": true,
+                    "type": "string",
+                    "default": "127.0.0.1"
+                  }
+                },
+                {
+                  "port": {
+                    "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                    "type": "integer",
+                    "between": [
+                      0,
+                      65535
+                    ],
+                    "referenceable": true,
+                    "default": 6379
+                  }
+                },
+                {
+                  "connect_timeout": {
+                    "between": [
+                      0,
+                      2147483646
+                    ],
+                    "default": 2000,
+                    "type": "integer",
+                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
+                  }
+                },
+                {
+                  "send_timeout": {
+                    "between": [
+                      0,
+                      2147483646
+                    ],
+                    "default": 2000,
+                    "type": "integer",
+                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
+                  }
+                },
+                {
+                  "read_timeout": {
+                    "between": [
+                      0,
+                      2147483646
+                    ],
+                    "default": 2000,
+                    "type": "integer",
+                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
+                  }
+                },
+                {
+                  "username": {
+                    "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
+                    "referenceable": true,
+                    "type": "string"
+                  }
+                },
+                {
+                  "password": {
+                    "encrypted": true,
+                    "referenceable": true,
+                    "type": "string",
+                    "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis."
+                  }
+                },
+                {
+                  "sentinel_username": {
+                    "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+.",
+                    "referenceable": true,
+                    "type": "string"
+                  }
+                },
+                {
+                  "sentinel_password": {
+                    "encrypted": true,
+                    "referenceable": true,
+                    "type": "string",
+                    "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels."
+                  }
+                },
+                {
+                  "cloud_authentication": {
+                    "required": false,
+                    "type": "record",
+                    "entity_checks": [
+                      {
+                        "mutually_required": [
+                          "aws_access_key_id",
+                          "aws_secret_access_key"
+                        ]
+                      },
+                      {
+                        "mutually_required": [
+                          "aws_assume_role_arn",
+                          "aws_role_session_name"
+                        ]
+                      },
+                      {
+                        "custom_entity_check": {
+                          "field_sources": [
+                            "auth_provider",
+                            "aws_cache_name"
+                          ]
+                        }
+                      }
+                    ],
+                    "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance.",
+                    "fields": [
+                      {
+                        "auth_provider": {
+                          "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
+                          "type": "string",
+                          "one_of": [
+                            "aws",
+                            "gcp",
+                            "azure"
+                          ]
+                        }
+                      },
+                      {
+                        "aws_cache_name": {
+                          "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                          "referenceable": true,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "aws_region": {
+                          "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                          "referenceable": true,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "aws_is_serverless": {
+                          "required": false,
+                          "default": true,
+                          "type": "boolean",
+                          "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`."
+                        }
+                      },
+                      {
+                        "aws_access_key_id": {
+                          "encrypted": true,
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`."
+                        }
+                      },
+                      {
+                        "aws_secret_access_key": {
+                          "encrypted": true,
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`."
+                        }
+                      },
+                      {
+                        "aws_assume_role_arn": {
+                          "encrypted": true,
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens."
+                        }
+                      },
+                      {
+                        "aws_role_session_name": {
+                          "encrypted": true,
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "The session name for the temporary credentials when assuming the IAM role."
+                        }
+                      },
+                      {
+                        "gcp_service_account_json": {
+                          "encrypted": true,
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`."
+                        }
+                      },
+                      {
+                        "azure_client_id": {
+                          "encrypted": true,
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`."
+                        }
+                      },
+                      {
+                        "azure_client_secret": {
+                          "encrypted": true,
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`."
+                        }
+                      },
+                      {
+                        "azure_tenant_id": {
+                          "encrypted": true,
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`."
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "database": {
+                    "description": "Database to use for the Redis connection when using the `redis` strategy",
+                    "default": 0,
+                    "type": "integer"
+                  }
+                },
+                {
+                  "keepalive_pool_size": {
+                    "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
+                    "default": 256,
+                    "type": "integer",
+                    "between": [
+                      1,
+                      2147483646
+                    ]
+                  }
+                },
+                {
+                  "keepalive_backlog": {
+                    "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`.",
+                    "type": "integer",
+                    "between": [
+                      0,
+                      2147483646
+                    ]
+                  }
+                },
+                {
+                  "sentinel_master": {
+                    "type": "string",
+                    "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
+                  }
+                },
+                {
+                  "sentinel_role": {
+                    "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel.",
+                    "type": "string",
+                    "one_of": [
+                      "master",
+                      "slave",
+                      "any"
+                    ]
+                  }
+                },
+                {
+                  "sentinel_nodes": {
+                    "required": false,
+                    "type": "array",
+                    "len_min": 1,
+                    "elements": {
+                      "type": "record",
+                      "fields": [
+                        {
+                          "host": {
+                            "required": true,
+                            "default": "127.0.0.1",
+                            "type": "string",
+                            "description": "A string representing a host name, such as example.com."
+                          }
+                        },
+                        {
+                          "port": {
+                            "between": [
+                              0,
+                              65535
+                            ],
+                            "default": 6379,
+                            "type": "integer",
+                            "description": "An integer representing a port number between 0 and 65535, inclusive."
+                          }
+                        }
+                      ]
+                    },
+                    "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element."
+                  }
+                },
+                {
+                  "cluster_nodes": {
+                    "required": false,
+                    "type": "array",
+                    "len_min": 1,
+                    "elements": {
+                      "type": "record",
+                      "fields": [
+                        {
+                          "ip": {
+                            "required": true,
+                            "default": "127.0.0.1",
+                            "type": "string",
+                            "description": "A string representing a host name, such as example.com."
+                          }
+                        },
+                        {
+                          "port": {
+                            "between": [
+                              0,
+                              65535
+                            ],
+                            "default": 6379,
+                            "type": "integer",
+                            "description": "An integer representing a port number between 0 and 65535, inclusive."
+                          }
+                        }
+                      ]
+                    },
+                    "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element."
+                  }
+                },
+                {
+                  "ssl": {
+                    "required": false,
+                    "default": false,
+                    "type": "boolean",
+                    "description": "If set to true, uses SSL to connect to Redis."
+                  }
+                },
+                {
+                  "ssl_verify": {
+                    "required": false,
+                    "default": false,
+                    "type": "boolean",
+                    "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly."
+                  }
+                },
+                {
+                  "server_name": {
+                    "required": false,
+                    "referenceable": true,
+                    "type": "string",
+                    "description": "A string representing an SNI (server name indication) value for TLS."
+                  }
+                },
+                {
+                  "cluster_max_redirections": {
+                    "required": false,
+                    "default": 5,
+                    "type": "integer",
+                    "description": "Maximum retry attempts for redirection."
+                  }
+                },
+                {
+                  "connection_is_proxied": {
+                    "required": false,
+                    "default": false,
+                    "type": "boolean",
+                    "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address."
+                  }
+                }
+              ],
+              "type": "record",
               "entity_checks": [
                 {
                   "mutually_required": [
@@ -249,14 +597,11 @@
                   }
                 }
               ],
-              "required": true,
               "shorthand_fields": [
                 {
                   "timeout": {
-                    "type": "integer",
                     "deprecation": {
                       "message": "redis schema field `timeout` is deprecated, use `connect_timeout`, `send_timeout` and `read_timeout`",
-                      "removal_in_version": "4.0",
                       "replaced_with": [
                         {
                           "path": [
@@ -273,297 +618,75 @@
                             "read_timeout"
                           ]
                         }
-                      ]
-                    }
+                      ],
+                      "removal_in_version": "4.0"
+                    },
+                    "type": "integer"
                   }
                 },
                 {
                   "sentinel_addresses": {
-                    "len_min": 1,
                     "elements": {
                       "type": "string"
                     },
-                    "type": "array",
                     "deprecation": {
                       "message": "sentinel_addresses is deprecated, please use sentinel_nodes instead",
-                      "removal_in_version": "4.0",
                       "replaced_with": [
                         {
                           "path": [
                             "sentinel_nodes"
                           ]
                         }
-                      ]
-                    }
+                      ],
+                      "removal_in_version": "4.0"
+                    },
+                    "type": "array",
+                    "len_min": 1
                   }
                 },
                 {
                   "cluster_addresses": {
-                    "len_min": 1,
                     "elements": {
                       "type": "string"
                     },
-                    "type": "array",
                     "deprecation": {
                       "message": "cluster_addresses is deprecated, please use cluster_nodes instead",
-                      "removal_in_version": "4.0",
                       "replaced_with": [
                         {
                           "path": [
                             "cluster_nodes"
                           ]
                         }
-                      ]
-                    }
+                      ],
+                      "removal_in_version": "4.0"
+                    },
+                    "type": "array",
+                    "len_min": 1
                   }
                 }
               ],
-              "type": "record",
-              "fields": [
-                {
-                  "host": {
-                    "default": "127.0.0.1",
-                    "type": "string",
-                    "description": "A string representing a host name, such as example.com."
-                  }
-                },
-                {
-                  "port": {
-                    "default": 6379,
-                    "between": [
-                      0,
-                      65535
-                    ],
-                    "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                    "type": "integer"
-                  }
-                },
-                {
-                  "connect_timeout": {
-                    "default": 2000,
-                    "between": [
-                      0,
-                      2147483646
-                    ],
-                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-                    "type": "integer"
-                  }
-                },
-                {
-                  "send_timeout": {
-                    "default": 2000,
-                    "between": [
-                      0,
-                      2147483646
-                    ],
-                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-                    "type": "integer"
-                  }
-                },
-                {
-                  "read_timeout": {
-                    "default": 2000,
-                    "between": [
-                      0,
-                      2147483646
-                    ],
-                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-                    "type": "integer"
-                  }
-                },
-                {
-                  "username": {
-                    "referenceable": true,
-                    "type": "string",
-                    "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`."
-                  }
-                },
-                {
-                  "password": {
-                    "referenceable": true,
-                    "type": "string",
-                    "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
-                    "encrypted": true
-                  }
-                },
-                {
-                  "sentinel_username": {
-                    "referenceable": true,
-                    "type": "string",
-                    "description": "Sentinel username to authenticate with a Redis Sentinel instance. If undefined, ACL authentication won't be performed. This requires Redis v6.2.0+."
-                  }
-                },
-                {
-                  "sentinel_password": {
-                    "referenceable": true,
-                    "type": "string",
-                    "description": "Sentinel password to authenticate with a Redis Sentinel instance. If undefined, no AUTH commands are sent to Redis Sentinels.",
-                    "encrypted": true
-                  }
-                },
-                {
-                  "database": {
-                    "default": 0,
-                    "type": "integer",
-                    "description": "Database to use for the Redis connection when using the `redis` strategy"
-                  }
-                },
-                {
-                  "keepalive_pool_size": {
-                    "default": 256,
-                    "description": "The size limit for every cosocket connection pool associated with every remote server, per worker process. If neither `keepalive_pool_size` nor `keepalive_backlog` is specified, no pool is created. If `keepalive_pool_size` isn't specified but `keepalive_backlog` is specified, then the pool uses the default value. Try to increase (e.g. 512) this value if latency is high or throughput is low.",
-                    "type": "integer",
-                    "between": [
-                      1,
-                      2147483646
-                    ]
-                  }
-                },
-                {
-                  "keepalive_backlog": {
-                    "between": [
-                      0,
-                      2147483646
-                    ],
-                    "type": "integer",
-                    "description": "Limits the total number of opened connections for a pool. If the connection pool is full, connection queues above the limit go into the backlog queue. If the backlog queue is full, subsequent connect operations fail and return `nil`. Queued operations (subject to set timeouts) resume once the number of connections in the pool is less than `keepalive_pool_size`. If latency is high or throughput is low, try increasing this value. Empirically, this value is larger than `keepalive_pool_size`."
-                  }
-                },
-                {
-                  "sentinel_master": {
-                    "type": "string",
-                    "description": "Sentinel master to use for Redis connections. Defining this value implies using Redis Sentinel."
-                  }
-                },
-                {
-                  "sentinel_role": {
-                    "one_of": [
-                      "master",
-                      "slave",
-                      "any"
-                    ],
-                    "type": "string",
-                    "description": "Sentinel role to use for Redis connections when the `redis` strategy is defined. Defining this value implies using Redis Sentinel."
-                  }
-                },
-                {
-                  "sentinel_nodes": {
-                    "elements": {
-                      "type": "record",
-                      "fields": [
-                        {
-                          "host": {
-                            "default": "127.0.0.1",
-                            "required": true,
-                            "type": "string",
-                            "description": "A string representing a host name, such as example.com."
-                          }
-                        },
-                        {
-                          "port": {
-                            "default": 6379,
-                            "between": [
-                              0,
-                              65535
-                            ],
-                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                            "type": "integer"
-                          }
-                        }
-                      ]
-                    },
-                    "description": "Sentinel node addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Sentinel. The minimum length of the array is 1 element.",
-                    "required": false,
-                    "type": "array",
-                    "len_min": 1
-                  }
-                },
-                {
-                  "cluster_nodes": {
-                    "elements": {
-                      "type": "record",
-                      "fields": [
-                        {
-                          "ip": {
-                            "default": "127.0.0.1",
-                            "required": true,
-                            "type": "string",
-                            "description": "A string representing a host name, such as example.com."
-                          }
-                        },
-                        {
-                          "port": {
-                            "default": 6379,
-                            "between": [
-                              0,
-                              65535
-                            ],
-                            "description": "An integer representing a port number between 0 and 65535, inclusive.",
-                            "type": "integer"
-                          }
-                        }
-                      ]
-                    },
-                    "description": "Cluster addresses to use for Redis connections when the `redis` strategy is defined. Defining this field implies using a Redis Cluster. The minimum length of the array is 1 element.",
-                    "required": false,
-                    "type": "array",
-                    "len_min": 1
-                  }
-                },
-                {
-                  "ssl": {
-                    "default": false,
-                    "required": false,
-                    "type": "boolean",
-                    "description": "If set to true, uses SSL to connect to Redis."
-                  }
-                },
-                {
-                  "ssl_verify": {
-                    "default": false,
-                    "required": false,
-                    "type": "boolean",
-                    "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly."
-                  }
-                },
-                {
-                  "server_name": {
-                    "required": false,
-                    "description": "A string representing an SNI (server name indication) value for TLS.",
-                    "type": "string"
-                  }
-                },
-                {
-                  "cluster_max_redirections": {
-                    "default": 5,
-                    "required": false,
-                    "type": "integer",
-                    "description": "Maximum retry attempts for redirection."
-                  }
-                },
-                {
-                  "connection_is_proxied": {
-                    "default": false,
-                    "required": false,
-                    "type": "boolean",
-                    "description": "If the connection to Redis is proxied (e.g. Envoy), set it `true`. Set the `host` and `port` to point to the proxy address."
-                  }
-                }
-              ]
+              "required": true
             }
           },
           {
             "disable_penalty": {
-              "default": false,
               "description": "If set to `true`, this doesn't count denied requests (status = `429`). If set to `false`, all requests, including denied ones, are counted. This parameter only affects the `sliding` window_type and the request prompt provider.",
+              "default": false,
               "type": "boolean"
             }
           },
           {
             "request_prompt_count_function": {
               "required": false,
-              "description": "If defined, it use custom function to count requests for the request prompt provider",
-              "type": "string"
+              "type": "string",
+              "description": "If defined, it use custom function to count requests for the request prompt provider"
+            }
+          },
+          {
+            "custom_cost_count_function": {
+              "required": false,
+              "type": "string",
+              "description": "If defined, it uses custom function to generate cost for the inference request"
             }
           },
           {
@@ -576,20 +699,22 @@
           },
           {
             "error_message": {
-              "default": "AI token rate limit exceeded for provider(s): ",
               "description": "Set a custom error message to return when the rate limit is exceeded.",
+              "default": "AI token rate limit exceeded for provider(s): ",
               "type": "string"
             }
           },
           {
             "error_hide_providers": {
-              "default": false,
               "description": "Optionally hide informative response that would otherwise provide information about the provider in the error message.",
+              "default": false,
               "type": "boolean"
             }
           },
           {
             "tokens_count_strategy": {
+              "description": "What tokens to use for cost calculation. Available values are: `total_tokens` `prompt_tokens`, `completion_tokens` or `cost`.",
+              "type": "string",
               "default": "total_tokens",
               "one_of": [
                 "total_tokens",
@@ -597,26 +722,49 @@
                 "completion_tokens",
                 "cost"
               ],
-              "required": true,
-              "type": "string",
-              "description": "What tokens to use for cost calculation. Available values are: `total_tokens` `prompt_tokens`, `completion_tokens` or `cost`."
+              "required": true
             }
           },
           {
             "llm_format": {
-              "default": "openai",
-              "description": "LLM input and output format and schema to use",
               "required": false,
               "type": "string",
+              "default": "openai",
+              "description": "LLM input and output format and schema to use",
               "one_of": [
                 "openai",
                 "bedrock",
                 "gemini",
                 "cohere",
-                "huggingface"
+                "huggingface",
+                "anthropic"
               ]
             }
+          },
+          {
+            "decrease_by_fractions_in_redis": {
+              "required": false,
+              "default": false,
+              "type": "boolean",
+              "description": "By default, Kong decreates the AI rate limiting counters by whole number in Redis. This setting allows to decrease the counters by float number."
+            }
           }
+        ],
+        "type": "record",
+        "required": true
+      }
+    }
+  ],
+  "supported_partials": {
+    "redis-ee": [
+      "config.redis"
+    ]
+  },
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config"
         ]
       }
     }

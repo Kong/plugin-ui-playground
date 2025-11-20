@@ -2,22 +2,24 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
-        "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumers"
       }
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -33,27 +35,23 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "mode": {
+              "required": true,
+              "description": "The mode of the MCP proxy. Possible values are: 'passthrough-listener', 'conversion-listener', 'conversion-only', 'listener'.",
               "one_of": [
                 "passthrough-listener",
                 "conversion-listener",
                 "conversion-only",
                 "listener"
               ],
-              "required": true,
-              "type": "string",
-              "description": "The mode of the MCP proxy. Possible values are: 'passthrough-listener', 'conversion-listener', 'conversion-only', 'listener'."
+              "type": "string"
             }
           },
           {
@@ -65,14 +63,15 @@
                 "fields": [
                   {
                     "description": {
-                      "required": true,
                       "description": "The description of the MCP tool. This is used to provide information about the tool's functionality and usage.",
-                      "type": "string"
+                      "type": "string",
+                      "required": true
                     }
                   },
                   {
                     "parameters": {
                       "description": "The API parameters specification defined in OpenAPI. For example, '[{\"name\": \"city\", \"in\": \"query\", \"description\": \"Name of the city to get the weather for\", \"required\": true, \"schema\": {\"type\": \"string\"}}]'.See https://swagger.io/docs/specification/v3_0/describing-parameters/ for more details.",
+                      "type": "json",
                       "json_schema": {
                         "inline": {
                           "type": [
@@ -80,13 +79,13 @@
                             "null"
                           ]
                         }
-                      },
-                      "type": "json"
+                      }
                     }
                   },
                   {
                     "request_body": {
                       "description": "The API requestBody specification defined in OpenAPI. For example, '{\"content\":{\"application/x-www-form-urlencoded\":{\"schema\":{\"type\":\"object\",\"properties\":{\"color\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details.",
+                      "type": "json",
                       "json_schema": {
                         "inline": {
                           "type": [
@@ -94,30 +93,29 @@
                             "null"
                           ]
                         }
-                      },
-                      "type": "json"
+                      }
                     }
                   },
                   {
                     "host": {
-                      "type": "string",
-                      "description": "The host of the exported API. By default, Kong will extract the host from API configuration. If the configured host is wildcard, this field is required."
+                      "description": "The host of the exported API. By default, Kong will extract the host from API configuration. If the configured host is wildcard, this field is required.",
+                      "type": "string"
                     }
                   },
                   {
                     "path": {
-                      "type": "string",
-                      "description": "The path of the exported API. By default, Kong will extract the path from API configuration. If the configured path is not exactly matched, this field is required. Paths not starting with '/' are treated as relative paths."
+                      "description": "The path of the exported API. By default, Kong will extract the path from API configuration. If the configured path is not exactly matched, this field is required. Paths not starting with '/' are treated as relative paths.",
+                      "type": "string"
                     }
                   },
                   {
                     "headers": {
                       "description": "The headers of the exported API. By default, Kong will extract the headers from API configuration. If the configured headers are not exactly matched, this field is required.",
-                      "keys": {
-                        "type": "string",
-                        "description": "A string representing an HTTP header name."
-                      },
                       "type": "map",
+                      "keys": {
+                        "description": "A string representing an HTTP header name.",
+                        "type": "string"
+                      },
                       "values": {
                         "type": "array",
                         "elements": {
@@ -129,11 +127,11 @@
                   {
                     "query": {
                       "description": "The query arguments of the exported API. If the generated query arguments are not exactly matched, this field is required.",
-                      "keys": {
-                        "type": "string",
-                        "description": "A string representing an HTTP header name."
-                      },
                       "type": "map",
+                      "keys": {
+                        "description": "A string representing an HTTP header name.",
+                        "type": "string"
+                      },
                       "values": {
                         "type": "array",
                         "elements": {
@@ -144,25 +142,25 @@
                   },
                   {
                     "method": {
+                      "description": "The method of the exported API. By default, Kong will extract the method from API configuration. If the configured method is not exactly matched, this field is required.",
+                      "type": "string",
                       "one_of": [
                         "GET",
                         "PUT",
                         "PATCH",
                         "POST",
                         "DELETE"
-                      ],
-                      "description": "The method of the exported API. By default, Kong will extract the method from API configuration. If the configured method is not exactly matched, this field is required.",
-                      "type": "string"
+                      ]
                     }
                   },
                   {
                     "scheme": {
+                      "description": "The scheme of the exported API. By default, Kong will extract the scheme from API configuration. If the configured scheme is not expected, this field can be used to override it.",
+                      "type": "string",
                       "one_of": [
                         "http",
                         "https"
-                      ],
-                      "description": "The scheme of the exported API. By default, Kong will extract the scheme from API configuration. If the configured scheme is not expected, this field can be used to override it.",
-                      "type": "string"
+                      ]
                     }
                   },
                   {
@@ -171,32 +169,32 @@
                       "fields": [
                         {
                           "title": {
-                            "type": "string",
-                            "description": "Human-readable title for the tool"
+                            "description": "Human-readable title for the tool",
+                            "type": "string"
                           }
                         },
                         {
                           "read_only_hint": {
-                            "type": "boolean",
-                            "description": "If true, the tool does not modify its environment"
+                            "description": "If true, the tool does not modify its environment",
+                            "type": "boolean"
                           }
                         },
                         {
                           "destructive_hint": {
-                            "type": "boolean",
-                            "description": "If true, the tool may perform destructive updates"
+                            "description": "If true, the tool may perform destructive updates",
+                            "type": "boolean"
                           }
                         },
                         {
                           "idempotent_hint": {
-                            "type": "boolean",
-                            "description": "If true, repeated calls with same args have no additional effect"
+                            "description": "If true, repeated calls with same args have no additional effect",
+                            "type": "boolean"
                           }
                         },
                         {
                           "open_world_hint": {
-                            "type": "boolean",
-                            "description": "If true, tool interacts with external entities"
+                            "description": "If true, tool interacts with external entities",
+                            "type": "boolean"
                           }
                         }
                       ]
@@ -213,21 +211,21 @@
               "fields": [
                 {
                   "tag": {
-                    "type": "string",
-                    "description": "The tag of the MCP server. This is used to filter the exported MCP tools. The field should contain exactly one tag. "
+                    "description": "The tag of the MCP server. This is used to filter the exported MCP tools. The field should contain exactly one tag. ",
+                    "type": "string"
                   }
                 },
                 {
                   "timeout": {
-                    "default": 10000,
                     "description": "The timeout for calling the tools in milliseconds.",
+                    "default": 10000,
                     "type": "number"
                   }
                 },
                 {
                   "forward_client_headers": {
-                    "default": true,
                     "description": "Whether to forward the client request headers to the upstream server when calling the tools.",
+                    "default": true,
                     "type": "boolean"
                   }
                 }
@@ -236,25 +234,25 @@
           },
           {
             "logging": {
+              "required": true,
               "fields": [
                 {
                   "log_statistics": {
-                    "default": false,
-                    "required": true,
                     "description": "If enabled, will add mcp metrics into the Kong log plugin(s) output.",
-                    "type": "boolean"
+                    "default": false,
+                    "type": "boolean",
+                    "required": true
                   }
                 },
                 {
                   "log_payloads": {
-                    "default": false,
-                    "required": true,
                     "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.",
-                    "type": "boolean"
+                    "default": false,
+                    "type": "boolean",
+                    "required": true
                   }
                 }
               ],
-              "required": true,
               "type": "record",
               "entity_checks": [
                 {
@@ -269,13 +267,15 @@
           },
           {
             "max_request_body_size": {
-              "gt": 0,
-              "default": 8192,
+              "gt": -1,
+              "default": 1048576,
               "type": "integer",
-              "description": "max allowed body size allowed to be handled as MCP request."
+              "description": "max allowed body size allowed to be handled as MCP request. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

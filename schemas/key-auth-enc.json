@@ -2,14 +2,15 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
-        "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumers"
       }
     },
     {
       "protocols": {
+        "required": true,
         "default": [
           "grpc",
           "grpcs",
@@ -18,7 +19,6 @@
           "ws",
           "wss"
         ],
-        "required": true,
         "type": "set",
         "elements": {
           "type": "string",
@@ -35,36 +35,34 @@
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "key_names": {
+              "required": true,
+              "type": "array",
               "default": [
                 "apikey"
               ],
+              "description": "Describes an array of parameter names where the plugin will look for a key. The client must send the authentication key in one of those key names, and the plugin will try to read the credential from a header, request body, or query string parameter with the same name.  Key names may only contain [a-z], [A-Z], [0-9], [_] underscore, and [-] hyphen.",
               "elements": {
-                "type": "string",
-                "description": "A string representing an HTTP header name."
-              },
-              "required": true,
-              "type": "array",
-              "description": "Describes an array of parameter names where the plugin will look for a key. The client must send the authentication key in one of those key names, and the plugin will try to read the credential from a header, request body, or query string parameter with the same name.  Key names may only contain [a-z], [A-Z], [0-9], [_] underscore, and [-] hyphen."
+                "description": "A string representing an HTTP header name.",
+                "type": "string"
+              }
             }
           },
           {
             "hide_credentials": {
+              "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service. If `true`, the plugin strips the credential from the request (i.e., the header, query string, or request body containing the key) before proxying it.",
               "default": false,
-              "type": "boolean",
-              "description": "An optional boolean value telling the plugin to show or hide the credential from the upstream service. If `true`, the plugin strips the credential from the request (i.e., the header, query string, or request body containing the key) before proxying it."
+              "type": "boolean"
             }
           },
           {
@@ -75,30 +73,30 @@
           },
           {
             "key_in_header": {
+              "description": "If enabled (default), the plugin reads the request header and tries to find the key in it.",
               "default": true,
-              "type": "boolean",
-              "description": "If enabled (default), the plugin reads the request header and tries to find the key in it."
+              "type": "boolean"
             }
           },
           {
             "key_in_query": {
+              "description": "If enabled (default), the plugin reads the query parameter in the request and tries to find the key in it.",
               "default": true,
-              "type": "boolean",
-              "description": "If enabled (default), the plugin reads the query parameter in the request and tries to find the key in it."
+              "type": "boolean"
             }
           },
           {
             "key_in_body": {
+              "description": "If enabled, the plugin reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`.",
               "default": false,
-              "type": "boolean",
-              "description": "If enabled, the plugin reads the request body (if said request has one and its MIME type is supported) and tries to find the key in it. Supported MIME types: `application/www-form-urlencoded`, `application/json`, and `multipart/form-data`."
+              "type": "boolean"
             }
           },
           {
             "run_on_preflight": {
+              "description": "A boolean value that indicates whether the plugin should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed.",
               "default": true,
-              "type": "boolean",
-              "description": "A boolean value that indicates whether the plugin should run (and try to authenticate) on `OPTIONS` preflight requests. If set to `false`, then `OPTIONS` requests are always allowed."
+              "type": "boolean"
             }
           },
           {
@@ -108,7 +106,9 @@
               "description": "When authentication fails the plugin sends `WWW-Authenticate` header with `realm` attribute value."
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

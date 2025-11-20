@@ -2,14 +2,16 @@
   "fields": [
     {
       "consumer": {
-        "eq": null,
-        "reference": "consumers",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumers"
       }
     },
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -25,110 +27,106 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "consumer_group": {
-        "eq": null,
-        "reference": "consumer_groups",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "type": "foreign"
+        "type": "foreign",
+        "eq": null,
+        "reference": "consumer_groups"
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "max_body_size": {
-              "default": 8192,
-              "description": "Max size of the request body. -1 means unlimited.",
               "required": false,
               "type": "integer",
               "between": [
                 -1,
                 2147483648
-              ]
+              ],
+              "default": 8192,
+              "description": "Max size of the request body. -1 means unlimited."
             }
           },
           {
             "max_container_depth": {
-              "default": -1,
-              "description": "Max nested depth of objects and arrays. -1 means unlimited.",
               "required": false,
               "type": "integer",
               "between": [
                 -1,
                 2147483648
-              ]
+              ],
+              "default": -1,
+              "description": "Max nested depth of objects and arrays. -1 means unlimited."
             }
           },
           {
             "max_object_entry_count": {
-              "default": -1,
-              "description": "Max number of entries in an object. -1 means unlimited.",
               "required": false,
               "type": "integer",
               "between": [
                 -1,
                 2147483648
-              ]
+              ],
+              "default": -1,
+              "description": "Max number of entries in an object. -1 means unlimited."
             }
           },
           {
             "max_object_entry_name_length": {
-              "default": -1,
-              "description": "Max string length of object name. -1 means unlimited.",
               "required": false,
               "type": "integer",
               "between": [
                 -1,
                 2147483648
-              ]
+              ],
+              "default": -1,
+              "description": "Max string length of object name. -1 means unlimited."
             }
           },
           {
             "max_array_element_count": {
-              "default": -1,
-              "description": "Max number of elements in an array. -1 means unlimited.",
               "required": false,
               "type": "integer",
               "between": [
                 -1,
                 2147483648
-              ]
+              ],
+              "default": -1,
+              "description": "Max number of elements in an array. -1 means unlimited."
             }
           },
           {
             "max_string_value_length": {
-              "default": -1,
-              "description": "Max string value length. -1 means unlimited.",
               "required": false,
               "type": "integer",
               "between": [
                 -1,
                 2147483648
-              ]
+              ],
+              "default": -1,
+              "description": "Max string value length. -1 means unlimited."
             }
           },
           {
             "allow_duplicate_object_entry_name": {
+              "description": "Allow or disallow duplicate object entry name.",
               "default": true,
-              "required": false,
               "type": "boolean",
-              "description": "Allow or disallow duplicate object entry name."
+              "required": false
             }
           },
           {
             "enforcement_mode": {
-              "default": "block",
-              "description": "Enforcement mode of the security policy.",
               "required": false,
               "type": "string",
+              "default": "block",
+              "description": "Enforcement mode of the security policy.",
               "one_of": [
                 "block",
                 "log_only"
@@ -137,25 +135,27 @@
           },
           {
             "error_status_code": {
-              "default": 400,
-              "description": "The response status code when validation fails.",
               "required": false,
               "type": "integer",
               "between": [
                 400,
                 499
-              ]
+              ],
+              "default": 400,
+              "description": "The response status code when validation fails."
             }
           },
           {
             "error_message": {
-              "default": "Bad Request",
               "required": false,
+              "default": "Bad Request",
               "type": "string",
               "description": "The response message when validation fails"
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],

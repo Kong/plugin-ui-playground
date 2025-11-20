@@ -2,6 +2,8 @@
   "fields": [
     {
       "protocols": {
+        "required": true,
+        "type": "set",
         "default": [
           "grpc",
           "grpcs",
@@ -17,15 +19,11 @@
             "https"
           ]
         },
-        "required": true,
-        "type": "set",
         "description": "A set of strings representing HTTP protocols."
       }
     },
     {
       "config": {
-        "required": true,
-        "type": "record",
         "fields": [
           {
             "prompts": {
@@ -34,15 +32,18 @@
               "fields": [
                 {
                   "prepend": {
+                    "required": false,
+                    "type": "array",
                     "len_max": 15,
+                    "description": "Insert chat messages at the beginning of the chat message array. This array preserves exact order when adding messages.",
                     "elements": {
                       "required": false,
                       "type": "record",
                       "fields": [
                         {
                           "role": {
-                            "default": "system",
                             "required": true,
+                            "default": "system",
                             "type": "string",
                             "one_of": [
                               "system",
@@ -53,30 +54,30 @@
                         },
                         {
                           "content": {
-                            "len_max": 100000,
                             "required": true,
+                            "len_max": 100000,
                             "type": "string",
                             "len_min": 1
                           }
                         }
                       ]
-                    },
-                    "required": false,
-                    "type": "array",
-                    "description": "Insert chat messages at the beginning of the chat message array. This array preserves exact order when adding messages."
+                    }
                   }
                 },
                 {
                   "append": {
+                    "required": false,
+                    "type": "array",
                     "len_max": 15,
+                    "description": "Insert chat messages at the end of the chat message array. This array preserves exact order when adding messages.",
                     "elements": {
                       "required": false,
                       "type": "record",
                       "fields": [
                         {
                           "role": {
-                            "default": "system",
                             "required": true,
+                            "default": "system",
                             "type": "string",
                             "one_of": [
                               "system",
@@ -87,17 +88,14 @@
                         },
                         {
                           "content": {
-                            "len_max": 100000,
                             "required": true,
+                            "len_max": 100000,
                             "type": "string",
                             "len_min": 1
                           }
                         }
                       ]
-                    },
-                    "required": false,
-                    "type": "array",
-                    "description": "Insert chat messages at the end of the chat message array. This array preserves exact order when adding messages."
+                    }
                   }
                 }
               ]
@@ -105,28 +103,31 @@
           },
           {
             "max_request_body_size": {
-              "gt": 0,
-              "default": 8192,
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+              "default": 1048576,
               "type": "integer",
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
+              "gt": -1
             }
           },
           {
             "llm_format": {
-              "default": "openai",
-              "description": "LLM input and output format and schema to use",
               "required": false,
               "type": "string",
+              "default": "openai",
+              "description": "LLM input and output format and schema to use",
               "one_of": [
                 "openai",
                 "bedrock",
                 "gemini",
                 "cohere",
-                "huggingface"
+                "huggingface",
+                "anthropic"
               ]
             }
           }
-        ]
+        ],
+        "type": "record",
+        "required": true
       }
     }
   ],
