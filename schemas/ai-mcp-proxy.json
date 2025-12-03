@@ -2,24 +2,24 @@
   "fields": [
     {
       "consumer": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumers"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumers",
+        "eq": null
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -27,51 +27,123 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
       "config": {
+        "type": "record",
+        "required": true,
         "fields": [
           {
             "mode": {
-              "required": true,
-              "description": "The mode of the MCP proxy. Possible values are: 'passthrough-listener', 'conversion-listener', 'conversion-only', 'listener'.",
               "one_of": [
                 "passthrough-listener",
                 "conversion-listener",
                 "conversion-only",
                 "listener"
               ],
-              "type": "string"
+              "type": "string",
+              "required": true,
+              "description": "The mode of the MCP proxy. Possible values are: 'passthrough-listener', 'conversion-listener', 'conversion-only', 'listener'."
+            }
+          },
+          {
+            "default_acl": {
+              "description": "Optional list of default ACL rules keyed by scope (for example, tools).",
+              "type": "array",
+              "elements": {
+                "description": "Default ACL entry for the given scope. `deny` has higher precedence than `allow`.",
+                "type": "record",
+                "required": false,
+                "fields": [
+                  {
+                    "scope": {
+                      "required": false,
+                      "type": "string",
+                      "description": "Scope for this default ACL entry (for example: 'tools'). Defaults to 'tools'.",
+                      "default": "tools"
+                    }
+                  },
+                  {
+                    "allow": {
+                      "description": "Subjects explicitly allowed to access this scope. If `include_consumer_groups` is true, Consumer Group names are allowed here.",
+                      "type": "array",
+                      "elements": {
+                        "type": "string"
+                      },
+                      "required": false
+                    }
+                  },
+                  {
+                    "deny": {
+                      "description": "Subjects explicitly denied from this scope. `deny` takes precedence over `allow`. If `include_consumer_groups` is true, Consumer Group names are allowed here.",
+                      "type": "array",
+                      "elements": {
+                        "type": "string"
+                      },
+                      "required": false
+                    }
+                  }
+                ]
+              },
+              "required": false
+            }
+          },
+          {
+            "include_consumer_groups": {
+              "required": false,
+              "type": "boolean",
+              "description": "If enabled (true), allows Consumer Group names to be used in default and per-primitive ACL.",
+              "default": false
+            }
+          },
+          {
+            "consumer_identifier": {
+              "one_of": [
+                "consumer_id",
+                "username",
+                "custom_id"
+              ],
+              "type": "string",
+              "description": "Which subject type entries in ACL lists refer to for per-consumer matching.",
+              "default": "username",
+              "required": false
             }
           },
           {
             "tools": {
-              "required": false,
               "type": "array",
+              "required": false,
               "elements": {
                 "type": "record",
                 "fields": [
                   {
-                    "description": {
-                      "description": "The description of the MCP tool. This is used to provide information about the tool's functionality and usage.",
+                    "name": {
                       "type": "string",
-                      "required": true
+                      "required": false,
+                      "description": "Tool identifier. In passthrough-listener mode, used to match remote MCP Server tools for ACL enforcement. In other modes, it is also used as the tool name (overrides tools.annotations.title if present)."
+                    }
+                  },
+                  {
+                    "description": {
+                      "type": "string",
+                      "required": true,
+                      "description": "The description of the MCP tool. This is used to provide information about the tool's functionality and usage."
                     }
                   },
                   {
                     "parameters": {
-                      "description": "The API parameters specification defined in OpenAPI. For example, '[{\"name\": \"city\", \"in\": \"query\", \"description\": \"Name of the city to get the weather for\", \"required\": true, \"schema\": {\"type\": \"string\"}}]'.See https://swagger.io/docs/specification/v3_0/describing-parameters/ for more details.",
                       "type": "json",
+                      "description": "The API parameters specification defined in OpenAPI. For example, '[{\"name\": \"city\", \"in\": \"query\", \"description\": \"Name of the city to get the weather for\", \"required\": true, \"schema\": {\"type\": \"string\"}}]'.See https://swagger.io/docs/specification/v3_0/describing-parameters/ for more details.",
                       "json_schema": {
                         "inline": {
                           "type": [
@@ -84,8 +156,22 @@
                   },
                   {
                     "request_body": {
-                      "description": "The API requestBody specification defined in OpenAPI. For example, '{\"content\":{\"application/x-www-form-urlencoded\":{\"schema\":{\"type\":\"object\",\"properties\":{\"color\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details.",
                       "type": "json",
+                      "description": "The API requestBody specification defined in OpenAPI. For example, '{\"content\":{\"application/x-www-form-urlencoded\":{\"schema\":{\"type\":\"object\",\"properties\":{\"color\":{\"type\":\"array\",\"items\":{\"type\":\"string\"}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-request-body/describing-request-body/ for more details.",
+                      "json_schema": {
+                        "inline": {
+                          "type": [
+                            "object",
+                            "null"
+                          ]
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "responses": {
+                      "type": "json",
+                      "description": "The API responses specification defined in OpenAPI. This specification will be used to validate the upstream response and map it back to the structuredOutput. For example, '{\"200\":{\"description\":\"Successful response\",\"content\":{\"application/json\":{\"schema\":{\"type\":\"object\",\"properties\":{\"result\":{\"type\":\"string\"}}}}}}}'.See https://swagger.io/docs/specification/v3_0/describing-responses/ for more details.Only one non-error (status code < 400) responses are supported.",
                       "json_schema": {
                         "inline": {
                           "type": [
@@ -117,10 +203,10 @@
                         "type": "string"
                       },
                       "values": {
-                        "type": "array",
                         "elements": {
                           "type": "string"
-                        }
+                        },
+                        "type": "array"
                       }
                     }
                   },
@@ -133,34 +219,34 @@
                         "type": "string"
                       },
                       "values": {
-                        "type": "array",
                         "elements": {
                           "type": "string"
-                        }
+                        },
+                        "type": "array"
                       }
                     }
                   },
                   {
                     "method": {
-                      "description": "The method of the exported API. By default, Kong will extract the method from API configuration. If the configured method is not exactly matched, this field is required.",
-                      "type": "string",
                       "one_of": [
                         "GET",
                         "PUT",
                         "PATCH",
                         "POST",
                         "DELETE"
-                      ]
+                      ],
+                      "type": "string",
+                      "description": "The method of the exported API. By default, Kong will extract the method from API configuration. If the configured method is not exactly matched, this field is required."
                     }
                   },
                   {
                     "scheme": {
-                      "description": "The scheme of the exported API. By default, Kong will extract the scheme from API configuration. If the configured scheme is not expected, this field can be used to override it.",
-                      "type": "string",
                       "one_of": [
                         "http",
                         "https"
-                      ]
+                      ],
+                      "type": "string",
+                      "description": "The scheme of the exported API. By default, Kong will extract the scheme from API configuration. If the configured scheme is not expected, this field can be used to override it."
                     }
                   },
                   {
@@ -199,6 +285,35 @@
                         }
                       ]
                     }
+                  },
+                  {
+                    "acl": {
+                      "description": "Optional per-primitive ACL. `deny` has higher precedence than `allow`.",
+                      "type": "record",
+                      "required": false,
+                      "fields": [
+                        {
+                          "allow": {
+                            "description": "Subjects explicitly allowed to use this primitive. If `include_consumer_groups` is true, Consumer Group names are allowed here.",
+                            "type": "array",
+                            "elements": {
+                              "type": "string"
+                            },
+                            "required": false
+                          }
+                        },
+                        {
+                          "deny": {
+                            "description": "Subjects explicitly denied from using this primitive. `deny` takes precedence over `allow`. If `include_consumer_groups` is true, Consumer Group names are allowed here.",
+                            "type": "array",
+                            "elements": {
+                              "type": "string"
+                            },
+                            "required": false
+                          }
+                        }
+                      ]
+                    }
                   }
                 ]
               }
@@ -206,8 +321,8 @@
           },
           {
             "server": {
-              "required": false,
               "type": "record",
+              "required": false,
               "fields": [
                 {
                   "tag": {
@@ -217,16 +332,16 @@
                 },
                 {
                   "timeout": {
+                    "type": "number",
                     "description": "The timeout for calling the tools in milliseconds.",
-                    "default": 10000,
-                    "type": "number"
+                    "default": 10000
                   }
                 },
                 {
                   "forward_client_headers": {
+                    "type": "boolean",
                     "description": "Whether to forward the client request headers to the upstream server when calling the tools.",
-                    "default": true,
-                    "type": "boolean"
+                    "default": true
                   }
                 }
               ]
@@ -234,26 +349,6 @@
           },
           {
             "logging": {
-              "required": true,
-              "fields": [
-                {
-                  "log_statistics": {
-                    "description": "If enabled, will add mcp metrics into the Kong log plugin(s) output.",
-                    "default": false,
-                    "type": "boolean",
-                    "required": true
-                  }
-                },
-                {
-                  "log_payloads": {
-                    "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.",
-                    "default": false,
-                    "type": "boolean",
-                    "required": true
-                  }
-                }
-              ],
-              "type": "record",
               "entity_checks": [
                 {
                   "custom_entity_check": {
@@ -262,20 +357,46 @@
                     ]
                   }
                 }
+              ],
+              "type": "record",
+              "required": true,
+              "fields": [
+                {
+                  "log_statistics": {
+                    "required": true,
+                    "type": "boolean",
+                    "description": "If enabled, will add mcp metrics into the Kong log plugin(s) output.",
+                    "default": false
+                  }
+                },
+                {
+                  "log_payloads": {
+                    "required": true,
+                    "type": "boolean",
+                    "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.",
+                    "default": false
+                  }
+                },
+                {
+                  "log_audits": {
+                    "required": true,
+                    "type": "boolean",
+                    "description": "If true, emit audit logs for ACL evaluations.",
+                    "default": false
+                  }
+                }
               ]
             }
           },
           {
             "max_request_body_size": {
               "gt": -1,
-              "default": 1048576,
               "type": "integer",
-              "description": "max allowed body size allowed to be handled as MCP request. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
+              "description": "max allowed body size allowed to be handled as MCP request. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+              "default": 1048576
             }
           }
-        ],
-        "type": "record",
-        "required": true
+        ]
       }
     }
   ],

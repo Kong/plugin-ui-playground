@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,29 +11,31 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
       "config": {
+        "type": "record",
+        "required": true,
         "fields": [
           {
             "status_code": {
-              "description": "The response code to send. Must be an integer between 100 and 599.",
               "type": "integer",
+              "description": "The response code to send. Must be an integer between 100 and 599.",
+              "default": 503,
               "between": [
                 100,
                 599
               ],
-              "default": 503,
               "required": true
             }
           },
@@ -58,9 +60,9 @@
           {
             "echo": {
               "description": "When set, the plugin will echo a copy of the request back to the client. The main usecase for this is debugging. It can be combined with `trigger` in order to debug requests on live systems without disturbing real traffic.",
-              "default": false,
               "type": "boolean",
-              "required": true
+              "required": true,
+              "default": false
             }
           },
           {
@@ -69,9 +71,7 @@
               "type": "string"
             }
           }
-        ],
-        "type": "record",
-        "required": true
+        ]
       }
     }
   ],

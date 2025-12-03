@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,15 +11,15 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
@@ -27,10 +27,10 @@
         "fields": [
           {
             "allow_patterns": {
-              "required": false,
               "type": "array",
-              "len_max": 10,
               "description": "Array of valid regex patterns, or valid questions from the 'user' role in chat.",
+              "len_max": 10,
+              "required": false,
               "elements": {
                 "len_max": 500,
                 "type": "string",
@@ -40,10 +40,10 @@
           },
           {
             "deny_patterns": {
-              "required": false,
               "type": "array",
-              "len_max": 10,
               "description": "Array of invalid regex patterns, or invalid questions from the 'user' role in chat.",
+              "len_max": 10,
+              "required": false,
               "elements": {
                 "len_max": 500,
                 "type": "string",
@@ -54,33 +54,29 @@
           {
             "allow_all_conversation_history": {
               "required": true,
-              "default": false,
               "type": "boolean",
-              "description": "If true, will ignore all previous chat prompts from the conversation history."
+              "description": "If true, will ignore all previous chat prompts from the conversation history.",
+              "default": false
             }
           },
           {
             "max_request_body_size": {
               "gt": -1,
-              "default": 1048576,
               "type": "integer",
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size."
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+              "default": 1048576
             }
           },
           {
             "match_all_roles": {
               "required": true,
-              "default": false,
               "type": "boolean",
-              "description": "If true, will match all roles in addition to 'user' role in conversation history."
+              "description": "If true, will match all roles in addition to 'user' role in conversation history.",
+              "default": false
             }
           },
           {
             "llm_format": {
-              "required": false,
-              "type": "string",
-              "default": "openai",
-              "description": "LLM input and output format and schema to use",
               "one_of": [
                 "openai",
                 "bedrock",
@@ -88,15 +84,15 @@
                 "cohere",
                 "huggingface",
                 "anthropic"
-              ]
+              ],
+              "type": "string",
+              "description": "LLM input and output format and schema to use",
+              "default": "openai",
+              "required": false
             }
           },
           {
             "genai_category": {
-              "required": false,
-              "type": "string",
-              "default": "text/generation",
-              "description": "Generative AI category of the request",
               "one_of": [
                 "text/generation",
                 "text/embeddings",
@@ -105,12 +101,16 @@
                 "image/generation",
                 "video/generation",
                 "realtime/generation"
-              ]
+              ],
+              "type": "string",
+              "description": "Generative AI category of the request",
+              "default": "text/generation",
+              "required": false
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],

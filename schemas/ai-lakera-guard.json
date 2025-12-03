@@ -1,0 +1,139 @@
+{
+  "fields": [
+    {
+      "protocols": {
+        "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "elements": {
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https"
+          ],
+          "type": "string"
+        },
+        "required": true
+      }
+    },
+    {
+      "config": {
+        "entity_checks": [],
+        "type": "record",
+        "required": true,
+        "fields": [
+          {
+            "lakera_service_url": {
+              "type": "string",
+              "description": "The guard-operation URL of the Lakera Guard service. Defaults to the SaaS /v2/guard endpoint. It can be set to a locally hosted instance of Lakera Guard.",
+              "default": "https://api.lakera.ai/v2/guard",
+              "referenceable": true,
+              "required": true
+            }
+          },
+          {
+            "api_key": {
+              "type": "string",
+              "description": "API key for the Lakera Guard subscription.",
+              "encrypted": true,
+              "referenceable": true,
+              "required": false
+            }
+          },
+          {
+            "project_id": {
+              "referenceable": true,
+              "type": "string",
+              "required": false,
+              "description": "Project ID to apply filters from. If null, it will use the subscription's default project."
+            }
+          },
+          {
+            "stop_on_error": {
+              "type": "boolean",
+              "description": "Stop processing if an error occurs.",
+              "default": true
+            }
+          },
+          {
+            "timeout": {
+              "description": "Connection timeout with the Lakera Guard service",
+              "type": "number",
+              "required": true,
+              "default": 10000
+            }
+          },
+          {
+            "guarding_mode": {
+              "one_of": [
+                "INPUT",
+                "OUTPUT",
+                "BOTH"
+              ],
+              "type": "string",
+              "description": "The guardrail mode to use for the request",
+              "default": "INPUT",
+              "required": true
+            }
+          },
+          {
+            "reveal_failure_categories": {
+              "type": "boolean",
+              "description": "Whether to reveal failure categories in the response to the caller. They will always be written to the gateway logs, even if set to false.",
+              "default": false
+            }
+          },
+          {
+            "request_failure_message": {
+              "type": "string",
+              "description": "The message to return when a failure occurs on the request phase.",
+              "default": "Request was filtered by Lakera Guard"
+            }
+          },
+          {
+            "response_failure_message": {
+              "type": "string",
+              "description": "The message to return when a failure occurs on the response phase.",
+              "default": "Response was filtered by Lakera Guard"
+            }
+          },
+          {
+            "response_buffer_size": {
+              "required": true,
+              "type": "number",
+              "description": "The amount of bytes receiving from upstream to be buffered before sending to the Lakera Guard service. This only applies to the response content guard.",
+              "default": 100
+            }
+          },
+          {
+            "text_source": {
+              "one_of": [
+                "concatenate_all_content",
+                "concatenate_user_content",
+                "last_message"
+              ],
+              "type": "string",
+              "description": "Select where to pick the 'text' for the Lakera Guard request (when text/generation is selected).",
+              "default": "concatenate_all_content",
+              "required": true
+            }
+          },
+          {
+            "verify_ssl": {
+              "type": "boolean",
+              "description": "Whether to verify the SSL certificate of the configured Lakera Guard endpoint.",
+              "default": true
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "entity_checks": []
+}

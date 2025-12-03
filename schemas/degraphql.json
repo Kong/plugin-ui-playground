@@ -2,16 +2,16 @@
   "fields": [
     {
       "consumer": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumers"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumers",
+        "eq": null
       }
     },
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -19,23 +19,23 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
@@ -43,22 +43,22 @@
         "fields": [
           {
             "graphql_server_path": {
-              "required": true,
               "type": "string",
-              "starts_with": "/",
-              "default": "/graphql",
               "description": "The GraphQL endpoint serve path",
+              "default": "/graphql",
+              "starts_with": "/",
+              "required": true,
               "match_none": [
                 {
-                  "pattern": "//",
-                  "err": "must not have empty segments"
+                  "err": "must not have empty segments",
+                  "pattern": "//"
                 }
               ]
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],

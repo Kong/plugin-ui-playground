@@ -2,24 +2,24 @@
   "fields": [
     {
       "consumer": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumers"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumers",
+        "eq": null
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -27,15 +27,15 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
@@ -43,15 +43,12 @@
         "fields": [
           {
             "start": {
-              "type": "number",
-              "description": "Future time in seconds since epoch, when the canary release will start. Ignored when `percentage` is set, or when using `allow` or `deny` in `hash`."
+              "description": "Future time in seconds since epoch, when the canary release will start. Ignored when `percentage` is set, or when using `allow` or `deny` in `hash`.",
+              "type": "number"
             }
           },
           {
             "hash": {
-              "description": "Hash algorithm to be used for canary release.\n\n* `consumer`: The hash will be based on the consumer.\n* `ip`: The hash will be based on the client IP address.\n* `none`: No hash will be applied.\n* `allow`: Allows the specified groups to access the canary release.\n* `deny`: Denies the specified groups from accessing the canary release.\n* `header`: The hash will be based on the specified header value.",
-              "default": "consumer",
-              "type": "string",
               "one_of": [
                 "consumer",
                 "ip",
@@ -59,7 +56,10 @@
                 "allow",
                 "deny",
                 "header"
-              ]
+              ],
+              "type": "string",
+              "description": "Hash algorithm to be used for canary release.\n\n* `consumer`: The hash will be based on the consumer.\n* `ip`: The hash will be based on the client IP address.\n* `none`: No hash will be applied.\n* `allow`: Allows the specified groups to access the canary release.\n* `deny`: Denies the specified groups from accessing the canary release.\n* `header`: The hash will be based on the specified header value.",
+              "default": "consumer"
             }
           },
           {
@@ -71,27 +71,27 @@
           {
             "duration": {
               "gt": 0,
-              "default": 3600,
               "type": "number",
-              "description": "The duration of the canary release in seconds."
+              "description": "The duration of the canary release in seconds.",
+              "default": 3600
             }
           },
           {
             "steps": {
               "gt": 1,
-              "default": 1000,
               "type": "number",
-              "description": "The number of steps for the canary release."
+              "description": "The number of steps for the canary release.",
+              "default": 1000
             }
           },
           {
             "percentage": {
-              "description": "The percentage of traffic to be routed to the canary release.",
-              "type": "number",
               "between": [
                 0,
                 100
-              ]
+              ],
+              "type": "number",
+              "description": "The percentage of traffic to be routed to the canary release."
             }
           },
           {
@@ -112,23 +112,23 @@
           },
           {
             "upstream_uri": {
-              "description": "The URI of the upstream server to be used for the canary release.",
               "type": "string",
+              "description": "The URI of the upstream server to be used for the canary release.",
               "len_min": 1
             }
           },
           {
             "upstream_fallback": {
               "description": "Specifies whether to fallback to the upstream server if the canary release fails.",
-              "default": false,
               "type": "boolean",
-              "required": true
+              "required": true,
+              "default": false
             }
           },
           {
             "groups": {
-              "description": "The groups allowed to access the canary release.",
               "type": "array",
+              "description": "The groups allowed to access the canary release.",
               "elements": {
                 "type": "string"
               }
@@ -141,8 +141,8 @@
             }
           }
         ],
-        "required": true,
         "type": "record",
+        "required": true,
         "shorthand_fields": [
           {
             "hash": {

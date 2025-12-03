@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,8 +11,6 @@
           "https"
         ],
         "elements": {
-          "description": "A string representing a protocol, such as HTTP or HTTPS.",
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
@@ -24,17 +22,19 @@
             "udp",
             "ws",
             "wss"
-          ]
+          ],
+          "type": "string",
+          "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
@@ -42,9 +42,6 @@
         "fields": [
           {
             "log_level": {
-              "required": true,
-              "default": "info",
-              "type": "string",
               "one_of": [
                 "debug",
                 "info",
@@ -54,14 +51,14 @@
                 "crit",
                 "alert",
                 "emerg"
-              ]
+              ],
+              "type": "string",
+              "required": true,
+              "default": "info"
             }
           },
           {
             "successful_severity": {
-              "required": true,
-              "default": "info",
-              "type": "string",
               "one_of": [
                 "debug",
                 "info",
@@ -71,14 +68,14 @@
                 "crit",
                 "alert",
                 "emerg"
-              ]
+              ],
+              "type": "string",
+              "required": true,
+              "default": "info"
             }
           },
           {
             "client_errors_severity": {
-              "required": true,
-              "default": "info",
-              "type": "string",
               "one_of": [
                 "debug",
                 "info",
@@ -88,14 +85,14 @@
                 "crit",
                 "alert",
                 "emerg"
-              ]
+              ],
+              "type": "string",
+              "required": true,
+              "default": "info"
             }
           },
           {
             "server_errors_severity": {
-              "required": true,
-              "default": "info",
-              "type": "string",
               "one_of": [
                 "debug",
                 "info",
@@ -105,28 +102,28 @@
                 "crit",
                 "alert",
                 "emerg"
-              ]
+              ],
+              "type": "string",
+              "required": true,
+              "default": "info"
             }
           },
           {
             "custom_fields_by_lua": {
-              "description": "Lua code as a key-value map",
               "keys": {
                 "type": "string",
                 "len_min": 1
               },
+              "type": "map",
+              "description": "Lua code as a key-value map",
               "values": {
-                "type": "string",
-                "len_min": 1
-              },
-              "type": "map"
+                "len_min": 1,
+                "type": "string"
+              }
             }
           },
           {
             "facility": {
-              "description": "The facility is used by the operating system to decide how to handle each log message.",
-              "type": "string",
-              "default": "user",
               "one_of": [
                 "auth",
                 "authpriv",
@@ -149,12 +146,15 @@
                 "local6",
                 "local7"
               ],
+              "type": "string",
+              "description": "The facility is used by the operating system to decide how to handle each log message.",
+              "default": "user",
               "required": true
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],

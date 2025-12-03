@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,8 +11,6 @@
           "https"
         ],
         "elements": {
-          "description": "A string representing a protocol, such as HTTP or HTTPS.",
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
@@ -24,17 +22,19 @@
             "udp",
             "ws",
             "wss"
-          ]
+          ],
+          "type": "string",
+          "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
@@ -42,48 +42,55 @@
         "fields": [
           {
             "host": {
-              "description": "The IP address or host name to send data to.",
               "type": "string",
+              "description": "The IP address or host name to send data to.",
               "required": true
             }
           },
           {
             "port": {
-              "description": "The port to send data to on the upstream server.",
-              "required": true,
-              "type": "integer",
               "between": [
                 0,
                 65535
-              ]
+              ],
+              "type": "integer",
+              "description": "The port to send data to on the upstream server.",
+              "required": true
             }
           },
           {
             "timeout": {
+              "type": "number",
               "description": "An optional timeout in milliseconds when sending data to the upstream server.",
-              "default": 10000,
-              "type": "number"
+              "default": 10000
             }
           },
           {
             "keepalive": {
+              "type": "number",
               "description": "An optional value in milliseconds that defines how long an idle connection lives before being closed.",
-              "default": 60000,
-              "type": "number"
+              "default": 60000
             }
           },
           {
             "tls": {
               "description": "Indicates whether to perform a TLS handshake against the remote server.",
-              "default": false,
               "type": "boolean",
-              "required": true
+              "required": true,
+              "default": false
             }
           },
           {
             "tls_sni": {
               "description": "An optional string that defines the SNI (Server Name Indication) hostname to send in the TLS handshake.",
               "type": "string"
+            }
+          },
+          {
+            "ssl_verify": {
+              "type": "boolean",
+              "description": "When using TLS, this option enables verification of the certificate presented by the server.",
+              "default": false
             }
           },
           {
@@ -95,14 +102,24 @@
                 "len_min": 1
               },
               "values": {
-                "type": "string",
-                "len_min": 1
+                "len_min": 1,
+                "type": "string"
               }
             }
           }
         ],
         "type": "record",
-        "required": true
+        "required": true,
+        "entity_checks": [
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "tls",
+                "ssl_verify"
+              ]
+            }
+          }
+        ]
       }
     }
   ],

@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,15 +11,15 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
@@ -27,51 +27,48 @@
         "fields": [
           {
             "second": {
-              "description": "The number of HTTP requests that can be made per second.",
+              "gt": 0,
               "type": "number",
-              "gt": 0
+              "description": "The number of HTTP requests that can be made per second."
             }
           },
           {
             "minute": {
-              "description": "The number of HTTP requests that can be made per minute.",
+              "gt": 0,
               "type": "number",
-              "gt": 0
+              "description": "The number of HTTP requests that can be made per minute."
             }
           },
           {
             "hour": {
-              "description": "The number of HTTP requests that can be made per hour.",
+              "gt": 0,
               "type": "number",
-              "gt": 0
+              "description": "The number of HTTP requests that can be made per hour."
             }
           },
           {
             "day": {
-              "description": "The number of HTTP requests that can be made per day.",
+              "gt": 0,
               "type": "number",
-              "gt": 0
+              "description": "The number of HTTP requests that can be made per day."
             }
           },
           {
             "month": {
-              "description": "The number of HTTP requests that can be made per month.",
+              "gt": 0,
               "type": "number",
-              "gt": 0
+              "description": "The number of HTTP requests that can be made per month."
             }
           },
           {
             "year": {
-              "description": "The number of HTTP requests that can be made per year.",
+              "gt": 0,
               "type": "number",
-              "gt": 0
+              "description": "The number of HTTP requests that can be made per year."
             }
           },
           {
             "limit_by": {
-              "description": "The entity that is used when aggregating the limits.",
-              "default": "consumer",
-              "type": "string",
               "one_of": [
                 "consumer",
                 "credential",
@@ -80,7 +77,10 @@
                 "header",
                 "path",
                 "consumer-group"
-              ]
+              ],
+              "type": "string",
+              "description": "The entity that is used when aggregating the limits.",
+              "default": "consumer"
             }
           },
           {
@@ -91,41 +91,40 @@
           },
           {
             "path": {
-              "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes).",
+              "starts_with": "/",
+              "type": "string",
               "match_none": [
                 {
-                  "pattern": "//",
-                  "err": "must not have empty segments"
+                  "err": "must not have empty segments",
+                  "pattern": "//"
                 }
               ],
-              "type": "string",
-              "starts_with": "/"
+              "description": "A string representing a URL path, such as /path/to/resource. Must start with a forward slash (/) and must not contain empty segments (i.e., two consecutive forward slashes)."
             }
           },
           {
             "policy": {
-              "description": "The rate-limiting policies to use for retrieving and incrementing the limits.",
-              "type": "string",
-              "len_min": 0,
-              "default": "local",
               "one_of": [
                 "local",
                 "cluster",
                 "redis"
-              ]
+              ],
+              "type": "string",
+              "description": "The rate-limiting policies to use for retrieving and incrementing the limits.",
+              "len_min": 0,
+              "default": "local"
             }
           },
           {
             "fault_tolerant": {
               "required": true,
-              "default": true,
               "type": "boolean",
-              "description": "A boolean value that determines if the requests should be proxied even if Kong has troubles connecting a third-party data store. If `true`, requests will be proxied anyway, effectively disabling the rate-limiting function until the data store is working again. If `false`, then the clients will see `500` errors."
+              "description": "A boolean value that determines if the requests should be proxied even if Kong has troubles connecting a third-party data store. If `true`, requests will be proxied anyway, effectively disabling the rate-limiting function until the data store is working again. If `false`, then the clients will see `500` errors.",
+              "default": true
             }
           },
           {
             "redis": {
-              "description": "Redis configuration",
               "fields": [
                 {
                   "host": {
@@ -139,9 +138,9 @@
                       0,
                       65535
                     ],
-                    "default": 6379,
                     "type": "integer",
-                    "description": "An integer representing a port number between 0 and 65535, inclusive."
+                    "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                    "default": 6379
                   }
                 },
                 {
@@ -150,31 +149,132 @@
                       0,
                       2147483646
                     ],
-                    "default": 2000,
                     "type": "integer",
-                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
+                    "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                    "default": 2000
                   }
                 },
                 {
                   "username": {
-                    "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
-                    "referenceable": true,
-                    "type": "string"
-                  }
-                },
-                {
-                  "password": {
-                    "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
                     "type": "string",
-                    "len_min": 0,
-                    "encrypted": true,
+                    "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
                     "referenceable": true
                   }
                 },
                 {
+                  "password": {
+                    "type": "string",
+                    "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+                    "encrypted": true,
+                    "referenceable": true,
+                    "len_min": 0
+                  }
+                },
+                {
                   "cloud_authentication": {
+                    "fields": [
+                      {
+                        "auth_provider": {
+                          "one_of": [
+                            "aws",
+                            "gcp",
+                            "azure"
+                          ],
+                          "type": "string",
+                          "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
+                          "referenceable": true
+                        }
+                      },
+                      {
+                        "aws_cache_name": {
+                          "type": "string",
+                          "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                          "referenceable": true
+                        }
+                      },
+                      {
+                        "aws_region": {
+                          "type": "string",
+                          "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                          "referenceable": true
+                        }
+                      },
+                      {
+                        "aws_is_serverless": {
+                          "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                          "type": "boolean",
+                          "required": false,
+                          "default": true
+                        }
+                      },
+                      {
+                        "aws_access_key_id": {
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "aws_secret_access_key": {
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "aws_assume_role_arn": {
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "aws_role_session_name": {
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "The session name for the temporary credentials when assuming the IAM role.",
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "gcp_service_account_json": {
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "azure_client_id": {
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "azure_client_secret": {
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                          "encrypted": true
+                        }
+                      },
+                      {
+                        "azure_tenant_id": {
+                          "referenceable": true,
+                          "type": "string",
+                          "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                          "encrypted": true
+                        }
+                      }
+                    ],
                     "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance.",
                     "type": "record",
+                    "required": false,
                     "entity_checks": [
                       {
                         "mutually_required": [
@@ -196,183 +296,85 @@
                           ]
                         }
                       }
-                    ],
-                    "fields": [
-                      {
-                        "auth_provider": {
-                          "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
-                          "type": "string",
-                          "one_of": [
-                            "aws",
-                            "gcp",
-                            "azure"
-                          ]
-                        }
-                      },
-                      {
-                        "aws_cache_name": {
-                          "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
-                          "referenceable": true,
-                          "type": "string"
-                        }
-                      },
-                      {
-                        "aws_region": {
-                          "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
-                          "referenceable": true,
-                          "type": "string"
-                        }
-                      },
-                      {
-                        "aws_is_serverless": {
-                          "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                          "default": true,
-                          "type": "boolean",
-                          "required": false
-                        }
-                      },
-                      {
-                        "aws_access_key_id": {
-                          "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
-                          "referenceable": true,
-                          "type": "string",
-                          "encrypted": true
-                        }
-                      },
-                      {
-                        "aws_secret_access_key": {
-                          "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
-                          "referenceable": true,
-                          "type": "string",
-                          "encrypted": true
-                        }
-                      },
-                      {
-                        "aws_assume_role_arn": {
-                          "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                          "referenceable": true,
-                          "type": "string",
-                          "encrypted": true
-                        }
-                      },
-                      {
-                        "aws_role_session_name": {
-                          "description": "The session name for the temporary credentials when assuming the IAM role.",
-                          "referenceable": true,
-                          "type": "string",
-                          "encrypted": true
-                        }
-                      },
-                      {
-                        "gcp_service_account_json": {
-                          "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
-                          "referenceable": true,
-                          "type": "string",
-                          "encrypted": true
-                        }
-                      },
-                      {
-                        "azure_client_id": {
-                          "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
-                          "referenceable": true,
-                          "type": "string",
-                          "encrypted": true
-                        }
-                      },
-                      {
-                        "azure_client_secret": {
-                          "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
-                          "referenceable": true,
-                          "type": "string",
-                          "encrypted": true
-                        }
-                      },
-                      {
-                        "azure_tenant_id": {
-                          "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
-                          "referenceable": true,
-                          "type": "string",
-                          "encrypted": true
-                        }
-                      }
-                    ],
-                    "required": false
+                    ]
                   }
                 },
                 {
                   "database": {
+                    "type": "integer",
                     "description": "Database to use for the Redis connection when using the `redis` strategy",
-                    "default": 0,
-                    "type": "integer"
+                    "default": 0
                   }
                 },
                 {
                   "ssl": {
                     "description": "If set to true, uses SSL to connect to Redis.",
-                    "default": false,
                     "type": "boolean",
-                    "required": false
+                    "required": false,
+                    "default": false
                   }
                 },
                 {
                   "ssl_verify": {
                     "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-                    "default": false,
                     "type": "boolean",
-                    "required": false
+                    "required": false,
+                    "default": false
                   }
                 },
                 {
                   "server_name": {
-                    "required": false,
                     "type": "string",
+                    "required": false,
                     "description": "A string representing an SNI (server name indication) value for TLS."
                   }
                 }
               ],
               "type": "record",
+              "description": "Redis configuration",
               "required": true
             }
           },
           {
             "hide_client_headers": {
               "required": true,
-              "default": false,
               "type": "boolean",
-              "description": "Optionally hide informative response headers."
+              "description": "Optionally hide informative response headers.",
+              "default": false
             }
           },
           {
             "error_code": {
-              "description": "Set a custom error code to return when the rate limit is exceeded.",
-              "default": 429,
+              "gt": 0,
               "type": "number",
-              "gt": 0
+              "description": "Set a custom error code to return when the rate limit is exceeded.",
+              "default": 429
             }
           },
           {
             "error_message": {
+              "type": "string",
               "description": "Set a custom error message to return when the rate limit is exceeded.",
-              "default": "API rate limit exceeded",
-              "type": "string"
+              "default": "API rate limit exceeded"
             }
           },
           {
             "sync_rate": {
               "required": true,
-              "default": -1,
               "type": "number",
-              "description": "How often to sync counter data to the central data store. A value of -1 results in synchronous behavior."
+              "description": "How often to sync counter data to the central data store. A value of -1 results in synchronous behavior.",
+              "default": -1
             }
           }
         ],
-        "required": true,
         "type": "record",
+        "required": true,
         "shorthand_fields": [
           {
             "redis_host": {
               "deprecation": {
                 "message": "rate-limiting: config.redis_host is deprecated, please use config.redis.host instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -380,8 +382,7 @@
                       "host"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "type": "string"
             }
@@ -390,6 +391,7 @@
             "redis_port": {
               "deprecation": {
                 "message": "rate-limiting: config.redis_port is deprecated, please use config.redis.port instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -397,8 +399,7 @@
                       "port"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "type": "integer"
             }
@@ -408,6 +409,7 @@
               "type": "string",
               "deprecation": {
                 "message": "rate-limiting: config.redis_password is deprecated, please use config.redis.password instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -415,8 +417,7 @@
                       "password"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "len_min": 0
             }
@@ -425,6 +426,7 @@
             "redis_username": {
               "deprecation": {
                 "message": "rate-limiting: config.redis_username is deprecated, please use config.redis.username instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -432,8 +434,7 @@
                       "username"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "type": "string"
             }
@@ -442,6 +443,7 @@
             "redis_ssl": {
               "deprecation": {
                 "message": "rate-limiting: config.redis_ssl is deprecated, please use config.redis.ssl instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -449,8 +451,7 @@
                       "ssl"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "type": "boolean"
             }
@@ -459,6 +460,7 @@
             "redis_ssl_verify": {
               "deprecation": {
                 "message": "rate-limiting: config.redis_ssl_verify is deprecated, please use config.redis.ssl_verify instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -466,8 +468,7 @@
                       "ssl_verify"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "type": "boolean"
             }
@@ -476,6 +477,7 @@
             "redis_server_name": {
               "deprecation": {
                 "message": "rate-limiting: config.redis_server_name is deprecated, please use config.redis.server_name instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -483,8 +485,7 @@
                       "server_name"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "type": "string"
             }
@@ -493,6 +494,7 @@
             "redis_timeout": {
               "deprecation": {
                 "message": "rate-limiting: config.redis_timeout is deprecated, please use config.redis.timeout instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -500,8 +502,7 @@
                       "timeout"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "type": "integer"
             }
@@ -510,6 +511,7 @@
             "redis_database": {
               "deprecation": {
                 "message": "rate-limiting: config.redis_database is deprecated, please use config.redis.database instead",
+                "removal_in_version": "4.0",
                 "replaced_with": [
                   {
                     "path": [
@@ -517,8 +519,7 @@
                       "database"
                     ]
                   }
-                ],
-                "removal_in_version": "4.0"
+                ]
               },
               "type": "integer"
             }

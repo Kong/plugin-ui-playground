@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,8 +11,6 @@
           "https"
         ],
         "elements": {
-          "description": "A string representing a protocol, such as HTTP or HTTPS.",
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
@@ -24,17 +22,19 @@
             "udp",
             "ws",
             "wss"
-          ]
+          ],
+          "type": "string",
+          "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
@@ -42,29 +42,29 @@
         "fields": [
           {
             "proto": {
-              "description": "If present, describes the gRPC types and methods. Required to support payload transcoding. When absent, the web client must use application/grpw-web+proto content.",
               "type": "string",
+              "description": "If present, describes the gRPC types and methods. Required to support payload transcoding. When absent, the web client must use application/grpw-web+proto content.",
               "required": false
             }
           },
           {
             "pass_stripped_path": {
-              "description": "If set to `true` causes the plugin to pass the stripped request path to the upstream gRPC service.",
               "type": "boolean",
-              "required": false
+              "required": false,
+              "description": "If set to `true` causes the plugin to pass the stripped request path to the upstream gRPC service."
             }
           },
           {
             "allow_origin_header": {
-              "description": "The value of the `Access-Control-Allow-Origin` header in the response to the gRPC-Web client.",
-              "default": "*",
+              "required": false,
               "type": "string",
-              "required": false
+              "description": "The value of the `Access-Control-Allow-Origin` header in the response to the gRPC-Web client.",
+              "default": "*"
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],

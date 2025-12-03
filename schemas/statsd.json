@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,8 +11,6 @@
           "https"
         ],
         "elements": {
-          "description": "A string representing a protocol, such as HTTP or HTTPS.",
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
@@ -24,17 +22,19 @@
             "udp",
             "ws",
             "wss"
-          ]
+          ],
+          "type": "string",
+          "description": "A string representing a protocol, such as HTTP or HTTPS."
         },
-        "description": "A set of strings representing protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
@@ -42,37 +42,139 @@
         "fields": [
           {
             "host": {
+              "type": "string",
               "description": "The IP address or hostname of StatsD server to send data to.",
-              "default": "localhost",
-              "type": "string"
+              "default": "localhost"
             }
           },
           {
             "port": {
-              "description": "The port of StatsD server to send data to.",
-              "default": 8125,
-              "type": "integer",
               "between": [
                 0,
                 65535
-              ]
+              ],
+              "type": "integer",
+              "description": "The port of StatsD server to send data to.",
+              "default": 8125
             }
           },
           {
             "prefix": {
+              "type": "string",
               "description": "String to prefix to each metric's name.",
-              "default": "kong",
-              "type": "string"
+              "default": "kong"
             }
           },
           {
             "metrics": {
               "description": "List of metrics to be logged.",
+              "type": "array",
+              "elements": {
+                "entity_checks": [
+                  {
+                    "conditional": {
+                      "then_field": "sample_rate",
+                      "if_field": "stat_type",
+                      "then_match": {
+                        "required": true
+                      },
+                      "if_match": {
+                        "one_of": [
+                          "counter",
+                          "gauge"
+                        ]
+                      }
+                    }
+                  }
+                ],
+                "fields": [
+                  {
+                    "name": {
+                      "one_of": [
+                        "kong_latency",
+                        "latency",
+                        "request_count",
+                        "request_per_user",
+                        "request_size",
+                        "response_size",
+                        "status_count",
+                        "status_count_per_user",
+                        "unique_users",
+                        "upstream_latency",
+                        "status_count_per_workspace",
+                        "status_count_per_user_per_route",
+                        "shdict_usage",
+                        "cache_datastore_hits_total",
+                        "cache_datastore_misses_total"
+                      ],
+                      "type": "string",
+                      "required": true,
+                      "description": "StatsD metric’s name."
+                    }
+                  },
+                  {
+                    "stat_type": {
+                      "one_of": [
+                        "counter",
+                        "gauge",
+                        "histogram",
+                        "meter",
+                        "set",
+                        "timer"
+                      ],
+                      "type": "string",
+                      "required": true,
+                      "description": "Determines what sort of event a metric represents."
+                    }
+                  },
+                  {
+                    "sample_rate": {
+                      "gt": 0,
+                      "type": "number",
+                      "description": "Sampling rate"
+                    }
+                  },
+                  {
+                    "consumer_identifier": {
+                      "one_of": [
+                        "consumer_id",
+                        "custom_id",
+                        "username"
+                      ],
+                      "type": "string",
+                      "description": "Authenticated user detail."
+                    }
+                  },
+                  {
+                    "service_identifier": {
+                      "one_of": [
+                        "service_id",
+                        "service_name",
+                        "service_host",
+                        "service_name_or_host"
+                      ],
+                      "type": "string",
+                      "description": "Service detail."
+                    }
+                  },
+                  {
+                    "workspace_identifier": {
+                      "one_of": [
+                        "workspace_id",
+                        "workspace_name"
+                      ],
+                      "type": "string",
+                      "description": "Workspace detail."
+                    }
+                  }
+                ],
+                "type": "record"
+              },
               "default": [
                 {
                   "sample_rate": 1,
-                  "stat_type": "counter",
-                  "name": "request_count"
+                  "name": "request_count",
+                  "stat_type": "counter"
                 },
                 {
                   "name": "latency",
@@ -80,8 +182,8 @@
                 },
                 {
                   "sample_rate": 1,
-                  "stat_type": "counter",
-                  "name": "request_size"
+                  "name": "request_size",
+                  "stat_type": "counter"
                 },
                 {
                   "sample_rate": 1,
@@ -90,12 +192,12 @@
                 },
                 {
                   "sample_rate": 1,
-                  "stat_type": "counter",
-                  "name": "response_size"
+                  "name": "response_size",
+                  "stat_type": "counter"
                 },
                 {
-                  "name": "unique_users",
-                  "stat_type": "set"
+                  "stat_type": "set",
+                  "name": "unique_users"
                 },
                 {
                   "sample_rate": 1,
@@ -117,8 +219,8 @@
                 },
                 {
                   "sample_rate": 1,
-                  "stat_type": "counter",
-                  "name": "status_count_per_workspace"
+                  "name": "status_count_per_workspace",
+                  "stat_type": "counter"
                 },
                 {
                   "sample_rate": 1,
@@ -132,126 +234,24 @@
                 },
                 {
                   "sample_rate": 1,
-                  "stat_type": "counter",
-                  "name": "cache_datastore_hits_total"
+                  "name": "cache_datastore_hits_total",
+                  "stat_type": "counter"
                 },
                 {
                   "sample_rate": 1,
-                  "stat_type": "counter",
-                  "name": "cache_datastore_misses_total"
+                  "name": "cache_datastore_misses_total",
+                  "stat_type": "counter"
                 }
-              ],
-              "type": "array",
-              "elements": {
-                "fields": [
-                  {
-                    "name": {
-                      "description": "StatsD metric’s name.",
-                      "required": true,
-                      "one_of": [
-                        "kong_latency",
-                        "latency",
-                        "request_count",
-                        "request_per_user",
-                        "request_size",
-                        "response_size",
-                        "status_count",
-                        "status_count_per_user",
-                        "unique_users",
-                        "upstream_latency",
-                        "status_count_per_workspace",
-                        "status_count_per_user_per_route",
-                        "shdict_usage",
-                        "cache_datastore_hits_total",
-                        "cache_datastore_misses_total"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  {
-                    "stat_type": {
-                      "description": "Determines what sort of event a metric represents.",
-                      "required": true,
-                      "one_of": [
-                        "counter",
-                        "gauge",
-                        "histogram",
-                        "meter",
-                        "set",
-                        "timer"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  {
-                    "sample_rate": {
-                      "description": "Sampling rate",
-                      "type": "number",
-                      "gt": 0
-                    }
-                  },
-                  {
-                    "consumer_identifier": {
-                      "description": "Authenticated user detail.",
-                      "type": "string",
-                      "one_of": [
-                        "consumer_id",
-                        "custom_id",
-                        "username"
-                      ]
-                    }
-                  },
-                  {
-                    "service_identifier": {
-                      "description": "Service detail.",
-                      "type": "string",
-                      "one_of": [
-                        "service_id",
-                        "service_name",
-                        "service_host",
-                        "service_name_or_host"
-                      ]
-                    }
-                  },
-                  {
-                    "workspace_identifier": {
-                      "description": "Workspace detail.",
-                      "type": "string",
-                      "one_of": [
-                        "workspace_id",
-                        "workspace_name"
-                      ]
-                    }
-                  }
-                ],
-                "type": "record",
-                "entity_checks": [
-                  {
-                    "conditional": {
-                      "then_field": "sample_rate",
-                      "if_field": "stat_type",
-                      "then_match": {
-                        "required": true
-                      },
-                      "if_match": {
-                        "one_of": [
-                          "counter",
-                          "gauge"
-                        ]
-                      }
-                    }
-                  }
-                ]
-              }
+              ]
             }
           },
           {
             "allow_status_codes": {
-              "description": "List of status code ranges that are allowed to be logged in metrics.",
               "type": "array",
+              "description": "List of status code ranges that are allowed to be logged in metrics.",
               "elements": {
-                "type": "string",
-                "match": "^[0-9]+-[0-9]+$"
+                "match": "^[0-9]+-[0-9]+$",
+                "type": "string"
               }
             }
           },
@@ -261,56 +261,63 @@
                 0,
                 65507
               ],
-              "default": 0,
-              "type": "number"
+              "type": "number",
+              "default": 0
             }
           },
           {
             "use_tcp": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "ssl_verify": {
               "type": "boolean",
+              "description": "Whether to verify the TLS certificate when connecting to the StatsD server. Only valid when `use_tcp=true`.",
               "default": false
             }
           },
           {
             "hostname_in_prefix": {
-              "type": "boolean",
-              "default": false
+              "default": false,
+              "type": "boolean"
             }
           },
           {
             "consumer_identifier_default": {
-              "required": true,
-              "default": "custom_id",
-              "type": "string",
               "one_of": [
                 "consumer_id",
                 "custom_id",
                 "username"
-              ]
+              ],
+              "type": "string",
+              "required": true,
+              "default": "custom_id"
             }
           },
           {
             "service_identifier_default": {
-              "required": true,
-              "default": "service_name_or_host",
-              "type": "string",
               "one_of": [
                 "service_id",
                 "service_name",
                 "service_host",
                 "service_name_or_host"
-              ]
+              ],
+              "type": "string",
+              "required": true,
+              "default": "service_name_or_host"
             }
           },
           {
             "workspace_identifier_default": {
-              "required": true,
-              "default": "workspace_id",
-              "type": "string",
               "one_of": [
                 "workspace_id",
                 "workspace_name"
-              ]
+              ],
+              "type": "string",
+              "required": true,
+              "default": "workspace_id"
             }
           },
           {
@@ -345,14 +352,14 @@
           },
           {
             "tag_style": {
-              "required": false,
-              "type": "string",
               "one_of": [
                 "dogstatsd",
                 "influxdb",
                 "librato",
                 "signalfx"
-              ]
+              ],
+              "type": "string",
+              "required": false
             }
           },
           {
@@ -364,9 +371,9 @@
                       1,
                       1000000
                     ],
-                    "default": 1,
                     "type": "integer",
-                    "description": "Maximum number of entries that can be processed at a time."
+                    "description": "Maximum number of entries that can be processed at a time.",
+                    "default": 1
                   }
                 },
                 {
@@ -375,9 +382,9 @@
                       0,
                       3600
                     ],
-                    "default": 1,
                     "type": "number",
-                    "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler."
+                    "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+                    "default": 1
                   }
                 },
                 {
@@ -386,22 +393,22 @@
                       1,
                       1000000
                     ],
-                    "default": 10000,
                     "type": "integer",
-                    "description": "Maximum number of entries that can be waiting on the queue."
+                    "description": "Maximum number of entries that can be waiting on the queue.",
+                    "default": 10000
                   }
                 },
                 {
                   "max_bytes": {
-                    "type": "integer",
-                    "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
+                    "description": "Maximum number of bytes that can be waiting on a queue, requires string content.",
+                    "type": "integer"
                   }
                 },
                 {
                   "max_retry_time": {
+                    "type": "number",
                     "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
-                    "default": 60,
-                    "type": "number"
+                    "default": 60
                   }
                 },
                 {
@@ -410,43 +417,52 @@
                       0.001,
                       1000000
                     ],
-                    "default": 0.01,
                     "type": "number",
-                    "description": "Time in seconds before the initial retry is made for a failing batch."
+                    "description": "Time in seconds before the initial retry is made for a failing batch.",
+                    "default": 0.01
                   }
                 },
                 {
                   "max_retry_delay": {
-                    "description": "Maximum time in seconds between retries, caps exponential backoff.",
-                    "default": 60,
-                    "type": "number",
                     "between": [
                       0.001,
                       1000000
-                    ]
+                    ],
+                    "type": "number",
+                    "description": "Maximum time in seconds between retries, caps exponential backoff.",
+                    "default": 60
                   }
                 },
                 {
                   "concurrency_limit": {
-                    "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-                    "default": 1,
-                    "type": "integer",
                     "one_of": [
                       -1,
                       1
-                    ]
+                    ],
+                    "type": "integer",
+                    "description": "The number of of queue delivery timers. -1 indicates unlimited.",
+                    "default": 1
                   }
                 }
               ],
-              "type": "record",
-              "required": true
+              "required": true,
+              "type": "record"
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],
-  "entity_checks": []
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config.use_tcp",
+          "config.ssl_verify"
+        ]
+      }
+    }
+  ]
 }

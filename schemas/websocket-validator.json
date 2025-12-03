@@ -3,26 +3,26 @@
     {
       "protocols": {
         "required": true,
-        "default": [
-          "ws",
-          "wss"
-        ],
         "type": "set",
         "elements": {
-          "type": "string",
           "one_of": [
             "ws",
             "wss"
-          ]
-        }
+          ],
+          "type": "string"
+        },
+        "default": [
+          "ws",
+          "wss"
+        ]
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
@@ -30,31 +30,30 @@
         "fields": [
           {
             "client": {
-              "required": false,
               "fields": [
                 {
                   "text": {
-                    "required": false,
                     "fields": [
                       {
                         "type": {
-                          "required": true,
-                          "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported.",
                           "one_of": [
                             "draft4"
                           ],
-                          "type": "string"
+                          "type": "string",
+                          "required": true,
+                          "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported."
                         }
                       },
                       {
                         "schema": {
-                          "required": true,
                           "type": "string",
+                          "required": true,
                           "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
                         }
                       }
                     ],
                     "type": "record",
+                    "required": false,
                     "entity_checks": [
                       {
                         "custom_entity_check": {
@@ -69,27 +68,27 @@
                 },
                 {
                   "binary": {
-                    "required": false,
                     "fields": [
                       {
                         "type": {
-                          "required": true,
-                          "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported.",
                           "one_of": [
                             "draft4"
                           ],
-                          "type": "string"
+                          "type": "string",
+                          "required": true,
+                          "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported."
                         }
                       },
                       {
                         "schema": {
-                          "required": true,
                           "type": "string",
+                          "required": true,
                           "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
                         }
                       }
                     ],
                     "type": "record",
+                    "required": false,
                     "entity_checks": [
                       {
                         "custom_entity_check": {
@@ -104,6 +103,7 @@
                 }
               ],
               "type": "record",
+              "required": false,
               "entity_checks": [
                 {
                   "at_least_one_of": [
@@ -116,31 +116,30 @@
           },
           {
             "upstream": {
-              "required": false,
               "fields": [
                 {
                   "text": {
-                    "required": false,
                     "fields": [
                       {
                         "type": {
-                          "required": true,
-                          "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported.",
                           "one_of": [
                             "draft4"
                           ],
-                          "type": "string"
+                          "type": "string",
+                          "required": true,
+                          "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported."
                         }
                       },
                       {
                         "schema": {
-                          "required": true,
                           "type": "string",
+                          "required": true,
                           "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
                         }
                       }
                     ],
                     "type": "record",
+                    "required": false,
                     "entity_checks": [
                       {
                         "custom_entity_check": {
@@ -155,27 +154,27 @@
                 },
                 {
                   "binary": {
-                    "required": false,
                     "fields": [
                       {
                         "type": {
-                          "required": true,
-                          "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported.",
                           "one_of": [
                             "draft4"
                           ],
-                          "type": "string"
+                          "type": "string",
+                          "required": true,
+                          "description": "The corresponding validation library for `config.upstream.binary.schema`. Currently, only `draft4` is supported."
                         }
                       },
                       {
                         "schema": {
-                          "required": true,
                           "type": "string",
+                          "required": true,
                           "description": "Schema used to validate upstream-originated binary frames. The semantics of this field depend on the validation type set by `config.upstream.binary.type`."
                         }
                       }
                     ],
                     "type": "record",
+                    "required": false,
                     "entity_checks": [
                       {
                         "custom_entity_check": {
@@ -190,6 +189,7 @@
                 }
               ],
               "type": "record",
+              "required": false,
               "entity_checks": [
                 {
                   "at_least_one_of": [
@@ -201,8 +201,8 @@
             }
           }
         ],
-        "required": true,
         "type": "record",
+        "required": true,
         "entity_checks": [
           {
             "at_least_one_of": [

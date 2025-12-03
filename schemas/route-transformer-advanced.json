@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,27 +11,38 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
       "config": {
+        "entity_checks": [
+          {
+            "at_least_one_of": [
+              "path",
+              "port",
+              "host"
+            ]
+          }
+        ],
+        "type": "record",
+        "required": true,
         "fields": [
           {
             "path": {
@@ -53,17 +64,6 @@
               "type": "boolean",
               "default": false
             }
-          }
-        ],
-        "required": true,
-        "type": "record",
-        "entity_checks": [
-          {
-            "at_least_one_of": [
-              "path",
-              "port",
-              "host"
-            ]
           }
         ]
       }

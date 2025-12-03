@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,38 +11,74 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
       "config": {
+        "type": "record",
+        "entity_checks": [
+          {
+            "at_least_one_of": [
+              "http_proxy_host",
+              "https_proxy_host"
+            ]
+          },
+          {
+            "at_least_one_of": [
+              "http_proxy_port",
+              "https_proxy_port"
+            ]
+          },
+          {
+            "mutually_required": [
+              "http_proxy_host",
+              "http_proxy_port"
+            ]
+          },
+          {
+            "mutually_required": [
+              "https_proxy_host",
+              "https_proxy_port"
+            ]
+          },
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "https_verify",
+                "proxy_scheme"
+              ],
+              "run_with_missing_fields": true
+            }
+          }
+        ],
         "fields": [
           {
             "x_headers": {
-              "description": "Determines how to handle headers when forwarding the request.",
-              "type": "string",
-              "default": "append",
               "one_of": [
                 "append",
                 "transparent",
                 "delete"
               ],
+              "type": "string",
+              "description": "Determines how to handle headers when forwarding the request.",
+              "default": "append",
               "required": true
             }
           },
@@ -80,27 +116,27 @@
           },
           {
             "proxy_scheme": {
-              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
-              "type": "string",
-              "default": "http",
               "one_of": [
                 "http"
               ],
+              "type": "string",
+              "description": "The proxy scheme to use when connecting. Only `http` is supported.",
+              "default": "http",
               "required": true
             }
           },
           {
             "auth_username": {
               "description": "The username to authenticate with, if the forward proxy is protected\nby basic authentication.",
-              "referenceable": true,
               "type": "string",
-              "required": false
+              "required": false,
+              "referenceable": true
             }
           },
           {
             "auth_password": {
-              "description": "The password to authenticate with, if the forward proxy is protected\nby basic authentication.",
               "type": "string",
+              "description": "The password to authenticate with, if the forward proxy is protected\nby basic authentication.",
               "encrypted": true,
               "referenceable": true,
               "required": false
@@ -108,40 +144,14 @@
           },
           {
             "https_verify": {
-              "description": "Whether the server certificate will be verified according to the CA certificates specified in lua_ssl_trusted_certificate.",
-              "default": false,
+              "required": true,
               "type": "boolean",
-              "required": true
+              "description": "Whether the server certificate will be verified according to the CA certificates specified in lua_ssl_trusted_certificate.",
+              "default": false
             }
           }
         ],
-        "type": "record",
-        "entity_checks": [
-          {
-            "at_least_one_of": [
-              "http_proxy_host",
-              "https_proxy_host"
-            ]
-          },
-          {
-            "at_least_one_of": [
-              "http_proxy_port",
-              "https_proxy_port"
-            ]
-          },
-          {
-            "mutually_required": [
-              "http_proxy_host",
-              "http_proxy_port"
-            ]
-          },
-          {
-            "mutually_required": [
-              "https_proxy_host",
-              "https_proxy_port"
-            ]
-          }
-        ],
+        "required": true,
         "shorthand_fields": [
           {
             "proxy_host": {
@@ -161,8 +171,7 @@
               "type": "integer"
             }
           }
-        ],
-        "required": true
+        ]
       }
     }
   ],

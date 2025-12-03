@@ -2,40 +2,40 @@
   "fields": [
     {
       "consumer": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumers"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumers",
+        "eq": null
       }
     },
     {
       "service": {
-        "description": "A reference to the 'services' table with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "services"
+        "description": "A reference to the 'services' table with a null value allowed.",
+        "reference": "services",
+        "eq": null
       }
     },
     {
       "route": {
-        "description": "A reference to the 'routes' table with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "routes"
+        "description": "A reference to the 'routes' table with a null value allowed.",
+        "reference": "routes",
+        "eq": null
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -43,15 +43,15 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
@@ -59,32 +59,32 @@
         "fields": [
           {
             "account_email": {
-              "required": true,
+              "type": "string",
               "match": "%w*%p*@+%w*%.?%w*",
               "encrypted": true,
               "referenceable": true,
-              "type": "string",
+              "required": true,
               "description": "The account identifier. Can be reused in a different plugin instance."
             }
           },
           {
             "account_key": {
-              "description": "The private key associated with the account.",
               "required": false,
               "type": "record",
+              "description": "The private key associated with the account.",
               "fields": [
                 {
                   "key_id": {
                     "required": true,
-                    "description": "The Key ID.",
                     "type": "string",
+                    "description": "The Key ID.",
                     "encrypted": true
                   }
                 },
                 {
                   "key_set": {
-                    "description": "The name of the key set to associate the Key ID with.",
                     "type": "string",
+                    "description": "The name of the key set to associate the Key ID with.",
                     "encrypted": true
                   }
                 }
@@ -93,71 +93,72 @@
           },
           {
             "api_uri": {
+              "type": "string",
               "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
-              "default": "https://acme-v02.api.letsencrypt.org/directory",
-              "type": "string"
+              "default": "https://acme-v02.api.letsencrypt.org/directory"
             }
           },
           {
             "tos_accepted": {
+              "type": "boolean",
               "description": "If you are using Let's Encrypt, you must set this to `true` to agree the terms of service.",
-              "default": false,
-              "type": "boolean"
+              "default": false
             }
           },
           {
             "eab_kid": {
-              "description": "External account binding (EAB) key id. You usually don't need to set this unless it is explicitly required by the CA.",
-              "referenceable": true,
               "type": "string",
+              "referenceable": true,
+              "description": "External account binding (EAB) key id. You usually don't need to set this unless it is explicitly required by the CA.",
               "encrypted": true
             }
           },
           {
             "eab_hmac_key": {
-              "description": "External account binding (EAB) base64-encoded URL string of the HMAC key. You usually don't need to set this unless it is explicitly required by the CA.",
-              "referenceable": true,
               "type": "string",
+              "referenceable": true,
+              "description": "External account binding (EAB) base64-encoded URL string of the HMAC key. You usually don't need to set this unless it is explicitly required by the CA.",
               "encrypted": true
             }
           },
           {
             "cert_type": {
-              "description": "The certificate type to create. The possible values are `rsa` for RSA certificate or `ecc` for EC certificate.",
-              "default": "rsa",
-              "type": "string",
               "one_of": [
                 "rsa",
                 "ecc"
-              ]
+              ],
+              "type": "string",
+              "description": "The certificate type to create. The possible values are `rsa` for RSA certificate or `ecc` for EC certificate.",
+              "default": "rsa"
             }
           },
           {
             "rsa_key_size": {
-              "description": "RSA private key size for the certificate. The possible values are 2048, 3072, or 4096.",
-              "default": 4096,
-              "type": "number",
               "one_of": [
                 2048,
                 3072,
                 4096
-              ]
+              ],
+              "type": "number",
+              "description": "RSA private key size for the certificate. The possible values are 2048, 3072, or 4096.",
+              "default": 4096
             }
           },
           {
             "renew_threshold_days": {
+              "type": "number",
               "description": "Days remaining to renew the certificate before it expires.",
-              "default": 14,
-              "type": "number"
+              "default": 14
             }
           },
           {
             "domains": {
+              "type": "array",
               "elements": {
                 "match_all": [
                   {
-                    "pattern": "^[^*]*%*?[^*]*$",
-                    "err": "invalid wildcard: must have at most one wildcard"
+                    "err": "invalid wildcard: must have at most one wildcard",
+                    "pattern": "^[^*]*%*?[^*]*$"
                   }
                 ],
                 "type": "string",
@@ -170,36 +171,35 @@
                   "err": "invalid wildcard: must be placed at leftmost or rightmost label"
                 }
               },
-              "type": "array",
               "description": "An array of strings representing hosts. A valid host is a string containing one or more labels separated by periods, with at most one wildcard label ('*')"
             }
           },
           {
             "allow_any_domain": {
+              "type": "boolean",
               "description": "If set to `true`, the plugin allows all domains and ignores any values in the `domains` list.",
-              "default": false,
-              "type": "boolean"
+              "default": false
             }
           },
           {
             "fail_backoff_minutes": {
+              "type": "number",
               "description": "Minutes to wait for each domain that fails to create a certificate. This applies to both a\nnew certificate and a renewal certificate.",
-              "default": 5,
-              "type": "number"
+              "default": 5
             }
           },
           {
             "storage": {
-              "description": "The backend storage type to use. In DB-less mode and Konnect, `kong` storage is unavailable. In hybrid mode and Konnect, `shm` storage is unavailable. `shm` storage does not persist during Kong restarts and does not work for Kong running on different machines, so consider using one of `kong`, `redis`, `consul`, or `vault` in production.",
-              "default": "shm",
-              "type": "string",
               "one_of": [
                 "kong",
                 "shm",
                 "redis",
                 "consul",
                 "vault"
-              ]
+              ],
+              "type": "string",
+              "description": "The backend storage type to use. In DB-less mode and Konnect, `kong` storage is unavailable. In hybrid mode and Konnect, `shm` storage is unavailable. `shm` storage does not persist during Kong restarts and does not work for Kong running on different machines, so consider using one of `kong`, `redis`, `consul`, or `vault` in production.",
+              "default": "shm"
             }
           },
           {
@@ -210,21 +210,21 @@
                     "fields": [
                       {
                         "shm_name": {
+                          "type": "string",
                           "description": "Name of shared memory zone used for Kong API gateway storage",
-                          "default": "kong",
-                          "type": "string"
+                          "default": "kong"
                         }
                       }
                     ],
-                    "type": "record",
-                    "required": true
+                    "required": true,
+                    "type": "record"
                   }
                 },
                 {
                   "kong": {
                     "fields": [],
-                    "type": "record",
-                    "required": true
+                    "required": true,
+                    "type": "record"
                   }
                 },
                 {
@@ -242,9 +242,9 @@
                             0,
                             65535
                           ],
-                          "default": 6379,
                           "type": "integer",
-                          "description": "An integer representing a port number between 0 and 65535, inclusive."
+                          "description": "An integer representing a port number between 0 and 65535, inclusive.",
+                          "default": 6379
                         }
                       },
                       {
@@ -253,31 +253,132 @@
                             0,
                             2147483646
                           ],
-                          "default": 2000,
                           "type": "integer",
-                          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2."
+                          "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+                          "default": 2000
                         }
                       },
                       {
                         "username": {
-                          "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
-                          "referenceable": true,
-                          "type": "string"
-                        }
-                      },
-                      {
-                        "password": {
-                          "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
                           "type": "string",
-                          "len_min": 0,
-                          "encrypted": true,
+                          "description": "Username to use for Redis connections. If undefined, ACL authentication won't be performed. This requires Redis v6.0.0+. To be compatible with Redis v5.x.y, you can set it to `default`.",
                           "referenceable": true
                         }
                       },
                       {
+                        "password": {
+                          "type": "string",
+                          "description": "Password to use for Redis connections. If undefined, no AUTH commands are sent to Redis.",
+                          "encrypted": true,
+                          "referenceable": true,
+                          "len_min": 0
+                        }
+                      },
+                      {
                         "cloud_authentication": {
+                          "fields": [
+                            {
+                              "auth_provider": {
+                                "one_of": [
+                                  "aws",
+                                  "gcp",
+                                  "azure"
+                                ],
+                                "type": "string",
+                                "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
+                                "referenceable": true
+                              }
+                            },
+                            {
+                              "aws_cache_name": {
+                                "type": "string",
+                                "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
+                                "referenceable": true
+                              }
+                            },
+                            {
+                              "aws_region": {
+                                "type": "string",
+                                "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
+                                "referenceable": true
+                              }
+                            },
+                            {
+                              "aws_is_serverless": {
+                                "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
+                                "type": "boolean",
+                                "required": false,
+                                "default": true
+                              }
+                            },
+                            {
+                              "aws_access_key_id": {
+                                "referenceable": true,
+                                "type": "string",
+                                "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
+                                "encrypted": true
+                              }
+                            },
+                            {
+                              "aws_secret_access_key": {
+                                "referenceable": true,
+                                "type": "string",
+                                "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
+                                "encrypted": true
+                              }
+                            },
+                            {
+                              "aws_assume_role_arn": {
+                                "referenceable": true,
+                                "type": "string",
+                                "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
+                                "encrypted": true
+                              }
+                            },
+                            {
+                              "aws_role_session_name": {
+                                "referenceable": true,
+                                "type": "string",
+                                "description": "The session name for the temporary credentials when assuming the IAM role.",
+                                "encrypted": true
+                              }
+                            },
+                            {
+                              "gcp_service_account_json": {
+                                "referenceable": true,
+                                "type": "string",
+                                "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
+                                "encrypted": true
+                              }
+                            },
+                            {
+                              "azure_client_id": {
+                                "referenceable": true,
+                                "type": "string",
+                                "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
+                                "encrypted": true
+                              }
+                            },
+                            {
+                              "azure_client_secret": {
+                                "referenceable": true,
+                                "type": "string",
+                                "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
+                                "encrypted": true
+                              }
+                            },
+                            {
+                              "azure_tenant_id": {
+                                "referenceable": true,
+                                "type": "string",
+                                "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
+                                "encrypted": true
+                              }
+                            }
+                          ],
                           "description": "Cloud auth related configs for connecting to a Cloud Provider's Redis instance.",
                           "type": "record",
+                          "required": false,
                           "entity_checks": [
                             {
                               "mutually_required": [
@@ -299,180 +400,82 @@
                                 ]
                               }
                             }
-                          ],
-                          "fields": [
-                            {
-                              "auth_provider": {
-                                "description": "Auth providers to be used to authenticate to a Cloud Provider's Redis instance.",
-                                "type": "string",
-                                "one_of": [
-                                  "aws",
-                                  "gcp",
-                                  "azure"
-                                ]
-                              }
-                            },
-                            {
-                              "aws_cache_name": {
-                                "description": "The name of the AWS Elasticache cluster when `auth_provider` is set to `aws`.",
-                                "referenceable": true,
-                                "type": "string"
-                              }
-                            },
-                            {
-                              "aws_region": {
-                                "description": "The region of the AWS ElastiCache cluster when `auth_provider` is set to `aws`.",
-                                "referenceable": true,
-                                "type": "string"
-                              }
-                            },
-                            {
-                              "aws_is_serverless": {
-                                "description": "This flag specifies whether the cluster is serverless when auth_provider is set to `aws`.",
-                                "default": true,
-                                "type": "boolean",
-                                "required": false
-                              }
-                            },
-                            {
-                              "aws_access_key_id": {
-                                "description": "AWS Access Key ID to be used for authentication when `auth_provider` is set to `aws`.",
-                                "referenceable": true,
-                                "type": "string",
-                                "encrypted": true
-                              }
-                            },
-                            {
-                              "aws_secret_access_key": {
-                                "description": "AWS Secret Access Key to be used for authentication when `auth_provider` is set to `aws`.",
-                                "referenceable": true,
-                                "type": "string",
-                                "encrypted": true
-                              }
-                            },
-                            {
-                              "aws_assume_role_arn": {
-                                "description": "The ARN of the IAM role to assume for generating ElastiCache IAM authentication tokens.",
-                                "referenceable": true,
-                                "type": "string",
-                                "encrypted": true
-                              }
-                            },
-                            {
-                              "aws_role_session_name": {
-                                "description": "The session name for the temporary credentials when assuming the IAM role.",
-                                "referenceable": true,
-                                "type": "string",
-                                "encrypted": true
-                              }
-                            },
-                            {
-                              "gcp_service_account_json": {
-                                "description": "GCP Service Account JSON to be used for authentication when `auth_provider` is set to `gcp`.",
-                                "referenceable": true,
-                                "type": "string",
-                                "encrypted": true
-                              }
-                            },
-                            {
-                              "azure_client_id": {
-                                "description": "Azure Client ID to be used for authentication when `auth_provider` is set to `azure`.",
-                                "referenceable": true,
-                                "type": "string",
-                                "encrypted": true
-                              }
-                            },
-                            {
-                              "azure_client_secret": {
-                                "description": "Azure Client Secret to be used for authentication when `auth_provider` is set to `azure`.",
-                                "referenceable": true,
-                                "type": "string",
-                                "encrypted": true
-                              }
-                            },
-                            {
-                              "azure_tenant_id": {
-                                "description": "Azure Tenant ID to be used for authentication when `auth_provider` is set to `azure`.",
-                                "referenceable": true,
-                                "type": "string",
-                                "encrypted": true
-                              }
-                            }
-                          ],
-                          "required": false
+                          ]
                         }
                       },
                       {
                         "database": {
+                          "type": "integer",
                           "description": "Database to use for the Redis connection when using the `redis` strategy",
-                          "default": 0,
-                          "type": "integer"
+                          "default": 0
                         }
                       },
                       {
                         "ssl": {
                           "description": "If set to true, uses SSL to connect to Redis.",
-                          "default": false,
                           "type": "boolean",
-                          "required": false
+                          "required": false,
+                          "default": false
                         }
                       },
                       {
                         "ssl_verify": {
                           "description": "If set to true, verifies the validity of the server SSL certificate. If setting this parameter, also configure `lua_ssl_trusted_certificate` in `kong.conf` to specify the CA (or server) certificate used by your Redis server. You may also need to configure `lua_ssl_verify_depth` accordingly.",
-                          "default": false,
                           "type": "boolean",
-                          "required": false
+                          "required": false,
+                          "default": false
                         }
                       },
                       {
                         "server_name": {
-                          "required": false,
                           "type": "string",
+                          "required": false,
                           "description": "A string representing an SNI (server name indication) value for TLS."
                         }
                       },
                       {
                         "extra_options": {
-                          "description": "Custom ACME Redis options",
                           "fields": [
                             {
                               "namespace": {
-                                "required": true,
                                 "type": "string",
-                                "len_min": 0,
+                                "description": "A namespace to prepend to all keys stored in Redis.",
                                 "default": "",
-                                "description": "A namespace to prepend to all keys stored in Redis."
+                                "required": true,
+                                "len_min": 0
                               }
                             },
                             {
                               "scan_count": {
                                 "required": false,
-                                "default": 10,
                                 "type": "number",
-                                "description": "The number of keys to return in Redis SCAN calls."
+                                "description": "The number of keys to return in Redis SCAN calls.",
+                                "default": 10
                               }
                             }
                           ],
                           "type": "record",
-                          "required": true
+                          "required": true,
+                          "description": "Custom ACME Redis options"
                         }
                       }
                     ],
+                    "type": "record",
+                    "required": true,
                     "shorthand_fields": [
                       {
                         "auth": {
                           "type": "string",
                           "deprecation": {
+                            "message": "acme: config.storage_config.redis.auth is deprecated, please use config.storage_config.redis.password instead",
+                            "removal_in_version": "4.0",
                             "replaced_with": [
                               {
                                 "path": [
                                   "password"
                                 ]
                               }
-                            ],
-                            "message": "acme: config.storage_config.redis.auth is deprecated, please use config.storage_config.redis.password instead",
-                            "removal_in_version": "4.0"
+                            ]
                           },
                           "len_min": 0
                         }
@@ -480,15 +483,15 @@
                       {
                         "ssl_server_name": {
                           "deprecation": {
+                            "message": "acme: config.storage_config.redis.ssl_server_name is deprecated, please use config.storage_config.redis.server_name instead",
+                            "removal_in_version": "4.0",
                             "replaced_with": [
                               {
                                 "path": [
                                   "server_name"
                                 ]
                               }
-                            ],
-                            "message": "acme: config.storage_config.redis.ssl_server_name is deprecated, please use config.storage_config.redis.server_name instead",
-                            "removal_in_version": "4.0"
+                            ]
                           },
                           "type": "string"
                         }
@@ -497,6 +500,8 @@
                         "namespace": {
                           "type": "string",
                           "deprecation": {
+                            "message": "acme: config.storage_config.redis.namespace is deprecated, please use config.storage_config.redis.extra_options.namespace instead",
+                            "removal_in_version": "4.0",
                             "replaced_with": [
                               {
                                 "path": [
@@ -504,9 +509,7 @@
                                   "namespace"
                                 ]
                               }
-                            ],
-                            "message": "acme: config.storage_config.redis.namespace is deprecated, please use config.storage_config.redis.extra_options.namespace instead",
-                            "removal_in_version": "4.0"
+                            ]
                           },
                           "len_min": 0
                         }
@@ -514,6 +517,8 @@
                       {
                         "scan_count": {
                           "deprecation": {
+                            "message": "acme: config.storage_config.redis.scan_count is deprecated, please use config.storage_config.redis.extra_options.scan_count instead",
+                            "removal_in_version": "4.0",
                             "replaced_with": [
                               {
                                 "path": [
@@ -521,16 +526,12 @@
                                   "scan_count"
                                 ]
                               }
-                            ],
-                            "message": "acme: config.storage_config.redis.scan_count is deprecated, please use config.storage_config.redis.extra_options.scan_count instead",
-                            "removal_in_version": "4.0"
+                            ]
                           },
                           "type": "integer"
                         }
                       }
-                    ],
-                    "type": "record",
-                    "required": true
+                    ]
                   }
                 },
                 {
@@ -538,9 +539,9 @@
                     "fields": [
                       {
                         "https": {
+                          "type": "boolean",
                           "description": "Boolean representation of https.",
-                          "default": false,
-                          "type": "boolean"
+                          "default": false
                         }
                       },
                       {
@@ -573,15 +574,15 @@
                       },
                       {
                         "token": {
-                          "description": "Consul ACL token.",
-                          "referenceable": true,
                           "type": "string",
+                          "referenceable": true,
+                          "description": "Consul ACL token.",
                           "encrypted": true
                         }
                       }
                     ],
-                    "type": "record",
-                    "required": true
+                    "required": true,
+                    "type": "record"
                   }
                 },
                 {
@@ -589,9 +590,9 @@
                     "fields": [
                       {
                         "https": {
+                          "type": "boolean",
                           "description": "Boolean representation of https.",
-                          "default": false,
-                          "type": "boolean"
+                          "default": false
                         }
                       },
                       {
@@ -624,17 +625,17 @@
                       },
                       {
                         "token": {
-                          "description": "Consul ACL token.",
-                          "referenceable": true,
                           "type": "string",
+                          "referenceable": true,
+                          "description": "Consul ACL token.",
                           "encrypted": true
                         }
                       },
                       {
                         "tls_verify": {
+                          "type": "boolean",
                           "description": "Turn on TLS verification.",
-                          "default": true,
-                          "type": "boolean"
+                          "default": true
                         }
                       },
                       {
@@ -645,13 +646,13 @@
                       },
                       {
                         "auth_method": {
-                          "description": "Auth Method, default to token, can be 'token' or 'kubernetes'.",
-                          "default": "token",
-                          "type": "string",
                           "one_of": [
                             "token",
                             "kubernetes"
-                          ]
+                          ],
+                          "type": "string",
+                          "description": "Auth Method, default to token, can be 'token' or 'kubernetes'.",
+                          "default": "token"
                         }
                       },
                       {
@@ -673,13 +674,13 @@
                         }
                       }
                     ],
-                    "type": "record",
-                    "required": true
+                    "required": true,
+                    "type": "record"
                   }
                 }
               ],
-              "type": "record",
-              "required": true
+              "required": true,
+              "type": "record"
             }
           },
           {
@@ -690,14 +691,14 @@
           },
           {
             "enable_ipv4_common_name": {
+              "type": "boolean",
               "description": "A boolean value that controls whether to include the IPv4 address in the common name field of generated certificates.",
-              "default": true,
-              "type": "boolean"
+              "default": true
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],
@@ -751,6 +752,14 @@
       "custom_entity_check": {
         "field_sources": [
           "config.storage"
+        ]
+      }
+    },
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config.storage",
+          "config.storage_config"
         ]
       }
     }

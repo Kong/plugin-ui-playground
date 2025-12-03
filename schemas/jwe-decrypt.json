@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,31 +11,31 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
       "consumer": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumers"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumers",
+        "eq": null
       }
     },
     {
@@ -44,39 +44,39 @@
           {
             "lookup_header_name": {
               "description": "The name of the header to look for the JWE token.",
-              "default": "Authorization",
               "type": "string",
-              "required": true
+              "required": true,
+              "default": "Authorization"
             }
           },
           {
             "forward_header_name": {
               "description": "The name of the header that is used to set the decrypted value.",
-              "default": "Authorization",
               "type": "string",
-              "required": true
+              "required": true,
+              "default": "Authorization"
             }
           },
           {
             "key_sets": {
-              "description": "Denote the name or names of all Key Sets that should be inspected when trying to find a suitable key to decrypt the JWE token.",
-              "required": true,
-              "type": "array",
               "elements": {
                 "type": "string"
-              }
+              },
+              "type": "array",
+              "required": true,
+              "description": "Denote the name or names of all Key Sets that should be inspected when trying to find a suitable key to decrypt the JWE token."
             }
           },
           {
             "strict": {
+              "type": "boolean",
               "description": "Defines how the plugin behaves in cases where no token was found in the request. When using `strict` mode, the request requires a token to be present and subsequently raise an error if none could be found.",
-              "default": true,
-              "type": "boolean"
+              "default": true
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],

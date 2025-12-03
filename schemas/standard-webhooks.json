@@ -2,16 +2,16 @@
   "fields": [
     {
       "consumer": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumers"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumers",
+        "eq": null
       }
     },
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -19,15 +19,15 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
@@ -35,8 +35,8 @@
         "fields": [
           {
             "secret_v1": {
-              "description": "Webhook secret",
               "type": "string",
+              "description": "Webhook secret",
               "encrypted": true,
               "referenceable": true,
               "required": true
@@ -44,16 +44,16 @@
           },
           {
             "tolerance_second": {
-              "required": true,
+              "gt": -1,
               "type": "integer",
-              "default": 300,
               "description": "Tolerance of the webhook timestamp in seconds. If the webhook timestamp is older than this number of seconds, it will be rejected with a '400' response.",
-              "gt": -1
+              "default": 300,
+              "required": true
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],

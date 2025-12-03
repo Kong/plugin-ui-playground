@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,23 +11,23 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
       "consumer_group": {
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "type": "foreign",
-        "eq": null,
-        "reference": "consumer_groups"
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "reference": "consumer_groups",
+        "eq": null
       }
     },
     {
@@ -35,30 +35,26 @@
         "fields": [
           {
             "body_schema": {
-              "description": "The request body schema specification. One of `body_schema` or `parameter_schema` must be specified.",
               "type": "string",
-              "required": false
+              "required": false,
+              "description": "The request body schema specification. One of `body_schema` or `parameter_schema` must be specified."
             }
           },
           {
             "allowed_content_types": {
               "description": "List of allowed content types. The value can be configured with the `charset` parameter. For example, `application/json; charset=UTF-8`.",
-              "default": [
-                "application/json"
-              ],
               "type": "set",
               "elements": {
                 "required": true,
                 "type": "string"
-              }
+              },
+              "default": [
+                "application/json"
+              ]
             }
           },
           {
             "version": {
-              "required": true,
-              "type": "string",
-              "default": "kong",
-              "description": "Which validator to use. Supported values are `kong` (default) for using Kong's own schema validator, or `draft4`, `draft7`, `draft201909`, and `draft202012` for using their respective JSON Schema Draft compliant validators.",
               "one_of": [
                 "kong",
                 "draft4",
@@ -66,71 +62,18 @@
                 "draft7",
                 "draft201909",
                 "draft202012"
-              ]
+              ],
+              "type": "string",
+              "description": "Which validator to use. Supported values are `kong` (default) for using Kong's own schema validator, or `draft4`, `draft7`, `draft201909`, and `draft202012` for using their respective JSON Schema Draft compliant validators.",
+              "default": "kong",
+              "required": true
             }
           },
           {
             "parameter_schema": {
               "description": "Array of parameter validator specification. One of `body_schema` or `parameter_schema` must be specified.",
-              "required": false,
               "type": "array",
               "elements": {
-                "fields": [
-                  {
-                    "in": {
-                      "required": true,
-                      "description": "The location of the parameter.",
-                      "one_of": [
-                        "query",
-                        "header",
-                        "path"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  {
-                    "name": {
-                      "description": "The name of the parameter. Parameter names are case-sensitive, and correspond to the parameter name used by the `in` property. If `in` is `path`, the `name` field MUST correspond to the named capture group from the configured `route`.",
-                      "type": "string",
-                      "required": true
-                    }
-                  },
-                  {
-                    "required": {
-                      "description": "Determines whether this parameter is mandatory.",
-                      "type": "boolean",
-                      "required": true
-                    }
-                  },
-                  {
-                    "style": {
-                      "description": "Required when `schema` and `explode` are set. Describes how the parameter value will be deserialized depending on the type of the parameter value.",
-                      "type": "string",
-                      "one_of": [
-                        "label",
-                        "form",
-                        "matrix",
-                        "simple",
-                        "spaceDelimited",
-                        "pipeDelimited",
-                        "deepObject"
-                      ]
-                    }
-                  },
-                  {
-                    "explode": {
-                      "type": "boolean",
-                      "description": "Required when `schema` and `style` are set. When `explode` is `true`, parameter values of type `array` or `object` generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters, this property has no effect."
-                    }
-                  },
-                  {
-                    "schema": {
-                      "description": "Required when `style` and `explode` are set. This is the schema defining the type used for the parameter. It is validated using `draft4` for JSON Schema draft 4 compliant validator. In addition to being a valid JSON Schema, the parameter schema MUST have a top-level `type` property to enable proper deserialization before validating.",
-                      "type": "string"
-                    }
-                  }
-                ],
-                "type": "record",
                 "entity_checks": [
                   {
                     "mutually_required": [
@@ -147,29 +90,86 @@
                       ]
                     }
                   }
-                ]
-              }
+                ],
+                "fields": [
+                  {
+                    "in": {
+                      "one_of": [
+                        "query",
+                        "header",
+                        "path"
+                      ],
+                      "type": "string",
+                      "description": "The location of the parameter.",
+                      "required": true
+                    }
+                  },
+                  {
+                    "name": {
+                      "type": "string",
+                      "required": true,
+                      "description": "The name of the parameter. Parameter names are case-sensitive, and correspond to the parameter name used by the `in` property. If `in` is `path`, the `name` field MUST correspond to the named capture group from the configured `route`."
+                    }
+                  },
+                  {
+                    "required": {
+                      "type": "boolean",
+                      "required": true,
+                      "description": "Determines whether this parameter is mandatory."
+                    }
+                  },
+                  {
+                    "style": {
+                      "one_of": [
+                        "label",
+                        "form",
+                        "matrix",
+                        "simple",
+                        "spaceDelimited",
+                        "pipeDelimited",
+                        "deepObject"
+                      ],
+                      "type": "string",
+                      "description": "Required when `schema` and `explode` are set. Describes how the parameter value will be deserialized depending on the type of the parameter value."
+                    }
+                  },
+                  {
+                    "explode": {
+                      "description": "Required when `schema` and `style` are set. When `explode` is `true`, parameter values of type `array` or `object` generate separate parameters for each value of the array or key-value pair of the map. For other types of parameters, this property has no effect.",
+                      "type": "boolean"
+                    }
+                  },
+                  {
+                    "schema": {
+                      "description": "Required when `style` and `explode` are set. This is the schema defining the type used for the parameter. It is validated using `draft4` for JSON Schema draft 4 compliant validator. In addition to being a valid JSON Schema, the parameter schema MUST have a top-level `type` property to enable proper deserialization before validating.",
+                      "type": "string"
+                    }
+                  }
+                ],
+                "type": "record"
+              },
+              "required": false
             }
           },
           {
             "verbose_response": {
-              "required": true,
-              "default": false,
+              "description": "If enabled, the plugin returns more verbose and detailed validation errors.",
               "type": "boolean",
-              "description": "If enabled, the plugin returns more verbose and detailed validation errors."
+              "required": true,
+              "default": false
             }
           },
           {
             "content_type_parameter_validation": {
-              "required": true,
-              "default": true,
+              "description": "Determines whether to enable parameters validation of request content-type.",
               "type": "boolean",
-              "description": "Determines whether to enable parameters validation of request content-type."
+              "required": true,
+              "default": true
             }
           }
         ],
-        "required": true,
         "type": "record",
+        "required": true,
         "entity_checks": [
           {
             "at_least_one_of": [

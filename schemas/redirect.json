@@ -2,8 +2,8 @@
   "fields": [
     {
       "protocols": {
-        "required": true,
         "type": "set",
+        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,15 +11,15 @@
           "https"
         ],
         "elements": {
-          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ]
+          ],
+          "type": "string"
         },
-        "description": "A set of strings representing HTTP protocols."
+        "required": true
       }
     },
     {
@@ -27,33 +27,33 @@
         "fields": [
           {
             "status_code": {
-              "required": true,
               "type": "integer",
+              "description": "The response code to send. Must be an integer between 100 and 599.",
+              "default": 301,
               "between": [
                 100,
                 599
               ],
-              "default": 301,
-              "description": "The response code to send. Must be an integer between 100 and 599."
+              "required": true
             }
           },
           {
             "location": {
-              "description": "The URL to redirect to",
               "type": "string",
+              "description": "The URL to redirect to",
               "required": true
             }
           },
           {
             "keep_incoming_path": {
+              "type": "boolean",
               "description": "Use the incoming request's path and query string in the redirect URL",
-              "default": false,
-              "type": "boolean"
+              "default": false
             }
           }
         ],
-        "type": "record",
-        "required": true
+        "required": true,
+        "type": "record"
       }
     }
   ],
