@@ -69,7 +69,7 @@
 import { computed, provide } from 'vue'
 import { useGlobalStore } from '../composables/useGlobalStore'
 import PluginFormPreview from './PluginFormPreview.vue'
-import { FEATURE_FLAGS, TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '@kong-ui-public/entities-plugins'
+import { TOASTER_PROVIDER, useProvideExperimentalFreeForms } from '@kong-ui-public/entities-plugins'
 import { ToastManager } from '@kong/kongponents'
 
 const store = useGlobalStore()
@@ -81,7 +81,6 @@ const error = computed(() => store.error.value)
 const selectedPluginName = computed(() => store.selectedPluginName?.value)
 
 const toaster = new ToastManager()
-provide(FEATURE_FLAGS.DATAKIT_ENABLE_FLOW_EDITOR, true)
 provide(TOASTER_PROVIDER, toaster.open.bind(toaster))
 
 useProvideExperimentalFreeForms([
