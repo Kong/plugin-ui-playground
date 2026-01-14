@@ -33,6 +33,7 @@
     "vue-tsc": "^3.0.4"
   },
   "dependencies": {
-    "@kong-ui-public/entities-shared": "3.38.1-pr.2798.78bb279c5.0"
+    "@kong-ui-public/entities-shared": "3.38.1-pr.2798.78bb279c5.0",
+    "@kong-ui-public/monaco-editor": "^0.9.1"
   }
 }
