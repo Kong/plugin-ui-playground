@@ -26,17 +26,6 @@
       </div>
     </div>
 
-    <!-- Enable Switch Button toggle - only visible in freeform mode -->
-    <div v-if="!vfgEnabled" class="engine-control-group">
-      <span class="control-label">Options:</span>
-      <div class="engine-toggle">
-        <USwitch
-          v-model="switchButtonEnabled"
-        />
-        <span class="engine-name">Switch</span>
-      </div>
-    </div>
-
     <!-- Layout mode indicator -->
     <!-- <div class="layout-indicator">
       <UIcon
@@ -51,13 +40,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, type Ref } from 'vue'
+import { computed } from 'vue'
 import { useGlobalStore } from '../composables/useGlobalStore'
 
 const store = useGlobalStore()
 
-// Inject enableSwitchButton from App.vue
-const enableSwitchButton = inject<Ref<boolean>>('enableSwitchButton')
 
 // Computed properties
 const vfgEnabled = computed({
@@ -65,15 +52,6 @@ const vfgEnabled = computed({
   set: (value: boolean) => {
     console.log('VFG toggle changed:', value) // Debug log
     store.setVFGEngine(value)
-  },
-})
-
-const switchButtonEnabled = computed({
-  get: () => enableSwitchButton?.value ?? true,
-  set: (value: boolean) => {
-    if (enableSwitchButton) {
-      enableSwitchButton.value = value
-    }
   },
 })
 </script>

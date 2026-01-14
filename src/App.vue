@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, provide } from 'vue'
+import { computed } from 'vue'
 import { useGlobalStore } from './composables/useGlobalStore'
 import { useUrlSync } from './composables/useUrlSync'
 import PlaygroundHeader from './components/PlaygroundHeader.vue'
@@ -37,9 +37,6 @@ const schema = computed({
   set: (value: string) => store.updateSchema(value),
 })
 
-// Enable Switch Button ref and provide
-const enableSwitchButton = ref(true)
-provide('enableSwitchButton', enableSwitchButton)
 </script>
 
 <style scoped lang="scss">
