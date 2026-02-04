@@ -1,809 +1,4 @@
 {
-  "fields": [
-    {
-      "protocols": {
-        "required": true,
-        "type": "set",
-        "elements": {
-          "one_of": [
-            "grpc",
-            "grpcs",
-            "http",
-            "https",
-            "ws",
-            "wss"
-          ],
-          "type": "string"
-        },
-        "default": [
-          "grpc",
-          "grpcs",
-          "http",
-          "https",
-          "ws",
-          "wss"
-        ]
-      }
-    },
-    {
-      "config": {
-        "entity_checks": [
-          {
-            "conditional": {
-              "if_match": {
-                "one_of": [
-                  "gemini"
-                ]
-              },
-              "then_field": "auth.allow_override",
-              "if_field": "model.provider",
-              "then_match": {
-                "eq": false
-              },
-              "then_err": "gemini only support auth.allow_override = false"
-            }
-          },
-          {
-            "mutually_required": [
-              "auth.header_name",
-              "auth.header_value"
-            ]
-          },
-          {
-            "mutually_required": [
-              "auth.param_name",
-              "auth.param_value",
-              "auth.param_location"
-            ]
-          },
-          {
-            "conditional_at_least_one_of": {
-              "then_err": "must set %s for llama2 provider",
-              "if_field": "model.provider",
-              "then_at_least_one_of": [
-                "model.options.llama2_format"
-              ],
-              "if_match": {
-                "one_of": [
-                  "llama2"
-                ]
-              }
-            }
-          },
-          {
-            "conditional_at_least_one_of": {
-              "then_err": "must set %s for mistral provider",
-              "if_field": "model.provider",
-              "then_at_least_one_of": [
-                "model.options.mistral_format"
-              ],
-              "if_match": {
-                "one_of": [
-                  "mistral"
-                ]
-              }
-            }
-          },
-          {
-            "conditional_at_least_one_of": {
-              "then_err": "must set %s for anthropic provider",
-              "if_field": "model.provider",
-              "then_at_least_one_of": [
-                "model.options.anthropic_version"
-              ],
-              "if_match": {
-                "one_of": [
-                  "anthropic"
-                ]
-              }
-            }
-          },
-          {
-            "conditional_at_least_one_of": {
-              "then_err": "must set %s for azure provider",
-              "if_field": "model.provider",
-              "then_at_least_one_of": [
-                "model.options.azure_instance"
-              ],
-              "if_match": {
-                "one_of": [
-                  "azure"
-                ]
-              }
-            }
-          },
-          {
-            "conditional_at_least_one_of": {
-              "then_err": "must set %s for azure provider",
-              "if_field": "model.provider",
-              "then_at_least_one_of": [
-                "model.options.azure_api_version"
-              ],
-              "if_match": {
-                "one_of": [
-                  "azure"
-                ]
-              }
-            }
-          },
-          {
-            "conditional_at_least_one_of": {
-              "then_err": "must set %s for azure provider",
-              "if_field": "model.provider",
-              "then_at_least_one_of": [
-                "model.options.azure_deployment_id"
-              ],
-              "if_match": {
-                "one_of": [
-                  "azure"
-                ]
-              }
-            }
-          },
-          {
-            "conditional_at_least_one_of": {
-              "then_err": "must set %s for self-hosted providers/models",
-              "if_field": "model.provider",
-              "then_at_least_one_of": [
-                "model.options.upstream_url"
-              ],
-              "if_match": {
-                "one_of": [
-                  "llama2"
-                ]
-              }
-            }
-          },
-          {
-            "custom_entity_check": {
-              "field_sources": [
-                "route_type",
-                "model",
-                "logging"
-              ]
-            }
-          },
-          {
-            "custom_entity_check": {
-              "field_sources": [
-                "route_type"
-              ]
-            }
-          },
-          {
-            "custom_entity_check": {
-              "field_sources": [
-                "route_type",
-                "model"
-              ]
-            }
-          },
-          {
-            "custom_entity_check": {
-              "field_sources": [
-                "route_type",
-                "model"
-              ]
-            }
-          },
-          {
-            "custom_entity_check": {
-              "field_sources": [
-                "model",
-                "auth"
-              ]
-            }
-          }
-        ],
-        "fields": [
-          {
-            "route_type": {
-              "one_of": [
-                "llm/v1/chat",
-                "llm/v1/completions",
-                "llm/v1/embeddings",
-                "llm/v1/responses",
-                "llm/v1/assistants",
-                "llm/v1/batches",
-                "llm/v1/files",
-                "image/v1/images/generations",
-                "image/v1/images/edits",
-                "audio/v1/audio/transcriptions",
-                "audio/v1/audio/speech",
-                "audio/v1/audio/translations",
-                "realtime/v1/realtime",
-                "video/v1/videos/generations",
-                "preserve"
-              ],
-              "type": "string",
-              "description": "The model's operation implementation, for this provider. ",
-              "required": true
-            }
-          },
-          {
-            "auth": {
-              "type": "record",
-              "required": false,
-              "fields": [
-                {
-                  "header_name": {
-                    "referenceable": true,
-                    "type": "string",
-                    "required": false,
-                    "description": "If AI model requires authentication via Authorization or API key header, specify its name here."
-                  }
-                },
-                {
-                  "header_value": {
-                    "type": "string",
-                    "description": "Specify the full auth header value for 'header_name', for example 'Bearer key' or just 'key'.",
-                    "encrypted": true,
-                    "referenceable": true,
-                    "required": false
-                  }
-                },
-                {
-                  "param_name": {
-                    "referenceable": true,
-                    "type": "string",
-                    "required": false,
-                    "description": "If AI model requires authentication via query parameter, specify its name here."
-                  }
-                },
-                {
-                  "param_value": {
-                    "type": "string",
-                    "description": "Specify the full parameter value for 'param_name'.",
-                    "encrypted": true,
-                    "referenceable": true,
-                    "required": false
-                  }
-                },
-                {
-                  "param_location": {
-                    "one_of": [
-                      "query",
-                      "body"
-                    ],
-                    "type": "string",
-                    "description": "Specify whether the 'param_name' and 'param_value' options go in a query string, or the POST form/JSON body.",
-                    "required": false
-                  }
-                },
-                {
-                  "azure_use_managed_identity": {
-                    "required": false,
-                    "type": "boolean",
-                    "description": "Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models.",
-                    "default": false
-                  }
-                },
-                {
-                  "azure_client_id": {
-                    "referenceable": true,
-                    "type": "string",
-                    "required": false,
-                    "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client ID."
-                  }
-                },
-                {
-                  "azure_client_secret": {
-                    "type": "string",
-                    "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client secret.",
-                    "encrypted": true,
-                    "referenceable": true,
-                    "required": false
-                  }
-                },
-                {
-                  "azure_tenant_id": {
-                    "referenceable": true,
-                    "type": "string",
-                    "required": false,
-                    "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the tenant ID."
-                  }
-                },
-                {
-                  "gcp_use_service_account": {
-                    "required": false,
-                    "type": "boolean",
-                    "description": "Use service account auth for GCP-based providers and models.",
-                    "default": false
-                  }
-                },
-                {
-                  "gcp_service_account_json": {
-                    "type": "string",
-                    "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT`.",
-                    "encrypted": true,
-                    "referenceable": true,
-                    "required": false
-                  }
-                },
-                {
-                  "aws_access_key_id": {
-                    "type": "string",
-                    "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this plugin instance.",
-                    "encrypted": true,
-                    "referenceable": true,
-                    "required": false
-                  }
-                },
-                {
-                  "aws_secret_access_key": {
-                    "type": "string",
-                    "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this plugin instance.",
-                    "encrypted": true,
-                    "referenceable": true,
-                    "required": false
-                  }
-                },
-                {
-                  "allow_override": {
-                    "required": false,
-                    "type": "boolean",
-                    "description": "If enabled, the authorization header or parameter can be overridden in the request by the value configured in the plugin.",
-                    "default": false
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "model": {
-              "type": "record",
-              "required": true,
-              "fields": [
-                {
-                  "provider": {
-                    "one_of": [
-                      "openai",
-                      "azure",
-                      "anthropic",
-                      "cohere",
-                      "mistral",
-                      "llama2",
-                      "gemini",
-                      "bedrock",
-                      "huggingface",
-                      "dashscope",
-                      "xai",
-                      "cerebras"
-                    ],
-                    "type": "string",
-                    "description": "AI provider request format - Kong translates requests to and from the specified backend compatible formats.",
-                    "required": true
-                  }
-                },
-                {
-                  "name": {
-                    "type": "string",
-                    "description": "Model name to execute.",
-                    "required": false
-                  }
-                },
-                {
-                  "options": {
-                    "fields": [
-                      {
-                        "max_tokens": {
-                          "type": "integer",
-                          "description": "Defines the max_tokens, if using chat or completion models.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "input_cost": {
-                          "gt": 0,
-                          "type": "number",
-                          "description": "Defines the cost per 1M tokens in your prompt.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "output_cost": {
-                          "gt": 0,
-                          "type": "number",
-                          "description": "Defines the cost per 1M tokens in the output of the AI.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "temperature": {
-                          "between": [
-                            0,
-                            5
-                          ],
-                          "type": "number",
-                          "description": "Defines the matching temperature, if using chat or completion models.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "top_p": {
-                          "between": [
-                            0,
-                            1
-                          ],
-                          "type": "number",
-                          "description": "Defines the top-p probability mass, if supported.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "top_k": {
-                          "between": [
-                            0,
-                            500
-                          ],
-                          "type": "integer",
-                          "description": "Defines the top-k most likely tokens, if supported.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "anthropic_version": {
-                          "type": "string",
-                          "description": "Defines the schema/API version, if using Anthropic provider.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "azure_instance": {
-                          "type": "string",
-                          "description": "Instance name for Azure OpenAI hosted models.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "azure_api_version": {
-                          "required": false,
-                          "type": "string",
-                          "description": "'api-version' for Azure OpenAI instances.",
-                          "default": "2023-05-15"
-                        }
-                      },
-                      {
-                        "azure_deployment_id": {
-                          "type": "string",
-                          "description": "Deployment ID for Azure OpenAI instances.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "llama2_format": {
-                          "one_of": [
-                            "raw",
-                            "openai",
-                            "ollama"
-                          ],
-                          "type": "string",
-                          "description": "If using llama2 provider, select the upstream message format.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "mistral_format": {
-                          "one_of": [
-                            "openai",
-                            "ollama"
-                          ],
-                          "type": "string",
-                          "description": "If using mistral provider, select the upstream message format.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "upstream_url": {
-                          "type": "string",
-                          "required": false,
-                          "description": "Manually specify or override the full URL to the AI operation endpoints, when calling (self-)hosted models, or for running via a private endpoint."
-                        }
-                      },
-                      {
-                        "upstream_path": {
-                          "deprecation": {
-                            "message": "llm: config.model.options.upstream_path is deprecated, please use config.model.options.upstream_url instead",
-                            "removal_in_version": "4.0"
-                          },
-                          "type": "string",
-                          "required": false,
-                          "description": "Manually specify or override the AI operation path, used when e.g. using the 'preserve' route_type."
-                        }
-                      },
-                      {
-                        "embeddings_dimensions": {
-                          "gt": 0,
-                          "type": "integer",
-                          "description": "If using embeddings models, set the number of dimensions to generate.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "gemini": {
-                          "fields": [
-                            {
-                              "api_endpoint": {
-                                "type": "string",
-                                "description": "If running Gemini on Vertex, specify the regional API endpoint (hostname only).",
-                                "required": false
-                              }
-                            },
-                            {
-                              "project_id": {
-                                "type": "string",
-                                "description": "If running Gemini on Vertex, specify the project ID.",
-                                "required": false
-                              }
-                            },
-                            {
-                              "location_id": {
-                                "type": "string",
-                                "description": "If running Gemini on Vertex, specify the location ID.",
-                                "required": false
-                              }
-                            },
-                            {
-                              "endpoint_id": {
-                                "type": "string",
-                                "description": "If running Gemini on Vertex Model Garden, specify the endpoint ID.",
-                                "required": false
-                              }
-                            }
-                          ],
-                          "type": "record",
-                          "required": false,
-                          "entity_checks": [
-                            {
-                              "mutually_required": [
-                                "api_endpoint",
-                                "project_id",
-                                "location_id"
-                              ]
-                            },
-                            {
-                              "custom_entity_check": {
-                                "field_sources": [
-                                  "endpoint_id",
-                                  "api_endpoint",
-                                  "project_id",
-                                  "location_id"
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "bedrock": {
-                          "entity_checks": [
-                            {
-                              "mutually_required": [
-                                "aws_assume_role_arn",
-                                "aws_role_session_name"
-                              ]
-                            }
-                          ],
-                          "type": "record",
-                          "required": false,
-                          "fields": [
-                            {
-                              "aws_region": {
-                                "type": "string",
-                                "description": "If using AWS providers (Bedrock) you can override the `AWS_REGION` environment variable by setting this option.",
-                                "required": false
-                              }
-                            },
-                            {
-                              "aws_assume_role_arn": {
-                                "type": "string",
-                                "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful.",
-                                "required": false
-                              }
-                            },
-                            {
-                              "aws_role_session_name": {
-                                "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session.",
-                                "type": "string"
-                              }
-                            },
-                            {
-                              "aws_sts_endpoint_url": {
-                                "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role.",
-                                "type": "string"
-                              }
-                            },
-                            {
-                              "embeddings_normalize": {
-                                "type": "boolean",
-                                "description": "If using AWS providers (Bedrock), set to true to normalize the embeddings.",
-                                "default": false
-                              }
-                            },
-                            {
-                              "performance_config_latency": {
-                                "type": "string",
-                                "description": "Force the client's performance configuration 'latency' for all requests. Leave empty to let the consumer select the performance configuration.",
-                                "required": false
-                              }
-                            },
-                            {
-                              "video_output_s3_uri": {
-                                "type": "string",
-                                "description": "S3 URI (s3://bucket/prefix) where Bedrock will store generated video files. Required for video generation.",
-                                "required": false
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "huggingface": {
-                          "type": "record",
-                          "required": false,
-                          "fields": [
-                            {
-                              "use_cache": {
-                                "type": "boolean",
-                                "description": "Use the cache layer on the inference API",
-                                "required": false
-                              }
-                            },
-                            {
-                              "wait_for_model": {
-                                "type": "boolean",
-                                "description": "Wait for the model if it is not ready",
-                                "required": false
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "cohere": {
-                          "type": "record",
-                          "required": false,
-                          "fields": [
-                            {
-                              "embedding_input_type": {
-                                "one_of": [
-                                  "search_document",
-                                  "search_query",
-                                  "classification",
-                                  "clustering",
-                                  "image"
-                                ],
-                                "type": "string",
-                                "description": "The purpose of the input text to calculate embedding vectors.",
-                                "default": "classification",
-                                "required": false
-                              }
-                            },
-                            {
-                              "wait_for_model": {
-                                "type": "boolean",
-                                "description": "Wait for the model if it is not ready",
-                                "required": false
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        "dashscope": {
-                          "type": "record",
-                          "required": false,
-                          "fields": [
-                            {
-                              "international": {
-                                "required": false,
-                                "type": "boolean",
-                                "description": "        Two Dashscope endpoints are available, and the international endpoint will be used when this is set to `true`.\n        It is recommended to set this to `true` when using international version of dashscope.\n        ",
-                                "default": true
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    ],
-                    "type": "record",
-                    "required": false,
-                    "description": "Key/value settings for the model"
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "logging": {
-              "type": "record",
-              "required": true,
-              "fields": [
-                {
-                  "log_statistics": {
-                    "required": true,
-                    "type": "boolean",
-                    "description": "If enabled and supported by the driver, will add model usage and token metrics into the Kong log plugin(s) output.",
-                    "default": false
-                  }
-                },
-                {
-                  "log_payloads": {
-                    "required": true,
-                    "type": "boolean",
-                    "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.Furthermore if Opentelemetry instrumentation is enabled the traces will contain this data as well.",
-                    "default": false
-                  }
-                }
-              ]
-            }
-          },
-          {
-            "response_streaming": {
-              "one_of": [
-                "allow",
-                "deny",
-                "always"
-              ],
-              "type": "string",
-              "description": "Whether to 'optionally allow', 'deny', or 'always' (force) the streaming of answers via server sent events.",
-              "default": "allow",
-              "required": false
-            }
-          },
-          {
-            "max_request_body_size": {
-              "gt": -1,
-              "type": "integer",
-              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-              "default": 1048576
-            }
-          },
-          {
-            "model_name_header": {
-              "type": "boolean",
-              "description": "Display the model name selected in the X-Kong-LLM-Model response header",
-              "default": true
-            }
-          },
-          {
-            "llm_format": {
-              "one_of": [
-                "openai",
-                "bedrock",
-                "gemini",
-                "cohere",
-                "huggingface",
-                "anthropic"
-              ],
-              "type": "string",
-              "description": "LLM input and output format and schema to use",
-              "default": "openai",
-              "required": false
-            }
-          },
-          {
-            "genai_category": {
-              "one_of": [
-                "text/generation",
-                "text/embeddings",
-                "audio/transcription",
-                "audio/speech",
-                "image/generation",
-                "video/generation"
-              ],
-              "type": "string",
-              "description": "Generative AI category of the request",
-              "default": "text/generation",
-              "required": false
-            }
-          }
-        ],
-        "required": true,
-        "type": "record"
-      }
-    }
-  ],
   "entity_checks": [
     {
       "conditional": {
@@ -953,6 +148,827 @@
           ]
         },
         "then_err": "category 'audio/transcription' cannot be used with this route_type"
+      }
+    }
+  ],
+  "fields": [
+    {
+      "protocols": {
+        "required": true,
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https",
+          "ws",
+          "wss"
+        ],
+        "elements": {
+          "type": "string",
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https",
+            "ws",
+            "wss"
+          ]
+        },
+        "type": "set"
+      }
+    },
+    {
+      "config": {
+        "type": "record",
+        "fields": [
+          {
+            "route_type": {
+              "one_of": [
+                "llm/v1/chat",
+                "llm/v1/completions",
+                "llm/v1/embeddings",
+                "llm/v1/responses",
+                "llm/v1/assistants",
+                "llm/v1/batches",
+                "llm/v1/files",
+                "image/v1/images/generations",
+                "image/v1/images/edits",
+                "audio/v1/audio/transcriptions",
+                "audio/v1/audio/speech",
+                "audio/v1/audio/translations",
+                "realtime/v1/realtime",
+                "video/v1/videos/generations",
+                "preserve"
+              ],
+              "description": "The model's operation implementation, for this provider. ",
+              "type": "string",
+              "required": true
+            }
+          },
+          {
+            "auth": {
+              "fields": [
+                {
+                  "header_name": {
+                    "type": "string",
+                    "description": "If AI model requires authentication via Authorization or API key header, specify its name here.",
+                    "required": false,
+                    "referenceable": true
+                  }
+                },
+                {
+                  "header_value": {
+                    "type": "string",
+                    "referenceable": true,
+                    "description": "Specify the full auth header value for 'header_name', for example 'Bearer key' or just 'key'.",
+                    "encrypted": true,
+                    "required": false
+                  }
+                },
+                {
+                  "param_name": {
+                    "type": "string",
+                    "description": "If AI model requires authentication via query parameter, specify its name here.",
+                    "required": false,
+                    "referenceable": true
+                  }
+                },
+                {
+                  "param_value": {
+                    "type": "string",
+                    "referenceable": true,
+                    "description": "Specify the full parameter value for 'param_name'.",
+                    "encrypted": true,
+                    "required": false
+                  }
+                },
+                {
+                  "param_location": {
+                    "one_of": [
+                      "query",
+                      "body"
+                    ],
+                    "description": "Specify whether the 'param_name' and 'param_value' options go in a query string, or the POST form/JSON body.",
+                    "type": "string",
+                    "required": false
+                  }
+                },
+                {
+                  "azure_use_managed_identity": {
+                    "default": false,
+                    "description": "Set true to use the Azure Cloud Managed Identity (or user-assigned identity) to authenticate with Azure-provider models.",
+                    "required": false,
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "azure_client_id": {
+                    "type": "string",
+                    "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client ID.",
+                    "required": false,
+                    "referenceable": true
+                  }
+                },
+                {
+                  "azure_client_secret": {
+                    "type": "string",
+                    "referenceable": true,
+                    "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the client secret.",
+                    "encrypted": true,
+                    "required": false
+                  }
+                },
+                {
+                  "azure_tenant_id": {
+                    "type": "string",
+                    "description": "If azure_use_managed_identity is set to true, and you need to use a different user-assigned identity for this LLM instance, set the tenant ID.",
+                    "required": false,
+                    "referenceable": true
+                  }
+                },
+                {
+                  "gcp_use_service_account": {
+                    "default": false,
+                    "description": "Use service account auth for GCP-based providers and models.",
+                    "required": false,
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "gcp_service_account_json": {
+                    "type": "string",
+                    "referenceable": true,
+                    "description": "Set this field to the full JSON of the GCP service account to authenticate, if required. If null (and gcp_use_service_account is true), Kong will attempt to read from environment variable `GCP_SERVICE_ACCOUNT`.",
+                    "encrypted": true,
+                    "required": false
+                  }
+                },
+                {
+                  "gcp_oauth_token_url": {
+                    "type": "string",
+                    "description": "Custom OAuth token URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google OAuth token endpoint.",
+                    "required": false,
+                    "referenceable": true
+                  }
+                },
+                {
+                  "gcp_metadata_url": {
+                    "type": "string",
+                    "description": "Custom metadata URL for GCP authentication. Useful for restricted network environments or custom GCP endpoints. If null, Kong will use the default Google metadata endpoint.",
+                    "required": false,
+                    "referenceable": true
+                  }
+                },
+                {
+                  "aws_access_key_id": {
+                    "type": "string",
+                    "referenceable": true,
+                    "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_ACCESS_KEY_ID environment variable for this plugin instance.",
+                    "encrypted": true,
+                    "required": false
+                  }
+                },
+                {
+                  "aws_secret_access_key": {
+                    "type": "string",
+                    "referenceable": true,
+                    "description": "Set this if you are using an AWS provider (Bedrock) and you are authenticating using static IAM User credentials. Setting this will override the AWS_SECRET_ACCESS_KEY environment variable for this plugin instance.",
+                    "encrypted": true,
+                    "required": false
+                  }
+                },
+                {
+                  "allow_override": {
+                    "default": false,
+                    "description": "If enabled, the authorization header or parameter can be overridden in the request by the value configured in the plugin.",
+                    "required": false,
+                    "type": "boolean"
+                  }
+                }
+              ],
+              "type": "record",
+              "required": false
+            }
+          },
+          {
+            "model": {
+              "fields": [
+                {
+                  "provider": {
+                    "one_of": [
+                      "openai",
+                      "azure",
+                      "anthropic",
+                      "cohere",
+                      "mistral",
+                      "llama2",
+                      "gemini",
+                      "bedrock",
+                      "huggingface",
+                      "dashscope",
+                      "xai",
+                      "cerebras"
+                    ],
+                    "description": "AI provider request format - Kong translates requests to and from the specified backend compatible formats.",
+                    "type": "string",
+                    "required": true
+                  }
+                },
+                {
+                  "name": {
+                    "description": "Model name to execute.",
+                    "type": "string",
+                    "required": false
+                  }
+                },
+                {
+                  "options": {
+                    "fields": [
+                      {
+                        "max_tokens": {
+                          "description": "Defines the max_tokens, if using chat or completion models.",
+                          "type": "integer",
+                          "required": false
+                        }
+                      },
+                      {
+                        "input_cost": {
+                          "required": false,
+                          "description": "Defines the cost per 1M tokens in your prompt.",
+                          "type": "number",
+                          "gt": 0
+                        }
+                      },
+                      {
+                        "output_cost": {
+                          "required": false,
+                          "description": "Defines the cost per 1M tokens in the output of the AI.",
+                          "type": "number",
+                          "gt": 0
+                        }
+                      },
+                      {
+                        "temperature": {
+                          "required": false,
+                          "description": "Defines the matching temperature, if using chat or completion models.",
+                          "type": "number",
+                          "between": [
+                            0,
+                            5
+                          ]
+                        }
+                      },
+                      {
+                        "top_p": {
+                          "required": false,
+                          "description": "Defines the top-p probability mass, if supported.",
+                          "type": "number",
+                          "between": [
+                            0,
+                            1
+                          ]
+                        }
+                      },
+                      {
+                        "top_k": {
+                          "required": false,
+                          "description": "Defines the top-k most likely tokens, if supported.",
+                          "type": "integer",
+                          "between": [
+                            0,
+                            500
+                          ]
+                        }
+                      },
+                      {
+                        "anthropic_version": {
+                          "description": "Defines the schema/API version, if using Anthropic provider.",
+                          "type": "string",
+                          "required": false
+                        }
+                      },
+                      {
+                        "azure_instance": {
+                          "description": "Instance name for Azure OpenAI hosted models.",
+                          "type": "string",
+                          "required": false
+                        }
+                      },
+                      {
+                        "azure_api_version": {
+                          "default": "2023-05-15",
+                          "description": "'api-version' for Azure OpenAI instances.",
+                          "required": false,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "azure_deployment_id": {
+                          "description": "Deployment ID for Azure OpenAI instances.",
+                          "type": "string",
+                          "required": false
+                        }
+                      },
+                      {
+                        "llama2_format": {
+                          "one_of": [
+                            "raw",
+                            "openai",
+                            "ollama"
+                          ],
+                          "description": "If using llama2 provider, select the upstream message format.",
+                          "type": "string",
+                          "required": false
+                        }
+                      },
+                      {
+                        "mistral_format": {
+                          "one_of": [
+                            "openai",
+                            "ollama"
+                          ],
+                          "description": "If using mistral provider, select the upstream message format.",
+                          "type": "string",
+                          "required": false
+                        }
+                      },
+                      {
+                        "upstream_url": {
+                          "description": "Manually specify or override the full URL to the AI operation endpoints, when calling (self-)hosted models, or for running via a private endpoint.",
+                          "required": false,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "upstream_path": {
+                          "required": false,
+                          "description": "Manually specify or override the AI operation path, used when e.g. using the 'preserve' route_type.",
+                          "type": "string",
+                          "deprecation": {
+                            "removal_in_version": "4.0",
+                            "message": "llm: config.model.options.upstream_path is deprecated, please use config.model.options.upstream_url instead"
+                          }
+                        }
+                      },
+                      {
+                        "embeddings_dimensions": {
+                          "required": false,
+                          "description": "If using embeddings models, set the number of dimensions to generate.",
+                          "type": "integer",
+                          "gt": 0
+                        }
+                      },
+                      {
+                        "gemini": {
+                          "entity_checks": [
+                            {
+                              "mutually_required": [
+                                "api_endpoint",
+                                "project_id",
+                                "location_id"
+                              ]
+                            },
+                            {
+                              "custom_entity_check": {
+                                "field_sources": [
+                                  "endpoint_id",
+                                  "api_endpoint",
+                                  "project_id",
+                                  "location_id"
+                                ]
+                              }
+                            }
+                          ],
+                          "fields": [
+                            {
+                              "api_endpoint": {
+                                "description": "If running Gemini on Vertex, specify the regional API endpoint (hostname only).",
+                                "type": "string",
+                                "required": false
+                              }
+                            },
+                            {
+                              "project_id": {
+                                "description": "If running Gemini on Vertex, specify the project ID.",
+                                "type": "string",
+                                "required": false
+                              }
+                            },
+                            {
+                              "location_id": {
+                                "description": "If running Gemini on Vertex, specify the location ID.",
+                                "type": "string",
+                                "required": false
+                              }
+                            },
+                            {
+                              "endpoint_id": {
+                                "description": "If running Gemini on Vertex Model Garden, specify the endpoint ID.",
+                                "type": "string",
+                                "required": false
+                              }
+                            }
+                          ],
+                          "type": "record",
+                          "required": false
+                        }
+                      },
+                      {
+                        "bedrock": {
+                          "type": "record",
+                          "fields": [
+                            {
+                              "aws_region": {
+                                "description": "If using AWS providers (Bedrock) you can override the `AWS_REGION` environment variable by setting this option.",
+                                "type": "string",
+                                "required": false
+                              }
+                            },
+                            {
+                              "aws_assume_role_arn": {
+                                "description": "If using AWS providers (Bedrock) you can assume a different role after authentication with the current IAM context is successful.",
+                                "type": "string",
+                                "required": false
+                              }
+                            },
+                            {
+                              "aws_role_session_name": {
+                                "type": "string",
+                                "description": "If using AWS providers (Bedrock), set the identifier of the assumed role session."
+                              }
+                            },
+                            {
+                              "aws_sts_endpoint_url": {
+                                "type": "string",
+                                "description": "If using AWS providers (Bedrock), override the STS endpoint URL when assuming a different role."
+                              }
+                            },
+                            {
+                              "embeddings_normalize": {
+                                "description": "If using AWS providers (Bedrock), set to true to normalize the embeddings.",
+                                "type": "boolean",
+                                "default": false
+                              }
+                            },
+                            {
+                              "performance_config_latency": {
+                                "description": "Force the client's performance configuration 'latency' for all requests. Leave empty to let the consumer select the performance configuration.",
+                                "type": "string",
+                                "required": false
+                              }
+                            },
+                            {
+                              "video_output_s3_uri": {
+                                "description": "S3 URI (s3://bucket/prefix) where Bedrock will store generated video files. Required for video generation.",
+                                "type": "string",
+                                "required": false
+                              }
+                            }
+                          ],
+                          "required": false,
+                          "entity_checks": [
+                            {
+                              "mutually_required": [
+                                "aws_assume_role_arn",
+                                "aws_role_session_name"
+                              ]
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        "huggingface": {
+                          "fields": [
+                            {
+                              "use_cache": {
+                                "description": "Use the cache layer on the inference API",
+                                "type": "boolean",
+                                "required": false
+                              }
+                            },
+                            {
+                              "wait_for_model": {
+                                "description": "Wait for the model if it is not ready",
+                                "type": "boolean",
+                                "required": false
+                              }
+                            }
+                          ],
+                          "type": "record",
+                          "required": false
+                        }
+                      },
+                      {
+                        "cohere": {
+                          "fields": [
+                            {
+                              "embedding_input_type": {
+                                "one_of": [
+                                  "search_document",
+                                  "search_query",
+                                  "classification",
+                                  "clustering",
+                                  "image"
+                                ],
+                                "default": "classification",
+                                "type": "string",
+                                "description": "The purpose of the input text to calculate embedding vectors.",
+                                "required": false
+                              }
+                            },
+                            {
+                              "wait_for_model": {
+                                "description": "Wait for the model if it is not ready",
+                                "type": "boolean",
+                                "required": false
+                              }
+                            }
+                          ],
+                          "type": "record",
+                          "required": false
+                        }
+                      },
+                      {
+                        "dashscope": {
+                          "fields": [
+                            {
+                              "international": {
+                                "type": "boolean",
+                                "default": true,
+                                "required": false,
+                                "description": "        Two Dashscope endpoints are available, and the international endpoint will be used when this is set to `true`.\n        It is recommended to set this to `true` when using international version of dashscope.\n        "
+                              }
+                            }
+                          ],
+                          "type": "record",
+                          "required": false
+                        }
+                      }
+                    ],
+                    "description": "Key/value settings for the model",
+                    "required": false,
+                    "type": "record"
+                  }
+                }
+              ],
+              "type": "record",
+              "required": true
+            }
+          },
+          {
+            "logging": {
+              "fields": [
+                {
+                  "log_statistics": {
+                    "default": false,
+                    "description": "If enabled and supported by the driver, will add model usage and token metrics into the Kong log plugin(s) output.",
+                    "required": true,
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "log_payloads": {
+                    "default": false,
+                    "description": "If enabled, will log the request and response body into the Kong log plugin(s) output.Furthermore if Opentelemetry instrumentation is enabled the traces will contain this data as well.",
+                    "required": true,
+                    "type": "boolean"
+                  }
+                }
+              ],
+              "type": "record",
+              "required": true
+            }
+          },
+          {
+            "response_streaming": {
+              "one_of": [
+                "allow",
+                "deny",
+                "always"
+              ],
+              "default": "allow",
+              "type": "string",
+              "description": "Whether to 'optionally allow', 'deny', or 'always' (force) the streaming of answers via server sent events.",
+              "required": false
+            }
+          },
+          {
+            "max_request_body_size": {
+              "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
+              "default": 1048576,
+              "type": "integer",
+              "gt": -1
+            }
+          },
+          {
+            "model_name_header": {
+              "description": "Display the model name selected in the X-Kong-LLM-Model response header",
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "llm_format": {
+              "one_of": [
+                "openai",
+                "bedrock",
+                "gemini",
+                "cohere",
+                "huggingface",
+                "anthropic"
+              ],
+              "default": "openai",
+              "type": "string",
+              "description": "LLM input and output format and schema to use",
+              "required": false
+            }
+          },
+          {
+            "genai_category": {
+              "one_of": [
+                "text/generation",
+                "text/embeddings",
+                "audio/transcription",
+                "audio/speech",
+                "image/generation",
+                "video/generation"
+              ],
+              "default": "text/generation",
+              "type": "string",
+              "description": "Generative AI category of the request",
+              "required": false
+            }
+          }
+        ],
+        "entity_checks": [
+          {
+            "conditional": {
+              "if_match": {
+                "one_of": [
+                  "gemini"
+                ]
+              },
+              "then_field": "auth.allow_override",
+              "if_field": "model.provider",
+              "then_match": {
+                "eq": false
+              },
+              "then_err": "gemini only support auth.allow_override = false"
+            }
+          },
+          {
+            "mutually_required": [
+              "auth.header_name",
+              "auth.header_value"
+            ]
+          },
+          {
+            "mutually_required": [
+              "auth.param_name",
+              "auth.param_value",
+              "auth.param_location"
+            ]
+          },
+          {
+            "conditional_at_least_one_of": {
+              "then_at_least_one_of": [
+                "model.options.llama2_format"
+              ],
+              "if_match": {
+                "one_of": [
+                  "llama2"
+                ]
+              },
+              "then_err": "must set %s for llama2 provider",
+              "if_field": "model.provider"
+            }
+          },
+          {
+            "conditional_at_least_one_of": {
+              "then_at_least_one_of": [
+                "model.options.mistral_format"
+              ],
+              "if_match": {
+                "one_of": [
+                  "mistral"
+                ]
+              },
+              "then_err": "must set %s for mistral provider",
+              "if_field": "model.provider"
+            }
+          },
+          {
+            "conditional_at_least_one_of": {
+              "then_at_least_one_of": [
+                "model.options.anthropic_version"
+              ],
+              "if_match": {
+                "one_of": [
+                  "anthropic"
+                ]
+              },
+              "then_err": "must set %s for anthropic provider",
+              "if_field": "model.provider"
+            }
+          },
+          {
+            "conditional_at_least_one_of": {
+              "then_at_least_one_of": [
+                "model.options.azure_instance"
+              ],
+              "if_match": {
+                "one_of": [
+                  "azure"
+                ]
+              },
+              "then_err": "must set %s for azure provider",
+              "if_field": "model.provider"
+            }
+          },
+          {
+            "conditional_at_least_one_of": {
+              "then_at_least_one_of": [
+                "model.options.azure_api_version"
+              ],
+              "if_match": {
+                "one_of": [
+                  "azure"
+                ]
+              },
+              "then_err": "must set %s for azure provider",
+              "if_field": "model.provider"
+            }
+          },
+          {
+            "conditional_at_least_one_of": {
+              "then_at_least_one_of": [
+                "model.options.azure_deployment_id"
+              ],
+              "if_match": {
+                "one_of": [
+                  "azure"
+                ]
+              },
+              "then_err": "must set %s for azure provider",
+              "if_field": "model.provider"
+            }
+          },
+          {
+            "conditional_at_least_one_of": {
+              "then_at_least_one_of": [
+                "model.options.upstream_url"
+              ],
+              "if_match": {
+                "one_of": [
+                  "llama2"
+                ]
+              },
+              "then_err": "must set %s for self-hosted providers/models",
+              "if_field": "model.provider"
+            }
+          },
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "route_type",
+                "model",
+                "logging"
+              ]
+            }
+          },
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "route_type"
+              ]
+            }
+          },
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "route_type",
+                "model"
+              ]
+            }
+          },
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "route_type",
+                "model"
+              ]
+            }
+          },
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "model",
+                "auth"
+              ]
+            }
+          }
+        ],
+        "required": true
       }
     }
   ]

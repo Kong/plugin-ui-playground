@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -23,17 +22,19 @@
             "ws",
             "wss"
           ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string"
         },
-        "required": true
+        "description": "A set of strings representing protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -42,16 +43,15 @@
         "fields": [
           {
             "proto": {
-              "type": "string",
+              "description": "Describes the gRPC types and methods.",
               "required": false,
-              "description": "Describes the gRPC types and methods."
+              "type": "string"
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

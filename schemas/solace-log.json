@@ -1,36 +1,25 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "consumer": {
-        "type": "foreign",
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "reference": "consumers",
-        "eq": null
+        "type": "foreign",
+        "eq": null,
+        "description": "Custom type for representing a foreign key with a null value allowed."
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
     {
       "protocols": {
         "required": true,
-        "type": "set",
-        "elements": {
-          "one_of": [
-            "grpc",
-            "grpcs",
-            "http",
-            "https",
-            "ws",
-            "wss"
-          ],
-          "type": "string"
-        },
         "default": [
           "grpc",
           "grpcs",
@@ -38,11 +27,32 @@
           "https",
           "ws",
           "wss"
-        ]
+        ],
+        "elements": {
+          "type": "string",
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https",
+            "ws",
+            "wss"
+          ]
+        },
+        "type": "set"
       }
     },
     {
       "config": {
+        "entity_checks": [
+          {
+            "custom_entity_check": {
+              "field_sources": [
+                "session"
+              ]
+            }
+          }
+        ],
         "fields": [
           {
             "session": {
@@ -50,33 +60,109 @@
                 {
                   "host": {
                     "referenceable": true,
-                    "type": "string",
                     "description": "The IPv4 or IPv6 address or host name to connect to (see: https://docs.solace.com/API-Developer-Online-Ref-Documentation/c/index.html#host-entry).",
+                    "type": "string",
                     "required": true
                   }
                 },
                 {
                   "vpn_name": {
-                    "len_max": 32,
                     "type": "string",
                     "description": "The name of the Message VPN to attempt to join when connecting to an event broker.",
-                    "required": false
+                    "required": false,
+                    "len_max": 32
                   }
                 },
                 {
                   "authentication": {
+                    "fields": [
+                      {
+                        "scheme": {
+                          "one_of": [
+                            "NONE",
+                            "BASIC",
+                            "OAUTH2"
+                          ],
+                          "default": "BASIC",
+                          "type": "string",
+                          "description": "The client authentication scheme used when connection to an event broker.",
+                          "required": true
+                        }
+                      },
+                      {
+                        "username": {
+                          "referenceable": true,
+                          "len_max": 189,
+                          "encrypted": true,
+                          "description": "The username used with `BASIC` authentication scheme when connecting to an event broker.",
+                          "required": false,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "password": {
+                          "referenceable": true,
+                          "len_max": 128,
+                          "encrypted": true,
+                          "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
+                          "required": false,
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "basic_auth_header": {
+                          "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields.",
+                          "type": "string",
+                          "required": false
+                        }
+                      },
+                      {
+                        "access_token": {
+                          "type": "string",
+                          "required": false,
+                          "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker.",
+                          "encrypted": true,
+                          "referenceable": true
+                        }
+                      },
+                      {
+                        "access_token_header": {
+                          "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field.",
+                          "type": "string",
+                          "required": false
+                        }
+                      },
+                      {
+                        "id_token": {
+                          "type": "string",
+                          "required": false,
+                          "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
+                          "encrypted": true,
+                          "referenceable": true
+                        }
+                      },
+                      {
+                        "id_token_header": {
+                          "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field.",
+                          "type": "string",
+                          "required": false
+                        }
+                      }
+                    ],
+                    "type": "record",
+                    "description": "Session authentication related configuration.",
                     "entity_checks": [
                       {
                         "conditional_at_least_one_of": {
-                          "if_match": {
-                            "eq": "BASIC"
-                          },
-                          "if_field": "scheme",
                           "then_at_least_one_of": [
                             "username",
                             "basic_auth_header"
                           ],
-                          "then_err": "must set one of %s when 'scheme' is 'BASIC'"
+                          "if_match": {
+                            "eq": "BASIC"
+                          },
+                          "then_err": "must set one of %s when 'scheme' is 'BASIC'",
+                          "if_field": "scheme"
                         }
                       },
                       {
@@ -87,168 +173,86 @@
                       },
                       {
                         "conditional_at_least_one_of": {
-                          "if_match": {
-                            "eq": "OAUTH2"
-                          },
-                          "if_field": "scheme",
                           "then_at_least_one_of": [
                             "access_token",
                             "access_token_header",
                             "id_token",
                             "id_token_header"
                           ],
-                          "then_err": "must set one of %s when 'scheme' is 'OAUTH2'"
+                          "if_match": {
+                            "eq": "OAUTH2"
+                          },
+                          "then_err": "must set one of %s when 'scheme' is 'OAUTH2'",
+                          "if_field": "scheme"
                         }
                       }
-                    ],
-                    "description": "Session authentication related configuration.",
-                    "type": "record",
-                    "required": true,
-                    "fields": [
-                      {
-                        "scheme": {
-                          "one_of": [
-                            "NONE",
-                            "BASIC",
-                            "OAUTH2"
-                          ],
-                          "type": "string",
-                          "description": "The client authentication scheme used when connection to an event broker.",
-                          "default": "BASIC",
-                          "required": true
-                        }
-                      },
-                      {
-                        "username": {
-                          "type": "string",
-                          "description": "The username used with `BASIC` authentication scheme when connecting to an event broker.",
-                          "encrypted": true,
-                          "len_max": 189,
-                          "referenceable": true,
-                          "required": false
-                        }
-                      },
-                      {
-                        "password": {
-                          "type": "string",
-                          "description": "The password used with `BASIC` authentication scheme when connecting to an event broker.",
-                          "encrypted": true,
-                          "len_max": 128,
-                          "referenceable": true,
-                          "required": false
-                        }
-                      },
-                      {
-                        "basic_auth_header": {
-                          "type": "string",
-                          "description": "Specifies the header that contains Basic Authentication credentials for the `BASIC` authentication scheme when connecting to an event broker. This header takes precedence over the `username` and `password` fields.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "access_token": {
-                          "type": "string",
-                          "description": "The OAuth2 access token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                          "encrypted": true,
-                          "referenceable": true,
-                          "required": false
-                        }
-                      },
-                      {
-                        "access_token_header": {
-                          "type": "string",
-                          "description": "Specifies the header that contains access token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `access_token` field.",
-                          "required": false
-                        }
-                      },
-                      {
-                        "id_token": {
-                          "type": "string",
-                          "description": "The OpenID Connect ID token used with `OAUTH2` authentication scheme when connecting to an event broker.",
-                          "encrypted": true,
-                          "referenceable": true,
-                          "required": false
-                        }
-                      },
-                      {
-                        "id_token_header": {
-                          "type": "string",
-                          "description": "Specifies the header that contains id token for the `OAUTH2` authentication scheme when connecting to an event broker. This header takes precedence over the `id_token` field.",
-                          "required": false
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  "connect_timeout": {
-                    "type": "integer",
-                    "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
-                    "default": 3000,
-                    "between": [
-                      100,
-                      100000
                     ],
                     "required": true
                   }
                 },
                 {
+                  "connect_timeout": {
+                    "default": 3000,
+                    "type": "integer",
+                    "between": [
+                      100,
+                      100000
+                    ],
+                    "description": "The timeout period (in milliseconds) for a connect operation to a given host (per host).",
+                    "required": true
+                  }
+                },
+                {
                   "ssl_validate_certificate": {
+                    "required": true,
                     "description": "Indicates whether the API should validate server certificates with the trusted certificates.",
                     "type": "boolean",
-                    "required": true,
                     "default": false
                   }
                 },
                 {
                   "calculate_message_expiry": {
+                    "required": true,
                     "description": "If this property is true and time-to-live has a positive value in a message, the expiration time is calculated when the message is sent or received",
                     "type": "boolean",
-                    "required": true,
                     "default": true
                   }
                 },
                 {
                   "generate_rcv_timestamps": {
+                    "required": true,
                     "description": "When enabled, a receive timestamp is recorded for each message.",
                     "type": "boolean",
-                    "required": true,
                     "default": true
                   }
                 },
                 {
                   "generate_send_timestamps": {
+                    "required": true,
                     "description": "When enabled, a send timestamp is automatically included (if not already present) in the Solace-defined fields for each message sent.",
                     "type": "boolean",
-                    "required": true,
                     "default": true
                   }
                 },
                 {
                   "generate_sender_id": {
+                    "required": true,
                     "description": "When enabled, a sender id is automatically included (if not already present) in the Solace-defined fields for each message sent.",
                     "type": "boolean",
-                    "required": true,
                     "default": true
                   }
                 },
                 {
                   "generate_sequence_number": {
+                    "required": true,
                     "description": "When enabled, a sequence number is automatically included (if not already present) in the Solace-defined fields for each message sent.",
                     "type": "boolean",
-                    "required": true,
                     "default": true
                   }
                 },
                 {
                   "properties": {
                     "type": "map",
-                    "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix).",
-                    "values": {
-                      "type": "string",
-                      "required": true,
-                      "referenceable": true
-                    },
                     "keys": {
                       "match": "^SESSION_",
                       "type": "string",
@@ -278,13 +282,19 @@
                         "SESSION_OIDC_ID_TOKEN"
                       ]
                     },
-                    "required": false
+                    "description": "Additional Solace session properties (each setting needs to have `SESSION_` prefix).",
+                    "required": false,
+                    "values": {
+                      "required": true,
+                      "referenceable": true,
+                      "type": "string"
+                    }
                   }
                 }
               ],
-              "type": "record",
+              "description": "Session related configuration.",
               "required": true,
-              "description": "Session related configuration."
+              "type": "record"
             }
           },
           {
@@ -292,18 +302,18 @@
               "fields": [
                 {
                   "destinations": {
+                    "len_min": 1,
                     "type": "array",
                     "description": "The log message destinations.",
-                    "len_min": 1,
                     "required": true,
                     "elements": {
                       "type": "record",
                       "fields": [
                         {
                           "name": {
+                            "description": "The name of the destination. You can use `$(uri_captures['<capture-identifier>'])` in this field to capture the name from a regex request URI (replace `<capture-identifier>` with a real value; for example `$(uri_captures['queue'])` when the matched route has a path `~/(?<queue>[a-z]+)`).",
                             "type": "string",
-                            "required": true,
-                            "description": "The name of the destination. You can use `$(uri_captures['<capture-identifier>'])` in this field to capture the name from a regex request URI (replace `<capture-identifier>` with a real value; for example `$(uri_captures['queue'])` when the matched route has a path `~/(?<queue>[a-z]+)`)."
+                            "required": true
                           }
                         },
                         {
@@ -312,9 +322,9 @@
                               "QUEUE",
                               "TOPIC"
                             ],
+                            "default": "QUEUE",
                             "type": "string",
                             "description": "The type of the destination.",
-                            "default": "QUEUE",
                             "required": true
                           }
                         }
@@ -328,95 +338,95 @@
                       "DIRECT",
                       "PERSISTENT"
                     ],
+                    "default": "DIRECT",
                     "type": "string",
                     "description": "Sets the log message delivery mode.",
-                    "default": "DIRECT",
                     "required": true
                   }
                 },
                 {
                   "sender_id": {
+                    "description": "Allows the application to set the sender identifier.",
                     "type": "string",
-                    "required": false,
-                    "description": "Allows the application to set the sender identifier."
+                    "required": false
                   }
                 },
                 {
                   "priority": {
-                    "type": "integer",
-                    "description": "Sets the log message priority.",
                     "default": 4,
+                    "type": "integer",
                     "between": [
                       0,
                       255
                     ],
+                    "description": "Sets the log message priority.",
                     "required": true
                   }
                 },
                 {
                   "dmq_eligible": {
+                    "required": true,
                     "description": "Sets the dead message queue (DMQ) eligible property on the log message.",
                     "type": "boolean",
-                    "required": true,
                     "default": false
                   }
                 },
                 {
                   "ttl": {
-                    "gt": -1,
+                    "default": 0,
                     "type": "integer",
                     "description": "Sets the time to live (TTL) in milliseconds for the log message. Setting the time to live to zero disables the TTL for the log message.",
-                    "default": 0,
-                    "required": true
+                    "required": true,
+                    "gt": -1
                   }
                 },
                 {
                   "ack_timeout": {
-                    "type": "integer",
-                    "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the log message acknowledgement timeout (waiting time).",
                     "default": 2000,
+                    "type": "integer",
                     "between": [
                       1,
                       100000
                     ],
+                    "description": "When using a non-DIRECT guaranteed delivery mode, this property sets the log message acknowledgement timeout (waiting time).",
                     "required": true
                   }
                 },
                 {
                   "custom_fields_by_lua": {
                     "type": "map",
-                    "description": "A key-value map that dynamically modifies log fields using Lua code.",
-                    "values": {
-                      "len_min": 1,
-                      "type": "string"
-                    },
-                    "required": false,
                     "keys": {
-                      "len_min": 1,
-                      "type": "string"
+                      "type": "string",
+                      "len_min": 1
+                    },
+                    "description": "A key-value map that dynamically modifies log fields using Lua code.",
+                    "required": false,
+                    "values": {
+                      "type": "string",
+                      "len_min": 1
                     }
                   }
                 },
                 {
                   "tracing": {
+                    "required": true,
                     "description": "Enable or disable the tracing propagation. This is primarily used for distributed tracing and message correlation, especially in debugging or tracking message flows across multiple systems.",
                     "type": "boolean",
-                    "required": true,
                     "default": false
                   }
                 },
                 {
                   "tracing_sampled": {
+                    "required": true,
                     "description": "Forcibly turn on the tracing on all the messages for distributed tracing (tracing needs to be enabled as well).",
                     "type": "boolean",
-                    "required": true,
                     "default": false
                   }
                 }
               ],
-              "type": "record",
+              "description": "The log message related configuration.",
               "required": true,
-              "description": "The log message related configuration."
+              "type": "record"
             }
           }
         ],
@@ -424,6 +434,5 @@
         "type": "record"
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

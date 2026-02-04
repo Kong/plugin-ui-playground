@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -23,101 +22,102 @@
             "ws",
             "wss"
           ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string"
         },
-        "required": true
+        "description": "A set of strings representing protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
     {
       "config": {
-        "type": "record",
-        "required": true,
         "fields": [
           {
             "timeout": {
+              "default": 600000,
               "type": "number",
-              "description": "Timeout in milliseconds before closing a connection to the Azure Functions server.",
-              "default": 600000
+              "description": "Timeout in milliseconds before closing a connection to the Azure Functions server."
             }
           },
           {
             "keepalive": {
+              "default": 60000,
               "type": "number",
-              "description": "Time in milliseconds during which an idle connection to the Azure Functions server lives before being closed.",
-              "default": 60000
+              "description": "Time in milliseconds during which an idle connection to the Azure Functions server lives before being closed."
             }
           },
           {
             "https": {
+              "default": true,
               "type": "boolean",
-              "description": "Use of HTTPS to connect with the Azure Functions server.",
-              "default": true
+              "description": "Use of HTTPS to connect with the Azure Functions server."
             }
           },
           {
             "https_verify": {
+              "default": false,
               "type": "boolean",
-              "description": "Set to `true` to authenticate the Azure Functions server.",
-              "default": false
+              "description": "Set to `true` to authenticate the Azure Functions server."
             }
           },
           {
             "apikey": {
               "type": "string",
-              "referenceable": true,
               "description": "The apikey to access the Azure resources. If provided, it is injected as the `x-functions-key` header.",
-              "encrypted": true
+              "encrypted": true,
+              "referenceable": true
             }
           },
           {
             "clientid": {
               "type": "string",
-              "referenceable": true,
               "description": "The `clientid` to access the Azure resources. If provided, it is injected as the `x-functions-clientid` header.",
-              "encrypted": true
+              "encrypted": true,
+              "referenceable": true
             }
           },
           {
             "appname": {
-              "type": "string",
               "description": "The Azure app name.",
-              "required": true
+              "required": true,
+              "type": "string"
             }
           },
           {
             "hostdomain": {
-              "required": true,
               "type": "string",
-              "description": "The domain where the function resides.",
-              "default": "azurewebsites.net"
+              "default": "azurewebsites.net",
+              "required": true,
+              "description": "The domain where the function resides."
             }
           },
           {
             "routeprefix": {
+              "default": "api",
               "type": "string",
-              "description": "Route prefix to use.",
-              "default": "api"
+              "description": "Route prefix to use."
             }
           },
           {
             "functionname": {
-              "type": "string",
               "description": "Name of the Azure function to invoke.",
-              "required": true
+              "required": true,
+              "type": "string"
             }
           }
-        ]
+        ],
+        "required": true,
+        "type": "record"
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

@@ -1,9 +1,16 @@
 {
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config"
+        ]
+      }
+    }
+  ],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -23,43 +30,44 @@
             "ws",
             "wss"
           ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string"
         },
-        "required": true
+        "description": "A set of strings representing protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
     {
       "config": {
-        "type": "record",
         "fields": [
           {
             "traces_endpoint": {
-              "type": "string",
               "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+              "type": "string",
               "referenceable": true
             }
           },
           {
             "logs_endpoint": {
-              "referenceable": true,
               "description": "An HTTP URL endpoint where internal logs are exported.",
-              "type": "string"
+              "type": "string",
+              "referenceable": true
             }
           },
           {
             "access_logs_endpoint": {
-              "referenceable": true,
               "description": "An HTTP URL endpoint where access logs (e.g. request/response, route/service, latency, etc.) are exported.",
-              "type": "string"
+              "type": "string",
+              "referenceable": true
             }
           },
           {
@@ -67,67 +75,74 @@
               "fields": [
                 {
                   "endpoint": {
-                    "referenceable": true,
                     "description": "An HTTP URL endpoint where metrics are exported.",
-                    "type": "string"
+                    "type": "string",
+                    "referenceable": true
                   }
                 },
                 {
                   "push_interval": {
-                    "gt": 0,
-                    "type": "number",
+                    "default": 60,
                     "description": "The interval in seconds at which metrics are pushed to the OTLP server. This setting is only applicable when `endpoint` is set.",
-                    "default": 60
+                    "type": "number",
+                    "gt": 0
                   }
                 },
                 {
                   "enable_consumer_attribute": {
+                    "description": "A boolean value that determines if `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics should fill in the consumer attribute when available.",
                     "type": "boolean",
-                    "description": "A boolean value that determines whether to add the `kong.auth.consumer.name` attribute for some metrics. If enabled, the `http.server.request.count`, `http.server.request.size` and `http.server.response.size` metrics fill in the consumer label when available.",
                     "default": false
                   }
                 },
                 {
                   "enable_request_metrics": {
+                    "description": "A boolean value that determines if request count metrics should be collected. If enabled, `http.server.request.count` metrics will be exported.",
                     "type": "boolean",
-                    "description": "A boolean value that determines if request metrics should be collected. If enabled, `http.server.request.count` metrics will be exported.",
                     "default": false
                   }
                 },
                 {
                   "enable_bandwidth_metrics": {
+                    "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `http.server.request.size` and `http.server.response.size` metrics will be exported.",
                     "type": "boolean",
-                    "description": "A boolean value that determines if bandwidth metrics should be collected. If enabled, `http.server.request.size``, `http.server.response.size` metrics will be exported.",
                     "default": false
                   }
                 },
                 {
                   "enable_latency_metrics": {
-                    "type": "boolean",
                     "description": "A boolean value that determines if latency metrics should be collected. If enabled, `kong.latency.total`, `kong.latency.internal` and `kong.latency.upstream` metrics will be exported.",
+                    "type": "boolean",
                     "default": false
                   }
                 },
                 {
                   "enable_upstream_health_metrics": {
-                    "type": "boolean",
                     "description": "A boolean value that determines if upstream health metrics should be collected. If enabled, `kong.upstream.target.status` metrics will be exported.",
+                    "type": "boolean",
+                    "default": false
+                  }
+                },
+                {
+                  "enable_ai_metrics": {
+                    "description": "A boolean value that determines if AI metrics should be collected. If enabled, `gen_ai.*`, `mcp.*`, `kong.gen_ai.*`, `kong.gen_ai.a2a.*` and `kong.mcp.*` metrics will be exported. To enable latency metrics for AI metrics, `enable_latency_metrics` must also be set to `true`. To enable `error.type` attribute for AI metrics, `enable_request_metrics` must also be set to `true`.",
+                    "type": "boolean",
                     "default": false
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
             "headers": {
+              "keys": {
+                "type": "string",
+                "description": "A string representing an HTTP header name."
+              },
               "description": "The custom headers to be added in the HTTP request sent to the OTLP server. This setting is useful for adding the authentication headers (token) for the APM backend.",
               "type": "map",
-              "keys": {
-                "description": "A string representing an HTTP header name.",
-                "type": "string"
-              },
               "values": {
                 "type": "string",
                 "referenceable": true
@@ -136,87 +151,86 @@
           },
           {
             "resource_attributes": {
-              "type": "map",
               "keys": {
-                "required": true,
-                "type": "string"
+                "type": "string",
+                "required": true
               },
               "values": {
-                "required": true,
-                "type": "string"
-              }
+                "type": "string",
+                "required": true
+              },
+              "type": "map"
             }
           },
           {
             "queue": {
-              "type": "record",
               "fields": [
                 {
                   "max_batch_size": {
+                    "description": "Maximum number of entries that can be processed at a time.",
+                    "default": 1,
+                    "type": "integer",
                     "between": [
                       1,
                       1000000
-                    ],
-                    "type": "integer",
-                    "description": "Maximum number of entries that can be processed at a time.",
-                    "default": 1
+                    ]
                   }
                 },
                 {
                   "max_coalescing_delay": {
+                    "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
+                    "default": 1,
+                    "type": "number",
                     "between": [
                       0,
                       3600
-                    ],
-                    "type": "number",
-                    "description": "Maximum number of (fractional) seconds to elapse after the first entry was queued before the queue starts calling the handler.",
-                    "default": 1
+                    ]
                   }
                 },
                 {
                   "max_entries": {
+                    "description": "Maximum number of entries that can be waiting on the queue.",
+                    "default": 10000,
+                    "type": "integer",
                     "between": [
                       1,
                       1000000
-                    ],
-                    "type": "integer",
-                    "description": "Maximum number of entries that can be waiting on the queue.",
-                    "default": 10000
+                    ]
                   }
                 },
                 {
                   "max_bytes": {
-                    "description": "Maximum number of bytes that can be waiting on a queue, requires string content.",
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Maximum number of bytes that can be waiting on a queue, requires string content."
                   }
                 },
                 {
                   "max_retry_time": {
+                    "default": 60,
                     "type": "number",
-                    "description": "Time in seconds before the queue gives up calling a failed handler for a batch.",
-                    "default": 60
+                    "description": "Time in seconds before the queue gives up calling a failed handler for a batch."
                   }
                 },
                 {
                   "initial_retry_delay": {
+                    "description": "Time in seconds before the initial retry is made for a failing batch.",
+                    "default": 0.01,
+                    "type": "number",
                     "between": [
                       0.001,
                       1000000
-                    ],
-                    "type": "number",
-                    "description": "Time in seconds before the initial retry is made for a failing batch.",
-                    "default": 0.01
+                    ]
                   }
                 },
                 {
                   "max_retry_delay": {
+                    "description": "Maximum time in seconds between retries, caps exponential backoff.",
+                    "default": 60,
+                    "type": "number",
                     "between": [
                       0.001,
                       1000000
-                    ],
-                    "type": "number",
-                    "description": "Maximum time in seconds between retries, caps exponential backoff.",
-                    "default": 60
+                    ]
                   }
                 },
                 {
@@ -225,71 +239,72 @@
                       -1,
                       1
                     ],
+                    "default": 1,
                     "type": "integer",
-                    "description": "The number of of queue delivery timers. -1 indicates unlimited.",
-                    "default": 1
+                    "description": "The number of of queue delivery timers. -1 indicates unlimited."
                   }
                 }
               ],
-              "required": true,
               "default": {
                 "max_batch_size": 200
-              }
+              },
+              "required": true,
+              "type": "record"
             }
           },
           {
             "batch_span_count": {
-              "type": "integer",
               "description": "The number of spans to be sent in a single batch.",
+              "type": "integer",
               "deprecation": {
+                "message": "opentelemetry: config.batch_span_count is deprecated, please use config.queue.max_batch_size instead",
                 "old_default": 200,
-                "removal_in_version": "4.0",
-                "message": "opentelemetry: config.batch_span_count is deprecated, please use config.queue.max_batch_size instead"
+                "removal_in_version": "4.0"
               }
             }
           },
           {
             "batch_flush_delay": {
-              "type": "integer",
               "description": "The delay, in seconds, between two consecutive batches.",
+              "type": "integer",
               "deprecation": {
+                "message": "opentelemetry: config.batch_flush_delay is deprecated, please use config.queue.max_coalescing_delay instead",
                 "old_default": 3,
-                "removal_in_version": "4.0",
-                "message": "opentelemetry: config.batch_flush_delay is deprecated, please use config.queue.max_coalescing_delay instead"
+                "removal_in_version": "4.0"
               }
             }
           },
           {
             "connect_timeout": {
+              "default": 1000,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "type": "integer",
               "between": [
                 0,
                 2147483646
-              ],
-              "type": "integer",
-              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-              "default": 1000
+              ]
             }
           },
           {
             "send_timeout": {
+              "default": 5000,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "type": "integer",
               "between": [
                 0,
                 2147483646
-              ],
-              "type": "integer",
-              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-              "default": 5000
+              ]
             }
           },
           {
             "read_timeout": {
+              "default": 5000,
+              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
+              "type": "integer",
               "between": [
                 0,
                 2147483646
-              ],
-              "type": "integer",
-              "description": "An integer representing a timeout in milliseconds. Must be between 0 and 2^31-2.",
-              "default": 5000
+              ]
             }
           },
           {
@@ -312,54 +327,53 @@
                 "datadog",
                 "instana"
               ],
-              "type": "string",
               "default": "preserve",
+              "type": "string",
+              "required": false,
               "deprecation": {
+                "message": "opentelemetry: config.header_type is deprecated, please use config.propagation options instead",
                 "old_default": "preserve",
-                "removal_in_version": "4.0",
-                "message": "opentelemetry: config.header_type is deprecated, please use config.propagation options instead"
-              },
-              "required": false
+                "removal_in_version": "4.0"
+              }
             }
           },
           {
             "sampling_rate": {
+              "required": false,
+              "description": "Tracing sampling rate for configuring the probability-based sampler. When set, this value supersedes the global `tracing_sampling_rate` setting from kong.conf.",
+              "type": "number",
               "between": [
                 0,
                 1
-              ],
-              "type": "number",
-              "description": "Tracing sampling rate for configuring the probability-based sampler. When set, this value supersedes the global `tracing_sampling_rate` setting from kong.conf.",
-              "required": false
+              ]
             }
           },
           {
             "propagation": {
-              "type": "record",
               "fields": [
                 {
                   "extract": {
-                    "type": "array",
                     "description": "Header formats used to extract tracing context from incoming requests. If multiple values are specified, the first one found will be used for extraction. If left empty, Kong will not extract any tracing context information from incoming requests and generate a trace with no parent and a new trace ID.",
+                    "type": "array",
                     "elements": {
+                      "type": "string",
                       "one_of": [
-                        "b3",
                         "jaeger",
                         "ot",
                         "datadog",
                         "aws",
                         "gcp",
                         "instana",
-                        "w3c"
-                      ],
-                      "type": "string"
+                        "w3c",
+                        "b3"
+                      ]
                     }
                   }
                 },
                 {
                   "clear": {
-                    "type": "array",
                     "description": "Header names to clear after context extraction. This allows to extract the context from a certain header and then remove it from the request, useful when extraction and injection are performed on different header formats and the original header should not be sent to the upstream. If left empty, no headers are cleared.",
+                    "type": "array",
                     "elements": {
                       "type": "string"
                     }
@@ -367,48 +381,49 @@
                 },
                 {
                   "inject": {
-                    "type": "array",
                     "description": "Header formats used to inject tracing context. The value `preserve` will use the same header format as the incoming request. If multiple values are specified, all of them will be used during injection. If left empty, Kong will not inject any tracing context information in outgoing requests.",
+                    "type": "array",
                     "elements": {
+                      "type": "string",
                       "one_of": [
                         "preserve",
-                        "b3",
-                        "b3-single",
                         "jaeger",
                         "ot",
                         "datadog",
                         "aws",
                         "gcp",
                         "instana",
-                        "w3c"
-                      ],
-                      "type": "string"
+                        "w3c",
+                        "b3",
+                        "b3-single"
+                      ]
                     }
                   }
                 },
                 {
                   "default_format": {
                     "one_of": [
-                      "b3",
-                      "b3-single",
                       "jaeger",
                       "ot",
                       "datadog",
                       "aws",
                       "gcp",
                       "instana",
-                      "w3c"
+                      "w3c",
+                      "b3",
+                      "b3-single"
                     ],
-                    "type": "string",
                     "description": "The default header format to use when extractors did not match any format in the incoming headers and `inject` is configured with the value: `preserve`. This can happen when no tracing header was found in the request, or the incoming tracing header formats were not included in `extract`.",
+                    "type": "string",
                     "required": true
                   }
                 }
               ],
-              "required": true,
               "default": {
                 "default_format": "w3c"
-              }
+              },
+              "required": true,
+              "type": "record"
             }
           },
           {
@@ -417,10 +432,24 @@
                 "parent_drop_probability_fallback",
                 "parent_probability_fallback"
               ],
+              "default": "parent_drop_probability_fallback",
               "type": "string",
               "description": "The sampling strategy to use for OTLP `traces`. Set `parent_drop_probability_fallback` if you want parent-based sampling when the parent span contains a `false` sampled flag, and fallback to probability-based sampling otherwise. Set `parent_probability_fallback` if you want parent-based sampling when the parent span contains a valid sampled flag (`true` or `false`), and fallback to probability-based sampling otherwise.",
-              "default": "parent_drop_probability_fallback",
               "required": true
+            }
+          }
+        ],
+        "type": "record",
+        "shorthand_fields": [
+          {
+            "endpoint": {
+              "type": "string",
+              "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
+              "referenceable": true,
+              "deprecation": {
+                "message": "OpenTelemetry: config.endpoint is deprecated, please use config.traces_endpoint instead",
+                "removal_in_version": "4.0"
+              }
             }
           }
         ],
@@ -434,29 +463,7 @@
             ]
           }
         ],
-        "required": true,
-        "shorthand_fields": [
-          {
-            "endpoint": {
-              "referenceable": true,
-              "type": "string",
-              "description": "A string representing a URL, such as https://example.com/path/to/resource?q=search.",
-              "deprecation": {
-                "removal_in_version": "4.0",
-                "message": "OpenTelemetry: config.endpoint is deprecated, please use config.traces_endpoint instead"
-              }
-            }
-          }
-        ]
-      }
-    }
-  ],
-  "entity_checks": [
-    {
-      "custom_entity_check": {
-        "field_sources": [
-          "config"
-        ]
+        "required": true
       }
     }
   ]

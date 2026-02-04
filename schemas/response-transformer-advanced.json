@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,15 +10,17 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
@@ -30,34 +31,34 @@
               "fields": [
                 {
                   "json": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "headers": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -65,26 +66,26 @@
               "fields": [
                 {
                   "headers": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -92,54 +93,54 @@
               "fields": [
                 {
                   "body": {
-                    "description": "String with which to replace the entire response body.",
-                    "type": "string"
+                    "type": "string",
+                    "description": "String with which to replace the entire response body."
                   }
                 },
                 {
                   "json": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
                     "type": "array",
                     "elements": {
+                      "type": "string",
                       "one_of": [
                         "boolean",
                         "number",
                         "string"
-                      ],
-                      "type": "string"
-                    },
-                    "default": []
+                      ]
+                    }
                   }
                 },
                 {
                   "headers": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -147,48 +148,48 @@
               "fields": [
                 {
                   "json": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
                     "type": "array",
                     "elements": {
+                      "type": "string",
                       "one_of": [
                         "boolean",
                         "number",
                         "string"
-                      ],
-                      "type": "string"
-                    },
-                    "default": []
+                      ]
+                    }
                   }
                 },
                 {
                   "headers": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -196,48 +197,48 @@
               "fields": [
                 {
                   "json": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
                     "type": "array",
                     "elements": {
+                      "type": "string",
                       "one_of": [
                         "boolean",
                         "number",
                         "string"
-                      ],
-                      "type": "string"
-                    },
-                    "default": []
+                      ]
+                    }
                   }
                 },
                 {
                   "headers": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -245,15 +246,15 @@
               "fields": [
                 {
                   "json": {
+                    "type": "set",
                     "elements": {
                       "type": "string"
-                    },
-                    "type": "set"
+                    }
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -261,48 +262,47 @@
               "fields": [
                 {
                   "functions": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "if_status": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 },
                 {
                   "json": {
+                    "default": [],
                     "type": "array",
                     "elements": {
                       "type": "string"
-                    },
-                    "default": []
+                    }
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
             "dots_in_keys": {
-              "type": "boolean",
               "description": "Whether dots (for example, `customers.info.phone`) should be treated as part of a property name or used to descend into nested JSON objects..",
+              "type": "boolean",
               "default": true
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

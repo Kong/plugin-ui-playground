@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,15 +10,17 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
@@ -28,59 +29,58 @@
           {
             "templates": {
               "elements": {
-                "type": "record",
-                "required": true,
                 "fields": [
                   {
                     "name": {
-                      "type": "string",
                       "description": "Unique name for the template, can be called with `{template://NAME}`",
+                      "type": "string",
                       "required": true
                     }
                   },
                   {
                     "template": {
-                      "type": "string",
                       "description": "Template string for this request, supports mustache-style `{{placeholders}}`",
+                      "type": "string",
                       "required": true
                     }
                   }
-                ]
+                ],
+                "type": "record",
+                "required": true
               },
-              "type": "array",
+              "description": "Array of templates available to the request context.",
               "required": true,
-              "description": "Array of templates available to the request context."
+              "type": "array"
             }
           },
           {
             "allow_untemplated_requests": {
+              "required": true,
               "description": "Set true to allow requests that don't call or match any template.",
               "type": "boolean",
-              "required": true,
               "default": true
             }
           },
           {
             "log_original_request": {
+              "required": true,
               "description": "Set true to add the original request to the Kong log plugin(s) output.",
               "type": "boolean",
-              "required": true,
               "default": false
             }
           },
           {
             "max_request_body_size": {
-              "gt": -1,
-              "type": "integer",
+              "default": 1048576,
               "description": "max allowed body size allowed to be introspected. 0 means unlimited, but the size of this body will still be limited by Nginx's client_max_body_size.",
-              "default": 1048576
+              "type": "integer",
+              "gt": -1
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

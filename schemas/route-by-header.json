@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,22 +10,24 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -35,24 +36,24 @@
         "fields": [
           {
             "rules": {
+              "default": [],
               "description": "Route by header rules.",
-              "type": "array",
               "elements": {
                 "type": "record",
                 "fields": [
                   {
                     "upstream_name": {
-                      "required": true,
-                      "type": "string"
+                      "type": "string",
+                      "required": true
                     }
                   },
                   {
                     "condition": {
                       "type": "map",
-                      "values": {
+                      "keys": {
                         "type": "string"
                       },
-                      "keys": {
+                      "values": {
                         "type": "string"
                       },
                       "required": true,
@@ -61,14 +62,13 @@
                   }
                 ]
               },
-              "default": []
+              "type": "array"
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

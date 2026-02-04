@@ -1,0 +1,100 @@
+{
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config"
+        ]
+      }
+    }
+  ],
+  "fields": [
+    {
+      "consumer": {
+        "reference": "consumers",
+        "type": "foreign",
+        "eq": null,
+        "description": "Custom type for representing a foreign key with a null value allowed."
+      }
+    },
+    {
+      "consumer_group": {
+        "reference": "consumer_groups",
+        "type": "foreign",
+        "description": "Custom type for representing a foreign key with a null value allowed.",
+        "eq": null
+      }
+    },
+    {
+      "protocols": {
+        "default": [
+          "grpc",
+          "grpcs",
+          "http",
+          "https"
+        ],
+        "elements": {
+          "type": "string",
+          "one_of": [
+            "grpc",
+            "grpcs",
+            "http",
+            "https"
+          ]
+        },
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
+      }
+    },
+    {
+      "config": {
+        "fields": [
+          {
+            "logging": {
+              "fields": [
+                {
+                  "log_statistics": {
+                    "default": false,
+                    "description": "If enabled, adds A2A metrics to Kong log plugin(s) output.",
+                    "required": true,
+                    "type": "boolean"
+                  }
+                },
+                {
+                  "log_payloads": {
+                    "required": true,
+                    "default": false,
+                    "type": "boolean",
+                    "description": "If enabled, logs request/response bodies to Kong log plugin(s) output. Requires log_statistics to be enabled."
+                  }
+                },
+                {
+                  "max_payload_size": {
+                    "default": 1048576,
+                    "type": "integer",
+                    "description": "Maximum size in bytes for logged request/response payloads. Payloads exceeding this size will be truncated.",
+                    "required": true,
+                    "gt": 0
+                  }
+                }
+              ],
+              "type": "record",
+              "required": true
+            }
+          },
+          {
+            "max_request_body_size": {
+              "description": "Maximum size of request body to parse for A2A metadata. Set to 0 for unlimited.",
+              "default": 1048576,
+              "type": "integer",
+              "gt": -1
+            }
+          }
+        ],
+        "type": "record",
+        "required": true
+      }
+    }
+  ]
+}

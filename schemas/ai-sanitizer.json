@@ -1,9 +1,16 @@
 {
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config"
+        ]
+      }
+    }
+  ],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,15 +18,17 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
@@ -28,38 +37,38 @@
           {
             "host": {
               "required": true,
-              "type": "string",
               "description": "The host of the sanitizer",
+              "type": "string",
               "default": "localhost"
             }
           },
           {
             "port": {
               "required": true,
-              "type": "number",
               "description": "The port of the sanitizer",
+              "type": "number",
               "default": 8080
             }
           },
           {
             "scheme": {
               "required": true,
-              "type": "string",
               "description": "The protocol can be http and https",
+              "type": "string",
               "default": "http"
             }
           },
           {
             "timeout": {
-              "type": "number",
               "description": "Connection timeout with the sanitizer",
+              "type": "number",
               "default": 10000
             }
           },
           {
             "keepalive_timeout": {
-              "type": "number",
               "description": "The keepalive timeout for the established http connnection",
+              "type": "number",
               "default": 60000
             }
           },
@@ -70,28 +79,29 @@
                 "OUTPUT",
                 "BOTH"
               ],
+              "default": "INPUT",
               "type": "string",
               "description": "The sanitization mode to use for the request",
-              "default": "INPUT",
               "required": true
             }
           },
           {
             "stop_on_error": {
-              "type": "boolean",
               "description": "Stop processing if an error occurs.",
+              "type": "boolean",
               "default": true
             }
           },
           {
             "anonymize": {
-              "type": "array",
-              "description": "List of types to be anonymized",
               "default": [
                 "all_and_credentials"
               ],
+              "type": "array",
+              "description": "List of types to be anonymized",
               "required": true,
               "elements": {
+                "type": "string",
                 "one_of": [
                   "general",
                   "phone",
@@ -113,22 +123,21 @@
                   "custom",
                   "all",
                   "all_and_credentials"
-                ],
-                "type": "string"
+                ]
               }
             }
           },
           {
             "recover_redacted": {
-              "type": "boolean",
               "description": "Whether to recover redacted data. This doesn't apply to the redacted output.",
+              "type": "boolean",
               "default": true
             }
           },
           {
             "block_if_detected": {
-              "type": "boolean",
               "description": "Whether to block requests containing PII data",
+              "type": "boolean",
               "default": false
             }
           },
@@ -138,17 +147,14 @@
                 "placeholder",
                 "synthetic"
               ],
-              "type": "string",
               "description": "What value to be used to redacted to",
+              "type": "string",
               "default": "placeholder"
             }
           },
           {
             "custom_patterns": {
               "type": "array",
-              "description": "List of custom patterns to be used for anonymization",
-              "len_min": 1,
-              "required": false,
               "elements": {
                 "type": "record",
                 "fields": [
@@ -166,38 +172,39 @@
                   },
                   {
                     "score": {
+                      "type": "number",
+                      "default": 0.5,
+                      "required": true,
                       "between": [
                         0,
                         1
-                      ],
-                      "type": "number",
-                      "required": true,
-                      "default": 0.5
+                      ]
                     }
                   }
                 ]
-              }
+              },
+              "description": "List of custom patterns to be used for anonymization",
+              "required": false,
+              "len_min": 1
             }
           },
           {
             "skip_logging_sanitized_items": {
-              "type": "boolean",
               "description": "Whether to log sanitized items in the Kong log plugins. Turn it on if you want to hide sensitive data from logs.",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "allow_all_conversation_history": {
+              "description": "If true, will ignore all previous chat messages from the conversation history.",
+              "type": "boolean",
               "default": false
             }
           }
         ],
-        "required": true,
-        "type": "record"
-      }
-    }
-  ],
-  "entity_checks": [
-    {
-      "custom_entity_check": {
-        "field_sources": [
-          "config"
-        ]
+        "type": "record",
+        "required": true
       }
     }
   ]

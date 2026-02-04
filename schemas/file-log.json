@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -23,17 +22,19 @@
             "ws",
             "wss"
           ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string"
         },
-        "required": true
+        "description": "A set of strings representing protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -42,17 +43,17 @@
         "fields": [
           {
             "path": {
+              "match": "^[^%s*&%%\\`][^*&%%\\`]*[^%s*&%%\\`]$",
               "type": "string",
               "description": "The file path of the output log file. The plugin creates the log file if it doesn't exist yet.",
-              "err": "not a valid filename",
               "required": true,
-              "match": "^[^%s*&%%\\`][^*&%%\\`]*[^%s*&%%\\`]$"
+              "err": "not a valid filename"
             }
           },
           {
             "reopen": {
-              "description": "Determines whether the log file is closed and reopened on every request.",
               "type": "boolean",
+              "description": "Determines whether the log file is closed and reopened on every request.",
               "required": true,
               "default": false
             }
@@ -63,8 +64,8 @@
                 "type": "string",
                 "len_min": 1
               },
-              "type": "map",
               "description": "Lua code as a key-value map",
+              "type": "map",
               "values": {
                 "len_min": 1,
                 "type": "string"
@@ -72,10 +73,9 @@
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

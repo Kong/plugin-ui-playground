@@ -1,9 +1,16 @@
 {
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config"
+        ]
+      }
+    }
+  ],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,15 +18,17 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
@@ -28,54 +37,54 @@
           {
             "compressor_url": {
               "required": true,
+              "default": "http://localhost:8080",
               "type": "string",
-              "description": "The url of the compressor",
-              "default": "http://localhost:8080"
+              "description": "The url of the compressor"
             }
           },
           {
             "timeout": {
+              "default": 10000,
               "type": "number",
-              "description": "Connection timeout with the compressor",
-              "default": 10000
+              "description": "Connection timeout with the compressor"
             }
           },
           {
             "keepalive_timeout": {
+              "default": 60000,
               "type": "number",
-              "description": "The keepalive timeout for the established http connnection",
-              "default": 60000
+              "description": "The keepalive timeout for the established http connnection"
             }
           },
           {
             "stop_on_error": {
+              "default": true,
               "type": "boolean",
-              "description": "Stop processing if an error occurs",
-              "default": true
+              "description": "Stop processing if an error occurs"
             }
           },
           {
             "log_text_data": {
+              "default": false,
               "type": "boolean",
-              "description": "Log the text data",
-              "default": false
+              "description": "Log the text data"
             }
           },
           {
             "message_type": {
               "required": true,
-              "type": "set",
+              "default": [
+                "user"
+              ],
               "elements": {
+                "type": "string",
                 "one_of": [
                   "system",
                   "assistant",
                   "user"
-                ],
-                "type": "string"
+                ]
               },
-              "default": [
-                "user"
-              ]
+              "type": "set"
             }
           },
           {
@@ -84,14 +93,16 @@
                 "rate",
                 "target_token"
               ],
+              "default": "rate",
               "type": "string",
               "description": "What compression type to use to compress with",
-              "default": "rate",
               "required": true
             }
           },
           {
             "compression_ranges": {
+              "required": true,
+              "description": "What value to be used to compress with. The 'value' is interpreted as rate or target_token depending on compressor_type.",
               "elements": {
                 "type": "record",
                 "fields": [
@@ -115,23 +126,12 @@
                   }
                 ]
               },
-              "type": "array",
-              "description": "What value to be used to compress with. The 'value' is interpreted as rate or target_token depending on compressor_type.",
-              "required": true
+              "type": "array"
             }
           }
         ],
-        "required": true,
-        "type": "record"
-      }
-    }
-  ],
-  "entity_checks": [
-    {
-      "custom_entity_check": {
-        "field_sources": [
-          "config"
-        ]
+        "type": "record",
+        "required": true
       }
     }
   ]

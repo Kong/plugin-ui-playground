@@ -1,17 +1,16 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "consumer": {
-        "type": "foreign",
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "reference": "consumers",
-        "eq": null
+        "type": "foreign",
+        "eq": null,
+        "description": "Custom type for representing a foreign key with a null value allowed."
       }
     },
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -19,22 +18,24 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -43,31 +44,30 @@
         "fields": [
           {
             "allow": {
+              "elements": {
+                "is_regex": true,
+                "type": "string"
+              },
               "description": "An array of regular expressions that should be allowed. The regular expressions will be checked against the `User-Agent` header.",
               "type": "array",
-              "elements": {
-                "type": "string",
-                "is_regex": true
-              },
               "default": []
             }
           },
           {
             "deny": {
+              "elements": {
+                "is_regex": true,
+                "type": "string"
+              },
               "description": "An array of regular expressions that should be denied. The regular expressions will be checked against the `User-Agent` header.",
               "type": "array",
-              "elements": {
-                "type": "string",
-                "is_regex": true
-              },
               "default": []
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

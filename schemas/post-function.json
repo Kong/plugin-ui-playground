@@ -1,25 +1,39 @@
 {
+  "entity_checks": [
+    {
+      "at_least_one_of": [
+        "config.certificate",
+        "config.rewrite",
+        "config.access",
+        "config.header_filter",
+        "config.body_filter",
+        "config.log",
+        "config.ws_handshake",
+        "config.ws_upstream_frame",
+        "config.ws_client_frame",
+        "config.ws_close"
+      ]
+    }
+  ],
   "fields": [
     {
       "consumer": {
-        "type": "foreign",
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "reference": "consumers",
-        "eq": null
+        "type": "foreign",
+        "eq": null,
+        "description": "Custom type for representing a foreign key with a null value allowed."
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -39,10 +53,12 @@
             "ws",
             "wss"
           ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string"
         },
-        "required": true
+        "description": "A set of strings representing protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
@@ -50,134 +66,118 @@
         "fields": [
           {
             "certificate": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "rewrite": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "access": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "header_filter": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "body_filter": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "log": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "ws_handshake": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "ws_client_frame": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "ws_upstream_frame": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           },
           {
             "ws_close": {
-              "required": true,
-              "type": "array",
               "elements": {
-                "required": false,
-                "type": "string"
+                "type": "string",
+                "required": false
               },
-              "default": []
+              "default": [],
+              "type": "array",
+              "required": true
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
-    }
-  ],
-  "entity_checks": [
-    {
-      "at_least_one_of": [
-        "config.certificate",
-        "config.rewrite",
-        "config.access",
-        "config.header_filter",
-        "config.body_filter",
-        "config.log",
-        "config.ws_handshake",
-        "config.ws_upstream_frame",
-        "config.ws_client_frame",
-        "config.ws_close"
-      ]
     }
   ]
 }

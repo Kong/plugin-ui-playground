@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,22 +10,24 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -35,8 +36,8 @@
         "fields": [
           {
             "header_name": {
-              "type": "string",
               "description": "The HTTP header name to use for the correlation ID.",
+              "type": "string",
               "default": "Kong-Request-ID"
             }
           },
@@ -47,25 +48,24 @@
                 "uuid#counter",
                 "tracker"
               ],
+              "default": "uuid#counter",
               "type": "string",
               "description": "The generator to use for the correlation ID. Accepted values are `uuid`, `uuid#counter`, and `tracker`. See [Generators](#generators).",
-              "default": "uuid#counter",
               "required": true
             }
           },
           {
             "echo_downstream": {
+              "default": false,
               "description": "Whether to echo the header back to downstream (the client).",
               "type": "boolean",
-              "required": true,
-              "default": false
+              "required": true
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

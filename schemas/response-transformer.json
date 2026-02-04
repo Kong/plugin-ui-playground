@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,15 +10,17 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
@@ -31,26 +32,26 @@
                 {
                   "json": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -59,28 +60,28 @@
                 {
                   "json": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "headers": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -89,44 +90,44 @@
                 {
                   "json": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
                     "type": "array",
                     "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
-                    "default": [],
                     "required": true,
                     "elements": {
+                      "type": "string",
                       "one_of": [
                         "boolean",
                         "number",
                         "string"
-                      ],
-                      "type": "string"
+                      ]
                     }
                   }
                 },
                 {
                   "headers": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -135,44 +136,44 @@
                 {
                   "json": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
                     "type": "array",
                     "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
-                    "default": [],
                     "required": true,
                     "elements": {
+                      "type": "string",
                       "one_of": [
                         "boolean",
                         "number",
                         "string"
-                      ],
-                      "type": "string"
+                      ]
                     }
                   }
                 },
                 {
                   "headers": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           },
           {
@@ -181,51 +182,50 @@
                 {
                   "json": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 },
                 {
                   "json_types": {
+                    "default": [],
                     "type": "array",
                     "description": "List of JSON type names. Specify the types of the JSON values returned when appending\nJSON properties. Each string element can be one of: boolean, number, or string.",
-                    "default": [],
                     "required": true,
                     "elements": {
+                      "type": "string",
                       "one_of": [
                         "boolean",
                         "number",
                         "string"
-                      ],
-                      "type": "string"
+                      ]
                     }
                   }
                 },
                 {
                   "headers": {
                     "required": true,
-                    "type": "array",
+                    "default": [],
                     "elements": {
                       "match": "^[^:]+:.*$",
                       "type": "string"
                     },
-                    "default": []
+                    "type": "array"
                   }
                 }
               ],
-              "required": true,
-              "type": "record"
+              "type": "record",
+              "required": true
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

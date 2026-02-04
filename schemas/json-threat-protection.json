@@ -1,17 +1,25 @@
 {
+  "entity_checks": [
+    {
+      "custom_entity_check": {
+        "field_sources": [
+          "config.max_body_size",
+          "config.max_container_depth"
+        ]
+      }
+    }
+  ],
   "fields": [
     {
       "consumer": {
-        "type": "foreign",
-        "description": "Custom type for representing a foreign key with a null value allowed.",
         "reference": "consumers",
-        "eq": null
+        "type": "foreign",
+        "eq": null,
+        "description": "Custom type for representing a foreign key with a null value allowed."
       }
     },
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -19,22 +27,24 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -43,82 +53,90 @@
         "fields": [
           {
             "max_body_size": {
-              "type": "integer",
-              "description": "Max size of the request body. -1 means unlimited.",
               "default": 8192,
+              "type": "integer",
               "between": [
                 -1,
                 2147483648
               ],
+              "description": "Max size of the request body. -1 means unlimited.",
               "required": false
             }
           },
           {
             "max_container_depth": {
-              "type": "integer",
-              "description": "Max nested depth of objects and arrays. -1 means unlimited.",
               "default": -1,
+              "type": "integer",
               "between": [
                 -1,
                 2147483648
               ],
+              "description": "Max nested depth of objects and arrays. -1 means unlimited.",
               "required": false
             }
           },
           {
             "max_object_entry_count": {
-              "type": "integer",
-              "description": "Max number of entries in an object. -1 means unlimited.",
               "default": -1,
+              "type": "integer",
               "between": [
                 -1,
                 2147483648
               ],
+              "description": "Max number of entries in an object. -1 means unlimited.",
               "required": false
             }
           },
           {
             "max_object_entry_name_length": {
-              "type": "integer",
-              "description": "Max string length of object name. -1 means unlimited.",
               "default": -1,
+              "type": "integer",
               "between": [
                 -1,
                 2147483648
               ],
+              "description": "Max string length of object name. -1 means unlimited.",
               "required": false
             }
           },
           {
             "max_array_element_count": {
-              "type": "integer",
-              "description": "Max number of elements in an array. -1 means unlimited.",
               "default": -1,
+              "type": "integer",
               "between": [
                 -1,
                 2147483648
               ],
+              "description": "Max number of elements in an array. -1 means unlimited.",
               "required": false
             }
           },
           {
             "max_string_value_length": {
-              "type": "integer",
-              "description": "Max string value length. -1 means unlimited.",
               "default": -1,
+              "type": "integer",
               "between": [
                 -1,
                 2147483648
               ],
+              "description": "Max string value length. -1 means unlimited.",
               "required": false
             }
           },
           {
             "allow_duplicate_object_entry_name": {
-              "required": false,
               "type": "boolean",
-              "description": "Allow or disallow duplicate object entry name.",
-              "default": true
+              "default": true,
+              "required": false,
+              "description": "Allow or disallow duplicate object entry name."
+            }
+          },
+          {
+            "allow_non_json_requests": {
+              "type": "boolean",
+              "default": false,
+              "required": false,
+              "description": "Allow non-json requests to bypass the rules"
             }
           },
           {
@@ -127,45 +145,35 @@
                 "block",
                 "log_only"
               ],
+              "default": "block",
               "type": "string",
               "description": "Enforcement mode of the security policy.",
-              "default": "block",
               "required": false
             }
           },
           {
             "error_status_code": {
-              "type": "integer",
-              "description": "The response status code when validation fails.",
               "default": 400,
+              "type": "integer",
               "between": [
                 400,
                 499
               ],
+              "description": "The response status code when validation fails.",
               "required": false
             }
           },
           {
             "error_message": {
-              "required": false,
               "type": "string",
-              "description": "The response message when validation fails",
-              "default": "Bad Request"
+              "default": "Bad Request",
+              "required": false,
+              "description": "The response message when validation fails"
             }
           }
         ],
-        "required": true,
-        "type": "record"
-      }
-    }
-  ],
-  "entity_checks": [
-    {
-      "custom_entity_check": {
-        "field_sources": [
-          "config.max_body_size",
-          "config.max_container_depth"
-        ]
+        "type": "record",
+        "required": true
       }
     }
   ]

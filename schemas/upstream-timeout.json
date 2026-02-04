@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,63 +10,64 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
     {
       "config": {
-        "type": "record",
-        "required": true,
         "fields": [
           {
             "read_timeout": {
+              "description": "The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server. Must be an integer between 1 and 2^31-2.",
+              "type": "integer",
               "between": [
                 0,
                 2147483646
-              ],
-              "type": "integer",
-              "description": "The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server. Must be an integer between 1 and 2^31-2."
+              ]
             }
           },
           {
             "send_timeout": {
+              "description": "The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server. Must be an integer between 1 and 2^31-2.",
+              "type": "integer",
               "between": [
                 0,
                 2147483646
-              ],
-              "type": "integer",
-              "description": "The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server. Must be an integer between 1 and 2^31-2."
+              ]
             }
           },
           {
             "connect_timeout": {
+              "description": "The timeout in milliseconds for establishing a connection to the upstream server. Must be an integer between 1 and 2^31-2.",
+              "type": "integer",
               "between": [
                 0,
                 2147483646
-              ],
-              "type": "integer",
-              "description": "The timeout in milliseconds for establishing a connection to the upstream server. Must be an integer between 1 and 2^31-2."
+              ]
             }
           }
-        ]
+        ],
+        "required": true,
+        "type": "record"
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

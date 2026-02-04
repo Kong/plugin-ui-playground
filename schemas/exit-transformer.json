@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing HTTP protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -11,22 +10,24 @@
           "https"
         ],
         "elements": {
+          "type": "string",
           "one_of": [
             "grpc",
             "grpcs",
             "http",
             "https"
-          ],
-          "type": "string"
+          ]
         },
-        "required": true
+        "description": "A set of strings representing HTTP protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -36,31 +37,30 @@
           {
             "functions": {
               "type": "array",
-              "required": true,
               "elements": {
                 "type": "string"
-              }
+              },
+              "required": true
             }
           },
           {
             "handle_unknown": {
+              "default": false,
               "type": "boolean",
-              "description": "Determines whether to handle unknown status codes by transforming their responses.",
-              "default": false
+              "description": "Determines whether to handle unknown status codes by transforming their responses."
             }
           },
           {
             "handle_unexpected": {
+              "default": false,
               "type": "boolean",
-              "description": "Determines whether to handle unexpected errors by transforming their responses.",
-              "default": false
+              "description": "Determines whether to handle unexpected errors by transforming their responses."
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

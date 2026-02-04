@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -23,17 +22,19 @@
             "ws",
             "wss"
           ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string"
         },
-        "required": true
+        "description": "A set of strings representing protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -52,9 +53,9 @@
                 "alert",
                 "emerg"
               ],
+              "default": "info",
               "type": "string",
-              "required": true,
-              "default": "info"
+              "required": true
             }
           },
           {
@@ -69,9 +70,9 @@
                 "alert",
                 "emerg"
               ],
+              "default": "info",
               "type": "string",
-              "required": true,
-              "default": "info"
+              "required": true
             }
           },
           {
@@ -86,9 +87,9 @@
                 "alert",
                 "emerg"
               ],
+              "default": "info",
               "type": "string",
-              "required": true,
-              "default": "info"
+              "required": true
             }
           },
           {
@@ -103,9 +104,9 @@
                 "alert",
                 "emerg"
               ],
+              "default": "info",
               "type": "string",
-              "required": true,
-              "default": "info"
+              "required": true
             }
           },
           {
@@ -114,8 +115,8 @@
                 "type": "string",
                 "len_min": 1
               },
-              "type": "map",
               "description": "Lua code as a key-value map",
+              "type": "map",
               "values": {
                 "len_min": 1,
                 "type": "string"
@@ -146,17 +147,16 @@
                 "local6",
                 "local7"
               ],
+              "default": "user",
               "type": "string",
               "description": "The facility is used by the operating system to decide how to handle each log message.",
-              "default": "user",
               "required": true
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }

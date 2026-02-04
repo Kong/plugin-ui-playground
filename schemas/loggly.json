@@ -1,9 +1,8 @@
 {
+  "entity_checks": [],
   "fields": [
     {
       "protocols": {
-        "type": "set",
-        "description": "A set of strings representing protocols.",
         "default": [
           "grpc",
           "grpcs",
@@ -23,17 +22,19 @@
             "ws",
             "wss"
           ],
-          "type": "string",
-          "description": "A string representing a protocol, such as HTTP or HTTPS."
+          "description": "A string representing a protocol, such as HTTP or HTTPS.",
+          "type": "string"
         },
-        "required": true
+        "description": "A set of strings representing protocols.",
+        "required": true,
+        "type": "set"
       }
     },
     {
       "consumer_group": {
+        "reference": "consumer_groups",
         "type": "foreign",
         "description": "Custom type for representing a foreign key with a null value allowed.",
-        "reference": "consumer_groups",
         "eq": null
       }
     },
@@ -42,39 +43,39 @@
         "fields": [
           {
             "host": {
-              "type": "string",
               "description": "A string representing a host name, such as example.com.",
+              "type": "string",
               "default": "logs-01.loggly.com"
             }
           },
           {
             "port": {
+              "default": 514,
+              "description": "An integer representing a port number between 0 and 65535, inclusive.",
+              "type": "integer",
               "between": [
                 0,
                 65535
-              ],
-              "type": "integer",
-              "description": "An integer representing a port number between 0 and 65535, inclusive.",
-              "default": 514
+              ]
             }
           },
           {
             "key": {
-              "type": "string",
-              "referenceable": true,
+              "encrypted": true,
               "required": true,
-              "encrypted": true
+              "type": "string",
+              "referenceable": true
             }
           },
           {
             "tags": {
+              "default": [
+                "kong"
+              ],
               "type": "set",
               "elements": {
                 "type": "string"
-              },
-              "default": [
-                "kong"
-              ]
+              }
             }
           },
           {
@@ -89,8 +90,8 @@
                 "alert",
                 "emerg"
               ],
-              "type": "string",
-              "default": "info"
+              "default": "info",
+              "type": "string"
             }
           },
           {
@@ -105,8 +106,8 @@
                 "alert",
                 "emerg"
               ],
-              "type": "string",
-              "default": "info"
+              "default": "info",
+              "type": "string"
             }
           },
           {
@@ -121,8 +122,8 @@
                 "alert",
                 "emerg"
               ],
-              "type": "string",
-              "default": "info"
+              "default": "info",
+              "type": "string"
             }
           },
           {
@@ -137,14 +138,14 @@
                 "alert",
                 "emerg"
               ],
-              "type": "string",
-              "default": "info"
+              "default": "info",
+              "type": "string"
             }
           },
           {
             "timeout": {
-              "default": 10000,
-              "type": "number"
+              "type": "number",
+              "default": 10000
             }
           },
           {
@@ -153,8 +154,8 @@
                 "type": "string",
                 "len_min": 1
               },
-              "type": "map",
               "description": "Lua code as a key-value map",
+              "type": "map",
               "values": {
                 "len_min": 1,
                 "type": "string"
@@ -162,10 +163,9 @@
             }
           }
         ],
-        "required": true,
-        "type": "record"
+        "type": "record",
+        "required": true
       }
     }
-  ],
-  "entity_checks": []
+  ]
 }
